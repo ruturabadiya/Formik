@@ -1,44 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate,useLocation } from "react-router-dom";
 import { Formik, ErrorMessage, Field } from "formik";
 import { IData } from "../../InterFace/commonInterface";
 import { dataValidation } from "../../validate/validation";
 import { TextFieldController } from "../common/TextFieldControl/TextFieldControl";
 import { USERS } from "../user";
-import { ToastContainer } from "react-toastify";
+import { toast,ToastContainer } from "react-toastify";
 import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
 
 const Update = () => {
-  const { id } = useParams<{ id: string }>(); 
+
+  const { id } = useParams<{ id: string | undefined }>();
   const navigate = useNavigate();
-  const [initialValue, setInitialValue] = useState<IData>({
-    id: 0,
-    firstName: "",
-    lastName: "",
-    emailAddress: "",
-    dOB: "",
-    gender: "",
-    password: "",
-    cPassword: ""
-  });
-
+  const [userData, setUserData] = useState<IData | undefined>(undefined);
+  const location = useLocation();
+  const user = location.state?.user;
+  
   useEffect(() => {
-    if (id) {
-        debugger
-      const userId = parseInt(id);
-      const user = USERS.find((user) => user.id === userId);
-
-      if (user) {
-        debugger
-        setInitialValue(user);
-      } else {
-        debugger
-        navigate("/");
-      }
-    } else {
-        debugger
-      navigate("/");
-    }
+    const userId = parseInt(id ?? ''); // Provide a default value of an empty string if id is undefined
+    const foundUser = USERS.find((user) => user.id == userId);
+    setUserData(foundUser); 
   }, [id, navigate]);
 
   const dropdown = [
@@ -47,46 +28,34 @@ const Update = () => {
     { key: "female", value: "Female" }
   ];
 
-  const onSubmit = (values: IData, { resetForm }: { resetForm: () => void }) => {
-    const emailExists = USERS.some(
-      user => user.emailAddress === values.emailAddress
-    );
-
-    if (emailExists) {
-      showToastError("This Email Address already exists.");
-      resetForm();
-    } else {
-      // Update the user object in the USERS array
-      const updatedUsers = USERS.map(user =>
-        user.id === values.id ? values : user
-      );
-      // Update the USERS array
-      // Assuming USERS is a mutable array, otherwise, you should use a state management solution
-      USERS.length = 0;
-      USERS.push(...updatedUsers);
-      
-      showToastSuccess("User updated successfully");
-      navigate("/");
-    }
-
-    console.log(values);
+  const onSubmit = (values: IData) => {
+    const updatedUsers = USERS.map((user) => user.id === values.id ? values : user);
+    USERS.length = 0;
+    USERS.push(...updatedUsers);
+    toast.success("User updated successfully");
+    setTimeout(() =>{
+      navigate('/');
+    },2000)
   };
-
   const handleCancel = () => {
     navigate("/");
   };
+
+  if (!userData) {
+    return null; 
+  }
 
   return (
     <>
       <div className="content">
         <Formik
-          initialValues={initialValue}
+          initialValues={userData}
           validationSchema={dataValidation}
           onSubmit={onSubmit}
         >
           {({ handleChange, handleSubmit }) => (
             <form className="row" autoComplete="off" onSubmit={handleSubmit}>
-            <TextFieldController
+              <TextFieldController
                 name="id"
                 onChange={handleChange}
                 placeholder="Enter your id"
@@ -96,7 +65,7 @@ const Update = () => {
                 onChange={handleChange}
                 placeholder="Enter your FirstName"
               />
-              <TextFieldController
+               <TextFieldController
                 name="lastName"
                 onChange={handleChange}
                 placeholder="Enter your LastName"
@@ -118,7 +87,7 @@ const Update = () => {
                 onChange={handleChange}
                 placeholder="Select your Gender"
               >
-                {dropdown.map(option => {
+                {dropdown.map((option) => {
                   return (
                     <option key={option.value} value={option.value}>
                       {option.key}
@@ -127,7 +96,7 @@ const Update = () => {
                 })}
               </Field>
               <div className="row p-0 m-0 w-100">
-                <ErrorMessage className="text-danger" name="Gender" />
+                <ErrorMessage className="text-danger" name="gender" />
               </div>
               <TextFieldController
                 name="password"
@@ -145,7 +114,11 @@ const Update = () => {
                 <button className="button" type="submit">
                   Update
                 </button>
-                <button className="button" type="button" onClick={handleCancel}>
+                <button
+                  className="button"
+                  type="button"
+                  onClick={handleCancel}
+                >
                   Cancel
                 </button>
               </div>
@@ -167,3 +140,6 @@ const Update = () => {
 };
 
 export default Update;
+
+
+

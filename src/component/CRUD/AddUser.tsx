@@ -10,7 +10,7 @@ import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
 
 const Add = () => {
   const initialValue: IData = {
-    id:1,
+    id:0,
     firstName: "",
     lastName: "",
     emailAddress: "",
@@ -41,7 +41,10 @@ const onSubmit = (values: IData,{resetForm}:{resetForm : ()=> void}) => {
     else {
       USERS.push(values);
       showToastSuccess("User added successfully");
-      navigate('/')
+      resetForm();
+      setTimeout(() =>{
+        navigate('/');
+      },2000)
     }
     
     console.log(values);

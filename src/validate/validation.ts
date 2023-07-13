@@ -16,7 +16,7 @@ export const dataValidation = Yup.object({
     dOB: Yup.date()
     .max(new Date(), "Date of Birth cannot be in the future")
     .required("Date of Birth is required"),
-  gender :Yup.string().required("Gender select"),
+    gender :Yup.string().required("Gender select"),
   password: Yup.string()
   .required('Password Required')
   .min(8, 'Password must have at least 8 characters')

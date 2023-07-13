@@ -1,29 +1,56 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Button,
-  TablePagination} from '@mui/material';
+import {Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Button,TablePagination} from '@mui/material';
 import { USERS } from '../user';
 import { TableLabel } from '../common/TextFieldControl/TextFieldControl';
-
+import DeleteUser from './DeleteUser';
+import { IData } from '../../InterFace/commonInterface';
 
 const List = () => {
   const navigate = useNavigate();
-  
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<IData | null>(null);
+
   const handleAddClick = () => {
     navigate('/add');
   };
 
   const handleEditClick = (id: number) => {
+    debugger
     navigate(`/update/${id}`);
+    console.log(USERS)
   };
- 
+  // const handleEditClick = (id: number) => {
+  //   debugger
+  //   const userId = Number(id); 
+  //   const user = USERS.find((user) => user.id === userId);
+  
+  //   if (user) {
+  //     navigate(`/update/${userId}`, { state: { user } });
+  //   } else {
+  //     console.log("User not found");
+  //   }
+  // };
+
+  const handleDeleteClick = (user: IData) => {
+    setUserToDelete(user);
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (userToDelete) {
+      const index = USERS.findIndex((user) => user.id === userToDelete.id);
+      if (index !== -1) {
+        USERS.splice(index, 1);
+      }
+      console.log(USERS)
+    }
+    setUserToDelete(null);
+    setShowDeleteConfirmation(false);
+  };
+  const handleDeleteCancel = () => {
+    setShowDeleteConfirmation(false);
+  };
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(2);
@@ -38,6 +65,7 @@ const List = () => {
   };
 
   return (
+    <>
     <div className="table">
       <div className="add">
         <input className="Addbutton" type="submit" value="+  Add" onClick={handleAddClick} />
@@ -46,13 +74,13 @@ const List = () => {
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableLabel name='id'/>
-              <TableLabel name='firstName'/>
-              <TableLabel name='lastName'/>
-              <TableLabel name='emailAddress'/>
-              <TableLabel name='dOB'/>
-              <TableLabel name='gender'/>
-              <TableLabel name='password'/>
+              <TableLabel name="Id" />
+              <TableLabel name="FirstName" />
+              <TableLabel name="LastName" />
+              <TableLabel name="EmailAddress" />
+              <TableLabel name="DOB" />
+              <TableLabel name="Gender" /> 
+              <TableLabel name="Password" />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -73,7 +101,11 @@ const List = () => {
                     Edit
                   </Button>
                   &nbsp;
-                  <Button variant="outlined" color="error">
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => handleDeleteClick(data)}
+                  >
                     Delete
                   </Button>
                 </TableCell>
@@ -90,8 +122,12 @@ const List = () => {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      /> 
     </div>
+    {showDeleteConfirmation && (
+      <DeleteUser user={userToDelete} onCancel={handleDeleteCancel} onConfirm={handleDeleteConfirm} />
+    )}
+    </>
   );
 };
 
