@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Button,TablePagination} from '@mui/material';
-import { USERS } from '../user';
-import { TableLabel } from '../common/TextFieldControl/TextFieldControl';
-import DeleteUser from './DeleteUser';
-import { IData } from '../../InterFace/commonInterface';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Button,TablePagination} from "@mui/material";
+import { USERS } from "../user";
+import { TableLabel } from "../common/TextFieldControl/TextFieldControl";
+import DeleteUser from "./DeleteUser";
+import { IData } from "../../InterFace/commonInterface";
+import { showToastSuccess } from "../../Toast/toastUtils";
 
 const List = () => {
   const navigate = useNavigate();
@@ -12,25 +13,12 @@ const List = () => {
   const [userToDelete, setUserToDelete] = useState<IData | null>(null);
 
   const handleAddClick = () => {
-    navigate('/add');
+    navigate("/add");
   };
 
   const handleEditClick = (id: number) => {
-    debugger
     navigate(`/update/${id}`);
-    console.log(USERS)
   };
-  // const handleEditClick = (id: number) => {
-  //   debugger
-  //   const userId = Number(id); 
-  //   const user = USERS.find((user) => user.id === userId);
-  
-  //   if (user) {
-  //     navigate(`/update/${userId}`, { state: { user } });
-  //   } else {
-  //     console.log("User not found");
-  //   }
-  // };
 
   const handleDeleteClick = (user: IData) => {
     setUserToDelete(user);
@@ -42,12 +30,19 @@ const List = () => {
       const index = USERS.findIndex((user) => user.id === userToDelete.id);
       if (index !== -1) {
         USERS.splice(index, 1);
+        
+        if (page > 0  && USERS.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length === 0) {
+          setPage(page - 1); 
+        } else if (index >= page * rowsPerPage && index < (page + 1) * rowsPerPage) {
+          setPage(page);
+        }
       }
-      console.log(USERS)
+      showToastSuccess('deleted');
+      setUserToDelete(null);
+      setShowDeleteConfirmation(false);
     }
-    setUserToDelete(null);
-    setShowDeleteConfirmation(false);
   };
+
   const handleDeleteCancel = () => {
     setShowDeleteConfirmation(false);
   };
@@ -59,74 +54,92 @@ const List = () => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
 
   return (
     <>
-    <div className="table">
-      <div className="add">
-        <input className="Addbutton" type="submit" value="+  Add" onClick={handleAddClick} />
-      </div>
-      <TableContainer>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableLabel name="Id" />
-              <TableLabel name="FirstName" />
-              <TableLabel name="LastName" />
-              <TableLabel name="EmailAddress" />
-              <TableLabel name="DOB" />
-              <TableLabel name="Gender" /> 
-              <TableLabel name="Password" />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(rowsPerPage > 0
-              ? USERS.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : USERS
-            ).map((data) => (
-              <TableRow key={data.emailAddress}>
-                <TableCell align="left">{data.id}</TableCell>
-                <TableCell align="left">{data.firstName}</TableCell>
-                <TableCell align="left">{data.lastName}</TableCell>
-                <TableCell align="left">{data.emailAddress}</TableCell>
-                <TableCell align="left">{data.dOB}</TableCell>
-                <TableCell align="left">{data.gender}</TableCell>
-                <TableCell align="left">{data.password}</TableCell>
-                <TableCell align="left">
-                  <Button variant="outlined" onClick={() => handleEditClick(data.id)}>
-                    Edit
-                  </Button>
-                  &nbsp;
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() => handleDeleteClick(data)}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
+      <div className="table">
+        <div className="add">
+          <input
+            className="Addbutton"
+            type="submit"
+            value="+  Add"
+            onClick={handleAddClick}
+          />
+        </div>
+        <TableContainer>
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableLabel name="Id" />
+                <TableLabel name="UserName" />
+                <TableLabel name="EmailAddress" />
+                <TableLabel name="DOB" />
+                <TableLabel name="Gender" />
+                <TableLabel name="Password" />
+                <TableLabel name="Action" />
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[2, 4, 6]}
-        component="div"
-        count={USERS.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      /> 
-    </div>
-    {showDeleteConfirmation && (
-      <DeleteUser user={userToDelete} onCancel={handleDeleteCancel} onConfirm={handleDeleteConfirm} />
-    )}
+            </TableHead>
+            <TableBody>
+              {USERS.length > 0 ? (
+                (rowsPerPage > 0
+                  ? USERS.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  : USERS
+                ).map((data) => (
+                  <TableRow key={data.emailAddress}>
+                    <TableCell align="left">{data.id}</TableCell>
+                    <TableCell align="left">
+                      {data.firstName} {data.lastName}
+                    </TableCell>
+                    <TableCell align="left">{data.emailAddress}</TableCell>
+                    <TableCell align="left">{data.dOB}</TableCell>
+                    <TableCell align="left">{data.gender}</TableCell>
+                    <TableCell align="left">{data.password}</TableCell>
+                    <TableCell align="left">
+                      <Button variant="outlined" onClick={() => handleEditClick(data.id)}>
+                        Edit
+                      </Button>
+                      &nbsp;
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => handleDeleteClick(data)}
+                      >
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7}>No Data available</TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[2, 4, 6]}
+          component="div"
+          count={USERS.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </div>
+      {showDeleteConfirmation && (
+        <DeleteUser
+          user={userToDelete}
+          onCancel={handleDeleteCancel}
+          onConfirm={handleDeleteConfirm}
+        />
+      )}
     </>
   );
 };

@@ -73,6 +73,8 @@
   margin-left: 10%;
   margin-top: 8%;
   height: 45px;
+  background: #173777;
+  color: white;
 }
 
 .field{
@@ -132,14 +134,11 @@
   color: black;
 }
 
-.btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  line-height: 1.5;
-  font: 700 1.2rem 'Roboto Slab', sans-serif;
-  padding: 0.75em 2em;
-  letter-spacing: 0.05rem;
-  margin: 1em;
-  width: 13rem;
+.cancel{
+ color: 'black';
+ border-color: "black";
 }
+.gender{
+  width: 100%;
+}
+
