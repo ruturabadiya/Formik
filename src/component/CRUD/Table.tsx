@@ -103,6 +103,9 @@ const List = () => {
 
   return (
     <>
+    <div className="search">
+            <textarea></textarea>
+        </div>
       <div className="table">
         <div className="add">
           <input className="Addbutton" type="submit" value="+  Add" onClick={handleAddClick} />
@@ -111,7 +114,7 @@ const List = () => {
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
-                <TableLabel name="#" onClick={() => handleSort("id")} />
+                <TableLabel name="Id" onClick={() => handleSort("id")} />
                 <TableLabel name="UserName" onClick={() => handleSort("firstName")} active={sortBy === "firstName"} sortOrder={sortOrder} />
                 <TableLabel name="EmailAddress" onClick={() => handleSort("emailAddress")} active={sortBy === "emailAddress"} sortOrder={sortOrder} />
                 <TableLabel name="DOB" onClick={() => handleSort("dOB")} active={sortBy === "dOB"} sortOrder={sortOrder} />

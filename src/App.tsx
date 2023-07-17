@@ -1,9 +1,10 @@
 import React from 'react';
 import './App.css';
 import Form from './component/CRUD/UserData';
-import Add from './component/CRUD/AddUser';
-import Update from './component/CRUD/EditUser';
+import AddUser from './component/CRUD/AddUser';
+import EditUser from './component/CRUD/EditUser';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
@@ -12,11 +13,20 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Form />} />
-            <Route path="/add" element={<Add />} />
-            <Route path="/update/:id" element={<Update />} />
+            <Route path="/add" element={<AddUser />} />
+            <Route path="/update/:id" element={<EditUser />} />
           </Routes>
         </Router>
       </header>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar
+        closeOnClick
+        pauseOnHover
+        draggable
+        limit={1}
+      />
     </div>
   );
 }

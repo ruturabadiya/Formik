@@ -1,12 +1,13 @@
 import React from "react";
-import { Formik, ErrorMessage, Field } from "formik";
+import { Formik } from "formik";
 import { IData } from "../../InterFace/commonInterface";
 import { dataValidation } from "../../validate/validation";
 import { TextFieldController, DropdownFieldController } from "../common/TextFieldControl/TextFieldControl";
 import { USERS } from "../user";
-import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Add = () => {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ const Add = () => {
           validationSchema={dataValidation}
           onSubmit={onSubmit}
         >
-          {({ handleChange, handleSubmit }) => (
+          {({ values, handleChange, handleSubmit }) => (
             <form className="row" autoComplete="off" onSubmit={handleSubmit}>
               <TextFieldController
                 name="firstName"
@@ -81,12 +82,18 @@ const Add = () => {
                 onChange={handleChange}
                 placeholder="Enter your Email Address"
               />
-              <TextFieldController
-                name="dOB"
-                type="date"
-                onChange={handleChange}
-                placeholder="Enter your Date of Birth"
-              />
+              <div className="form-group">
+              <DatePicker
+  name="dOB"
+  placeholderText="Enter your Date of Birth"
+  onChange={(date: Date) => {
+    handleChange({ target: { name: "dOB", value: date } });
+  }}
+  selected={values.dOB ? new Date(values.dOB) : null}
+  dateFormat="dd-MM-yyyy"
+  className="form-control"
+/>
+              </div>
               <DropdownFieldController
                 name="gender"
                 onChange={handleChange}
@@ -117,15 +124,6 @@ const Add = () => {
           )}
         </Formik>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar
-        closeOnClick
-        pauseOnHover
-        draggable
-        limit={1}
-      />
     </>
   );
 };

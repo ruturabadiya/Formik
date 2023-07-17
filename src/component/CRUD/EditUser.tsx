@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Formik, ErrorMessage } from "formik";
+import { Formik } from "formik";
 import { IData } from "../../InterFace/commonInterface";
 import { dataValidation } from "../../validate/validation";
 import { TextFieldController, DropdownFieldController } from "../common/TextFieldControl/TextFieldControl";
 import { USERS } from "../user";
-import { toast, ToastContainer } from "react-toastify";
-import { showToastError } from "../../Toast/toastUtils";
 
-const Update = () => {
+import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
+
+const EditUser = () => {
   const { id } = useParams<{ id: string | undefined }>();
   const navigate = useNavigate();
   const [userData, setUserData] = useState<IData | undefined>(undefined);
@@ -24,7 +24,7 @@ const Update = () => {
     if (values.emailAddress !== userData?.emailAddress) {
       const emailExists = USERS.some(
         (user) =>
-          user.emailAddress === values.emailAddress && user.id !== values.id
+          user.emailAddress === values.emailAddress
       );
       if (emailExists) {
         showToastError("Entered email address already exists.");
@@ -39,13 +39,14 @@ const Update = () => {
     const formattedDate = `${day}-${month}-${year}`;
     const updatedUser = { ...values, dOB: formattedDate };
 
-    const updatedUsers = USERS.map((user) =>
-      user.id === values.id ? updatedUser : user
-    );
-    USERS.length = 0;
-    USERS.push(...updatedUsers);
-
-    toast.success("User updated successfully");
+    if (values.id) {
+      const index = USERS.findIndex((user) => user.id === values.id);
+      USERS[index] = updatedUser
+    }
+    else {
+      USERS.push(updatedUser);
+    }
+    showToastSuccess("User updated successfully");
     setTimeout(() => {
       navigate("/");
     }, 2000);
@@ -55,12 +56,10 @@ const Update = () => {
     navigate("/");
   };
 
-  if (!userData) {
-    return null;
-  }
+
 
   return (
-    <>
+    userData ? <>
       <div className="content">
         <Formik
           initialValues={{ ...userData, dOB: formatDate(userData.dOB) }}
@@ -121,20 +120,12 @@ const Update = () => {
           )}
         </Formik>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar
-        closeOnClick
-        pauseOnHover
-        draggable
-        limit={1}
-      />
     </>
+      : <></>
   );
 };
 
-export default Update;
+export default EditUser;
 
 const formatDate = (dateString: string): string => {
   const [year, month, day] = dateString.split("-");
