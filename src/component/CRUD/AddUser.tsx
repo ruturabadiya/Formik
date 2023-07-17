@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Formik, ErrorMessage, Field } from "formik";
 import { IData } from "../../InterFace/commonInterface";
@@ -90,7 +89,6 @@ const Add = () => {
               />
               <DropdownFieldController
                 name="gender"
-                defaultValue="plz select gender"
                 onChange={handleChange}
                 as="select"
                 placeholder="Select your Gender"

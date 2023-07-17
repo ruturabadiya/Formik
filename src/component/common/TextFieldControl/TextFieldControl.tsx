@@ -1,6 +1,7 @@
-import React,{ChangeEvent,SelectHTMLAttributes,useState} from 'react';
+import React,{ChangeEvent, SelectHTMLAttributes} from 'react';
 import { Field, ErrorMessage } from 'formik';
-import { TableCell } from '@mui/material';
+import { TableCell,IconButton } from '@mui/material';
+import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
 
 interface LocalControllerProps {
     name:  string ;
@@ -28,22 +29,30 @@ interface LocalControllerProps {
 
   interface TableControllerProps {
     name: string;
+    onClick?: () => void;
+    active?: boolean;
+    sortOrder?: "asc" | "desc" | string;
   }
   
   export const TableLabel: React.FC<TableControllerProps> = ({
-    name
+    name,
+    onClick,
+    active = true,
+    sortOrder
   }) => (
-    <>
-      <TableCell align="center" style={{ fontWeight: '800' }}>
-        {name}
-      </TableCell>
-    </>
+    <TableCell align="center" style={{ fontWeight: '800', cursor: 'pointer' }} onClick={onClick}>
+      {name}
+      {active && sortOrder && (
+        <IconButton size="small">
+          {sortOrder === "asc" ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />}
+        </IconButton>
+      )}
+    </TableCell>
   );
 
 
   interface SelectControllerProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange'> {
     name: string;
-    defaultValue?: string; // Add a defaultValue prop
     onChange: { (e: ChangeEvent<any>): void; <T = string | ChangeEvent<any>>(field: T): T extends ChangeEvent<any> ? void : (e: string | ChangeEvent<any>) => void; };
     as: string;
   }
@@ -55,16 +64,13 @@ interface LocalControllerProps {
   
   export const DropdownFieldController: React.FC<SelectControllerProps> = ({
     name,
-    defaultValue,
     onChange,
     placeholder,
     as,
     ...selectProps
   }) => {
-    const [selectedValue, setSelectedValue] = useState(defaultValue || '');
   
     const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-      setSelectedValue(event.target.value);
       onChange(event);
     };
   
@@ -72,15 +78,16 @@ interface LocalControllerProps {
       <>
         <div className="field">
           <select
-            className='gender'
+            className="gender"
             name={name}
-            value={selectedValue}
             onChange={handleChange}
             {...selectProps}
           >
             <option value="">{placeholder}</option>
             {dropdown.map(option => (
-              <option key={option.value} value={option.value}>{option.key}</option>
+              <option key={option.value} value={option.value}>
+                {option.key}
+              </option>
             ))}
           </select>
         </div>
@@ -90,3 +97,4 @@ interface LocalControllerProps {
       </>
     );
   };
+  

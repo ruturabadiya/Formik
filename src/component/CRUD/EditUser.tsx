@@ -90,16 +90,13 @@ const Update = () => {
                 onChange={handleChange}
                 placeholder="Enter your Date of Birth"
               />
-
-<DropdownFieldController
-  name="gender"
-  onChange={handleChange}
-  as="select"
-  placeholder="Select your Gender"
-  defaultValue={userData.gender} // Set the initial value from userData
-/>
-
-
+              <DropdownFieldController
+                name="gender"
+                onChange={handleChange}
+                as="select"
+                placeholder="Select your Gender"
+                defaultValue={userData.gender}
+              />
               <TextFieldController
                 name="password"
                 type="password"
