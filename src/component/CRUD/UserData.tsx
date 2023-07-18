@@ -17,11 +17,11 @@ const List = () => {
   const [sortOrder, setSortOrder] = useState("");
 
   const handleAddClick = () => {
-    navigate("/add");
+    navigate("/addedit");
   };
 
   const handleEditClick = (id: number) => {
-    navigate(`/update/${id}`);
+    navigate(`/addedit/${id}`);
   };
 
   const handleDeleteClick = (user: IData) => {
@@ -70,7 +70,7 @@ const List = () => {
   };
 
   const sortedUsers = [...USERS];
-  sortedUsers.sort((a: IData, b: IData) => {
+  sortedUsers.sort((a: any, b: any) => {
     const dateA = new Date(a[sortBy]);
     const dateB = new Date(b[sortBy]);
 

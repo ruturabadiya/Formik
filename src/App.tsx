@@ -1,8 +1,7 @@
 import React from 'react';
 import './App.css';
-import Form from './component/CRUD/UserData';
-import AddUser from './component/CRUD/AddUser';
-import EditUser from './component/CRUD/EditUser';
+import List from './component/CRUD/UserData';
+import AddEditUser from './component/CRUD/AddEditUser';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
@@ -12,9 +11,9 @@ function App() {
       <header className="App-header">
         <Router>
           <Routes>
-            <Route path="/" element={<Form />} />
-            <Route path="/add" element={<AddUser />} />
-            <Route path="/update/:id" element={<EditUser />} />
+            <Route path="/" element={<List />} />
+            <Route path="/addedit" element={<AddEditUser />} />
+            <Route path="/addedit/:id" element={<AddEditUser />} />
           </Routes>
         </Router>
       </header>

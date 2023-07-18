@@ -1,19 +1,8 @@
-import React, { ChangeEvent, SelectHTMLAttributes } from 'react';
+import React, { ChangeEvent, SelectHTMLAttributes ,useRef, useImperativeHandle, forwardRef } from 'react';
 import { Field, ErrorMessage } from 'formik';
 import { TableCell, IconButton } from '@mui/material';
 import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import styled from 'styled-components';
-
-const StyledDemoContainer = styled.div`
-  background: white;
-  margin-top: 6%;
-  width: 100%;
-  margin-left: 0%;
-`;
+import DatePicker from "react-datepicker";
 
 interface LocalControllerProps {
   name: string;
@@ -110,30 +99,49 @@ export const DropdownFieldController: React.FC<SelectControllerProps> = ({
   );
 };
 
+
 interface DateControllerProps {
   name: string;
   placeholder: string;
-  onChange?: (date: Date | null) => void;
+  values: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const DatePickerController: React.FunctionComponent<DateControllerProps> = ({
-  name,
-  placeholder = `enter your ${name}`,
-  onChange,
-}) => {
-  const handleDateChange = (date: Date | null) => {
-    if (onChange) {
-      onChange(date);
+export const CommonDatePicker: React.ForwardRefRenderFunction<any, DateControllerProps> = (
+  { name, placeholder = `Enter your ${name}`, values: IData, onChange },
+  ref
+) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleDateChange = (date: Date) => {
+    const syntheticEvent = {
+      target: {
+        name: "dOB",
+        value: date.toISOString(),
+      },
+    } as React.ChangeEvent<HTMLInputElement>;
+
+    if (inputRef.current) {
+      inputRef.current.value = syntheticEvent.target.value;
     }
+
+    onChange(syntheticEvent);
   };
 
+  useImperativeHandle(ref, () => inputRef.current, [inputRef]);
+
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker']}>
-      <StyledDemoContainer>
-        <DatePicker label={placeholder} onChange={handleDateChange} />
-      </StyledDemoContainer>
-      </DemoContainer>
-    </LocalizationProvider>
+    <div className="form-group">
+      <DatePicker
+        name={name}
+        placeholderText={placeholder}
+        onChange={handleDateChange}
+        selected={IData ? new Date(IData) : null}
+        dateFormat="dd-MM-yyyy"
+        className="form-control"
+      />
+    </div>
   );
 };
+
+export default forwardRef(CommonDatePicker);

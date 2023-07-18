@@ -70,7 +70,7 @@ const List = () => {
   };
 
   const sortedUsers = [...USERS];
-  sortedUsers.sort((a: IData, b: IData) => {
+   sortedUsers.sort((a: any, b: any) => {
     const dateA = new Date(a[sortBy]);
     const dateB = new Date(b[sortBy]);
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Formik } from "formik";
 import { IData } from "../../InterFace/commonInterface";
 import { dataValidation } from "../../validate/validation";
-import { TextFieldController, DropdownFieldController } from "../common/TextFieldControl/TextFieldControl";
+import { TextFieldController, DropdownFieldController ,CommonDatePicker} from "../common/TextFieldControl/TextFieldControl";
 import { USERS } from "../user";
 import { useNavigate } from "react-router-dom";
 import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
@@ -30,18 +30,11 @@ const Add = () => {
       showToastError("This Email Address already exists.");
       resetForm();
     } else {
-      const nextId = USERS.length > 0 ? USERS[USERS.length - 1].id + 1 : 1; 
-
-      const date = new Date(values.dOB);
-      const day = String(date.getDate()).padStart(2, "0");
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = date.getFullYear();
-      const formattedDate = `${day}-${month}-${year}`;
+      const nextId = USERS.length > 0 ? USERS[USERS.length - 1].id + 1 : 1;
 
       const newUser: IData = {
         ...values,
-        id: nextId,
-        dOB: formattedDate
+        id: nextId
       };
 
       USERS.push(newUser);
@@ -82,18 +75,11 @@ const Add = () => {
                 onChange={handleChange}
                 placeholder="Enter your Email Address"
               />
-              <div className="form-group">
-              <DatePicker
+             {/* <CommonDatePicker
   name="dOB"
-  placeholderText="Enter your Date of Birth"
-  onChange={(date: Date) => {
-    handleChange({ target: { name: "dOB", value: date } });
-  }}
-  selected={values.dOB ? new Date(values.dOB) : null}
-  dateFormat="dd-MM-yyyy"
-  className="form-control"
-/>
-              </div>
+  placeholder="Enter your Date of Birth"
+  onChange={handleChange}
+/> */}
               <DropdownFieldController
                 name="gender"
                 onChange={handleChange}
