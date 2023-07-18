@@ -128,7 +128,7 @@ const List = () => {
                       <TableCell align="left">{data.id}</TableCell>
                       <TableCell align="left">{data.firstName} {data.lastName}</TableCell>
                       <TableCell align="left">{data.emailAddress}</TableCell>
-                      <TableCell align="left">{data.dOB}</TableCell>
+                      <TableCell align="left">{data.dOB.toString()}</TableCell>
                       <TableCell align="left">{data.gender}</TableCell>
                       <TableCell align="left">{data.password}</TableCell>
                       <TableCell align="left">

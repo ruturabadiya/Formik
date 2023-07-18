@@ -1,8 +1,8 @@
-import React, { ChangeEvent, SelectHTMLAttributes ,useRef, useImperativeHandle, forwardRef } from 'react';
+import React, { ChangeEvent, SelectHTMLAttributes} from 'react';
 import { Field, ErrorMessage } from 'formik';
 import { TableCell, IconButton } from '@mui/material';
 import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
-import DatePicker from "react-datepicker";
+
 
 interface LocalControllerProps {
   name: string;
@@ -100,48 +100,3 @@ export const DropdownFieldController: React.FC<SelectControllerProps> = ({
 };
 
 
-interface DateControllerProps {
-  name: string;
-  placeholder: string;
-  values: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-export const CommonDatePicker: React.ForwardRefRenderFunction<any, DateControllerProps> = (
-  { name, placeholder = `Enter your ${name}`, values: IData, onChange },
-  ref
-) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleDateChange = (date: Date) => {
-    const syntheticEvent = {
-      target: {
-        name: "dOB",
-        value: date.toISOString(),
-      },
-    } as React.ChangeEvent<HTMLInputElement>;
-
-    if (inputRef.current) {
-      inputRef.current.value = syntheticEvent.target.value;
-    }
-
-    onChange(syntheticEvent);
-  };
-
-  useImperativeHandle(ref, () => inputRef.current, [inputRef]);
-
-  return (
-    <div className="form-group">
-      <DatePicker
-        name={name}
-        placeholderText={placeholder}
-        onChange={handleDateChange}
-        selected={IData ? new Date(IData) : null}
-        dateFormat="dd-MM-yyyy"
-        className="form-control"
-      />
-    </div>
-  );
-};
-
-export default forwardRef(CommonDatePicker);

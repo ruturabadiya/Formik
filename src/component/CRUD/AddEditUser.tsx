@@ -13,7 +13,7 @@ const AddEditUser = () => {
     firstName: "",
     lastName: "",
     emailAddress: "",
-    dOB: "",
+    dOB: new Date(),
     gender: "",
     password: "",
     cPassword: ""

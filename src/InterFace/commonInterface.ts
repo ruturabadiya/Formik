@@ -3,9 +3,8 @@ export interface IData{
     firstName: string;
     lastName: string;
     emailAddress: string;
-    dOB: string;
+    dOB: Date;
     gender:string;
     password: string;
     cPassword: string;
-    // [key: string]: any;
 }
