@@ -7,6 +7,7 @@ import { TextFieldController, DropdownFieldController } from "../common/TextFiel
 import { USERS } from "../user";
 
 import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
+import { DatePickerController } from "../common/TextFieldControl/DatePickerControl";
 
 const EditUser = () => {
   const { id } = useParams<{ id: string | undefined }>();
@@ -21,35 +22,30 @@ const EditUser = () => {
   }, [id, navigate]);
 
   const onSubmit = (values: IData) => {
-    // if (values.emailAddress !== userData?.emailAddress) {
-    //   const emailExists = USERS.some(
-    //     (user) =>
-    //       user.emailAddress === values.emailAddress
-    //   );
-    //   if (emailExists) {
-    //     showToastError("Entered email address already exists.");
-    //     return;
-    //   }
-    // }
+    if (values.emailAddress !== userData?.emailAddress) {
+      const emailExists = USERS.some(
+        (user) =>
+          user.emailAddress === values.emailAddress
+      );
+      if (emailExists) {
+        showToastError("Entered email address already exists.");
+        return;
+      }
+    }
 
-    // const date = new Date(values.dOB);
-    // const day = String(date.getDate()).padStart(2, "0");
-    // const month = String(date.getMonth() + 1).padStart(2, "0");
-    // const year = date.getFullYear();
-    // const formattedDate = `${day}-${month}-${year}`;
-    // const updatedUser = { ...values, dOB: formattedDate };
+    const updatedUser = { ...values};
 
-    // if (values.id) {
-    //   const index = USERS.findIndex((user) => user.id === values.id);
-    //   USERS[index] = updatedUser
-    // }
-    // else {
-    //   USERS.push(updatedUser);
-    // }
-    // showToastSuccess("User updated successfully");
-    // setTimeout(() => {
-    //   navigate("/");
-    // }, 2000);
+    if (values.id) {
+      const index = USERS.findIndex((user) => user.id === values.id);
+      USERS[index] = updatedUser
+    }
+    else {
+      USERS.push(updatedUser);
+    }
+    showToastSuccess("User updated successfully");
+    setTimeout(() => {
+      navigate("/");
+    }, 2000);
   };
 
   const handleCancel = () => {
@@ -83,12 +79,11 @@ const EditUser = () => {
                 onChange={handleChange}
                 placeholder="Enter your Email Address"
               />
-              <TextFieldController
-                name="dOB"
-                type="date"
-                onChange={handleChange}
-                placeholder="Enter your Date of Birth"
-              />
+              <DatePickerController
+              name="dOB"
+              onChange={handleChange}
+              placeholder="Enter your Date of Birth"
+            />
               <DropdownFieldController
                 name="gender"
                 onChange={handleChange}
@@ -127,7 +122,3 @@ const EditUser = () => {
 
 export default EditUser;
 
-const formatDate = (dateString: string): string => {
-  const [year, month, day] = dateString.split("-");
-  return `${day}-${month}-${year}`;
-};

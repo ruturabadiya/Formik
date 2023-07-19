@@ -6,6 +6,7 @@ import { dataValidation } from "../../validate/validation";
 import { TextFieldController, DropdownFieldController } from "../common/TextFieldControl/TextFieldControl";
 import { USERS } from "../user";
 import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
+import { DatePickerController } from "../common/TextFieldControl/DatePickerControl";
 
 const AddEditUser = () => {
   const initialValues: IData = {
@@ -31,7 +32,7 @@ const AddEditUser = () => {
       setUserData(foundUser);
     }
   });
-console.log(userData)
+
   const onSubmit = (values: IData) => {
     const emailExists = USERS.some((user) => user.emailAddress === values.emailAddress);
     if (emailExists && (!isEditing || (isEditing && values.emailAddress !== userData!.emailAddress))) {
@@ -69,7 +70,7 @@ console.log(userData)
 
   return (
     <div className="content">
-       <Formik
+      <Formik
         initialValues={userData}
         validationSchema={dataValidation}
         enableReinitialize={true}
@@ -92,19 +93,17 @@ console.log(userData)
               onChange={handleChange}
               placeholder="Enter your Email Address"
             />
-            <TextFieldController
+            <DatePickerController
               name="dOB"
-              type="date"
               onChange={handleChange}
               placeholder="Enter your Date of Birth"
             />
-           <DropdownFieldController
-                name="gender"
-                onChange={handleChange}
-                as="select"
-                placeholder="Select your Gender"
-                defaultValue={userData.gender}
-              />
+            <DropdownFieldController
+              name="gender"
+              onChange={handleChange}
+              as="select"
+              placeholder="Select your Gender"
+            />
             <TextFieldController
               name="password"
               type="password"
