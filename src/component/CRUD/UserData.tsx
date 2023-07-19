@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+// useedata : 19-7-2023
+
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, TablePagination } from "@mui/material";
 import { USERS } from "../user";
@@ -12,9 +14,23 @@ const List = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [userToDelete, setUserToDelete] = useState<IData | null>(null);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(6);
+  const [rowsPerPage, setRowsPerPage] = useState(2);
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState<IData[]>([]);
+
+  useEffect(() => {
+    const filtered = USERS.filter((user) => {
+      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+      const emailAddress = user.emailAddress.toLowerCase();
+      const gender = user.gender;
+      const password = user.password.toLowerCase();
+      return fullName.includes(searchQuery.toLowerCase()) || emailAddress.includes(searchQuery.toLowerCase()) ||
+             gender.includes(searchQuery) || password.includes(searchQuery.toLowerCase());
+    });
+    setFilteredUsers(filtered);
+  }, [searchQuery, USERS]);
 
   const handleAddClick = () => {
     navigate("/addedit");
@@ -29,23 +45,60 @@ const List = () => {
     setShowDeleteConfirmation(true);
   };
 
-  const handleDeleteConfirm = () => {
-    if (userToDelete) {
-      const index = USERS.findIndex((user) => user.id === userToDelete.id);
-      if (index !== -1) {
-        USERS.splice(index, 1);
+  // const handleDeleteConfirm = () => {
+  //   if (userToDelete) {
+  //     const index = USERS.findIndex((user) => user.id === userToDelete.id);
+  //     if (index !== -1) {
+  //       USERS.splice(index, 1);
 
-        if (page > 0 && USERS.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length === 0) {
-          setPage(page - 1);
-        } else if (index >= page * rowsPerPage && index < (page + 1) * rowsPerPage) {
-          setPage(page);
+  //       if (page > 0 && USERS.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length === 0) {
+  //         setPage(page - 1);
+  //       } else if (index >= page * rowsPerPage && index < (page + 1) * rowsPerPage) {
+  //         setPage(page);
+  //       }
+  //     }
+  //     showToastSuccess("deleted");
+  //     setUserToDelete(null);
+  //     setShowDeleteConfirmation(false);
+  //   }
+  // };
+
+  const handleDeleteConfirm = () => {
+      if (userToDelete) {
+        const index = USERS.findIndex((user) => user.id === userToDelete.id);
+        if (index !== -1) {
+          USERS.splice(index, 1);
+    
+          const filtered = USERS.filter((user) => {
+            const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+            const emailAddress = user.emailAddress.toLowerCase();
+            return (
+              fullName.includes(searchQuery.toLowerCase()) ||
+              emailAddress.includes(searchQuery.toLowerCase())
+            );
+          });
+          setFilteredUsers(filtered);
+    
+          if (filtered.length === 0) {
+            setPage(0);
+          } else if (
+            page > 0 &&
+            filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .length === 0
+          ) {
+            setPage(page - 1);
+          } else if (
+            index >= page * rowsPerPage &&
+            index < (page + 1) * rowsPerPage
+          ) {
+            setPage(page);
+          }
         }
+        showToastSuccess("deleted");
+        setUserToDelete(null);
+        setShowDeleteConfirmation(false);
       }
-      showToastSuccess("deleted");
-      setUserToDelete(null);
-      setShowDeleteConfirmation(false);
-    }
-  };
+    };
 
   const handleDeleteCancel = () => {
     setShowDeleteConfirmation(false);
@@ -69,7 +122,7 @@ const List = () => {
     }
   };
 
-  const sortedUsers = [...USERS];
+  const sortedUsers = [...filteredUsers];
   sortedUsers.sort((a: any, b: any) => {
     const dateA = new Date(a[sortBy]);
     const dateB = new Date(b[sortBy]);
@@ -96,13 +149,27 @@ const List = () => {
     if (a[sortBy] > b[sortBy]) {
       return sortOrder === "asc" ? 1 : -1;
     }
-    
+
     return 0;
   });
 
+  const handleSearchQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const highlightSearchQuery = (text: string, searchQuery: string): string => {
+    const regex = new RegExp(searchQuery, "gi");
+    return text.replace(regex, (match: string) => `<mark>${match}</mark>`);
+  };
 
   return (
     <>
+    <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchQueryChange}
+          placeholder="Search..."
+        />
       <div className="table">
         <div className="add">
           <input className="Addbutton" type="submit" value="+  Add" onClick={handleAddClick} />
@@ -121,16 +188,16 @@ const List = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {USERS.length > 0 ? (
+              {filteredUsers.length > 0 ? (
                 (rowsPerPage > 0 ? sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : sortedUsers).map(
                   (data) => (
                     <TableRow key={data.id}>
                       <TableCell align="left">{data.id}</TableCell>
-                      <TableCell align="left">{data.firstName} {data.lastName}</TableCell>
-                      <TableCell align="left">{data.emailAddress}</TableCell>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(`${data.firstName} ${data.lastName}`, searchQuery) }}></TableCell>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.emailAddress, searchQuery) }}></TableCell>
                       <TableCell align="left">{data.dOB.toString()}</TableCell>
-                      <TableCell align="left">{data.gender}</TableCell>
-                      <TableCell align="left">{data.password}</TableCell>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.gender, searchQuery) }}></TableCell>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.password, searchQuery) }}></TableCell>
                       <TableCell align="left">
                         <Button variant="outlined" onClick={() => handleEditClick(data.id)}>
                           Edit
@@ -152,9 +219,9 @@ const List = () => {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[6, 12, 18]}
+          rowsPerPageOptions={[2, 4, 6]}
           component="div"
-          count={USERS.length}
+          count={filteredUsers.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
