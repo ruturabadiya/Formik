@@ -1,4 +1,4 @@
-import React, { ChangeEvent, SelectHTMLAttributes} from 'react';
+import React from 'react';
 import { Field, ErrorMessage } from 'formik';
 import { TableCell, IconButton } from '@mui/material';
 import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
@@ -50,53 +50,4 @@ export const TableLabel: React.FC<TableControllerProps> = ({
     )}
   </TableCell>
 );
-
-
-interface SelectControllerProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange'> {
-  name: string;
-  onChange: { (e: ChangeEvent<any>): void; <T = string | ChangeEvent<any>>(field: T): T extends ChangeEvent<any> ? void : (e: string | ChangeEvent<any>) => void; };
-  as: string;
-}
-
-const dropdown = [
-  { key: 'male', value: 'Male' },
-  { key: 'female', value: 'Female' }
-];
-
-export const DropdownFieldController: React.FC<SelectControllerProps> = ({
-  name,
-  onChange,
-  placeholder,
-  as,
-  ...selectProps
-}) => {
-
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    onChange(event);
-  };
-
-  return (
-    <>
-      <div className="field">
-        <select
-          className="gender"
-          name={name}
-          onChange={handleChange}
-          {...selectProps}
-        >
-          <option value="">{placeholder}</option>
-          {dropdown.map(option => (
-            <option key={option.value} value={option.value}>
-              {option.key}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="row p-0 m-0 w-100">
-        <ErrorMessage name={name} component="div" className="text-danger" />
-      </div>
-    </>
-  );
-};
-
 

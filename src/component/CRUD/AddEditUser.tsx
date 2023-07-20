@@ -3,10 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import { IData } from "../../InterFace/commonInterface";
 import { dataValidation } from "../../validate/validation";
-import { TextFieldController, DropdownFieldController } from "../common/TextFieldControl/TextFieldControl";
+import { TextFieldController} from "../common/CommonController/TextFieldControl";
 import { USERS } from "../user";
 import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
-import { DatePickerController } from "../common/TextFieldControl/DatePickerControl";
+import { DatePickerController } from "../common/CommonController/DatePickerControl";
+import { DropdownFieldController } from "../common/CommonController/SelectDropDownControl";
 
 const AddEditUser = () => {
   const initialValues: IData = {
@@ -33,10 +34,11 @@ const AddEditUser = () => {
     }
   });
 
-  const onSubmit = (values: IData) => {
+  const onSubmit = (values: IData,{resetForm}:{resetForm: () => void }) => {
     const emailExists = USERS.some((user) => user.emailAddress === values.emailAddress);
     if (emailExists && (!isEditing || (isEditing && values.emailAddress !== userData!.emailAddress))) {
       showToastError("This Email Address already exists.");
+      resetForm();
       return;
     }
 
@@ -56,6 +58,7 @@ const AddEditUser = () => {
       };
 
       USERS.push(newUser);
+      resetForm();
       showToastSuccess("User added successfully");
     }
 

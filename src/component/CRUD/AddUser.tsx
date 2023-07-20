@@ -2,11 +2,12 @@ import React from "react";
 import { Formik, ErrorMessage, Field } from "formik";
 import { IData } from "../../InterFace/commonInterface";
 import { dataValidation } from "../../validate/validation";
-import { TextFieldController, DropdownFieldController } from "../common/TextFieldControl/TextFieldControl";
+import { TextFieldController } from "../common/CommonController/TextFieldControl";
 import { USERS } from "../user";
 import { useNavigate } from "react-router-dom";
 import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
-import { DatePickerController } from "../common/TextFieldControl/DatePickerControl";
+import { DatePickerController } from "../common/CommonController/DatePickerControl";
+import { DropdownFieldController } from "../common/CommonController/SelectDropDownControl";
 
 const Add = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const Add = () => {
       showToastError("This Email Address already exists.");
       resetForm();
     } else {
-      const nextId = USERS.length > 0 ? USERS[USERS.length - 1].id + 1 : 1; 
+      const nextId = USERS.length > 0 ? USERS[USERS.length - 1].id + 1 : 1;
       const newUser: IData = {
         ...values,
         id: nextId,
@@ -73,14 +74,13 @@ const Add = () => {
                 onChange={handleChange}
                 placeholder="Enter your Email Address"
               />
-             <DatePickerController
-              name="dOB"
-              onChange={handleChange}
-              placeholder="Enter your Date of Birth"
-            />
+              <DatePickerController
+                name="dOB"
+                onChange={handleChange}
+                placeholder="Enter your Date of Birth"
+              />
               <DropdownFieldController
                 name="gender"
-                defaultValue="plz select gender"
                 onChange={handleChange}
                 as="select"
                 placeholder="Select your Gender"

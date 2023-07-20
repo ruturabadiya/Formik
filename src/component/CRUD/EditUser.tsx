@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Formik } from "formik";
+import { Formik, Field } from "formik";
 import { IData } from "../../InterFace/commonInterface";
 import { dataValidation } from "../../validate/validation";
-import { TextFieldController, DropdownFieldController } from "../common/TextFieldControl/TextFieldControl";
+import { TextFieldController } from "../common/CommonController/TextFieldControl";
 import { USERS } from "../user";
 
 import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
-import { DatePickerController } from "../common/TextFieldControl/DatePickerControl";
+import { DatePickerController } from "../common/CommonController/DatePickerControl";
+import { DropdownFieldController } from "../common/CommonController/SelectDropDownControl";
 
 const EditUser = () => {
   const { id } = useParams<{ id: string | undefined }>();
@@ -33,7 +34,7 @@ const EditUser = () => {
       }
     }
 
-    const updatedUser = { ...values};
+    const updatedUser = { ...values };
 
     if (values.id) {
       const index = USERS.findIndex((user) => user.id === values.id);
@@ -80,16 +81,15 @@ const EditUser = () => {
                 placeholder="Enter your Email Address"
               />
               <DatePickerController
-              name="dOB"
-              onChange={handleChange}
-              placeholder="Enter your Date of Birth"
-            />
+                name="dOB"
+                onChange={handleChange}
+                placeholder="Enter your Date of Birth"
+              />
               <DropdownFieldController
                 name="gender"
                 onChange={handleChange}
                 as="select"
                 placeholder="Select your Gender"
-                defaultValue={userData.gender}
               />
               <TextFieldController
                 name="password"

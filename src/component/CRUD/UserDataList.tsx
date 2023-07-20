@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, TablePagination } from "@mui/material";
 import { USERS } from "../user";
-import { TableLabel } from "../common/TextFieldControl/TextFieldControl";
+import { TableLabel } from "../common/CommonController/TextFieldControl";
 import DeleteUser from "./DeleteUser";
 import { IData } from "../../InterFace/commonInterface";
 import { showToastSuccess } from "../../Toast/toastUtils";
@@ -74,7 +74,7 @@ const List = () => {
           setPage(page);
         }
       }
-      showToastSuccess("deleted");
+      showToastSuccess('User deleted successfully!');
       setUserToDelete(null);
       setShowDeleteConfirmation(false);
     }
@@ -159,7 +159,7 @@ const List = () => {
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
-                <TableLabel name="#"/>
+                <TableLabel name="#" onClick={() => handleSort("id")}/>
                 <TableLabel name="UserName" onClick={() => handleSort("firstName")} active={sortBy === "firstName"} sortOrder={sortOrder} />
                 <TableLabel name="EmailAddress" onClick={() => handleSort("emailAddress")} active={sortBy === "emailAddress"} sortOrder={sortOrder} />
                 <TableLabel name="DOB" onClick={() => handleSort("dOB")} active={sortBy === "dOB"} sortOrder={sortOrder} />

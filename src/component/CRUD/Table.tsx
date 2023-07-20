@@ -179,7 +179,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Button,TablePagination} from "@mui/material";
 import { USERS } from "../user";
-import { TableLabel } from "../common/TextFieldControl/TextFieldControl";
+import { TableLabel } from "../common/CommonController/TextFieldControl";
 import DeleteUser from "./DeleteUser";
 import { IData } from "../../InterFace/commonInterface";
 import { showToastSuccess } from "../../Toast/toastUtils";
