@@ -1,8 +1,5 @@
 import React from 'react';
 import { Field, ErrorMessage } from 'formik';
-import { TableCell, IconButton } from '@mui/material';
-import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
-
 
 interface LocalControllerProps {
   name: string;
@@ -28,26 +25,5 @@ export const TextFieldController: React.FunctionComponent<LocalControllerProps> 
   </>
 );
 
-interface TableControllerProps {
-  name: string;
-  onClick?: () => void;
-  active?: boolean;
-  sortOrder?: "asc" | "desc" | string;
-}
 
-export const TableLabel: React.FC<TableControllerProps> = ({
-  name,
-  onClick,
-  active = true,
-  sortOrder
-}) => (
-  <TableCell align="center" style={{ fontWeight: '800', cursor: 'pointer' }} onClick={onClick}>
-    {name}
-    {active && sortOrder && (
-      <IconButton size="small">
-        {sortOrder === "asc" ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />}
-      </IconButton>
-    )}
-  </TableCell>
-);
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, TablePagination } from "@mui/material";
 import { USERS } from "../user";
-import { TableLabel } from "../common/CommonController/TextFieldControl";
+import { TableLabelControl } from "../common/CommonController/TableLabelControl";
 import DeleteUser from "./DeleteUser";
 import { IData } from "../../InterFace/commonInterface";
 import { showToastSuccess } from "../../Toast/toastUtils";
@@ -17,18 +17,32 @@ const List = () => {
   const [sortOrder, setSortOrder] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<IData[]>([]);
+  const [columnFilters, setColumnFilters] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     const filtered = USERS.filter((user) => {
-      return `${user.firstName} ${user.lastName}`.includes(searchQuery.toLowerCase()) || 
-        user.emailAddress.includes(searchQuery.toLowerCase()) || 
-        user.dOB.toString().includes(searchQuery.toString()) ||
-        user.gender.includes(searchQuery) || 
-        user.password.includes(searchQuery.toString());
+      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+      const emailAddress = user.emailAddress.toLowerCase();
+
+      // Check global search query
+      const globalSearchMatch =
+        fullName.includes(searchQuery.toLowerCase()) ||
+        emailAddress.includes(searchQuery.toLowerCase());
+
+      // Check column filters (if any)
+      const columnFilterMatch = Object.keys(columnFilters).every((column) => {
+        const value = columnFilters[column].toLowerCase();
+        return (
+          (user as any)[column as keyof IData]?.toString().toLowerCase().includes(value) ||
+          (user as any)[column as keyof IData]?.toString().toLowerCase().includes(value)
+        );
+      });
+
+      return globalSearchMatch && columnFilterMatch;
     });
+
     setFilteredUsers(filtered);
-    
-  },[searchQuery, USERS]);
+  }, [searchQuery, columnFilters, USERS]);
 
   const handleAddClick = () => {
     navigate("/addedit");
@@ -143,6 +157,12 @@ const List = () => {
     return text.replace(regex, (match: string) => `<mark>${match}</mark>`);
   };
 
+  const handleColumnFilterChange = (column: string, value: string) => {
+    // Update column filters
+    setColumnFilters((prevFilters) => ({ ...prevFilters, [column]: value }));
+    setPage(0); // Reset page when column filter changes
+  };
+
   return (
     <>
       <div className="table">
@@ -153,19 +173,39 @@ const List = () => {
             onChange={handleSearchQueryChange}
             placeholder="Search..."
           />
+            {/* <input
+            type="text"
+            value={columnFilters["firstName"] || ""}
+            onChange={(e) => handleColumnFilterChange("firstName", e.target.value)}
+            placeholder="Filter by First Name"
+          /> */}
           <input className="Addbutton" type="submit" value="+  Add" onClick={handleAddClick} />
         </div>
         <TableContainer>
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
-                <TableLabel name="#" onClick={() => handleSort("id")}/>
-                <TableLabel name="UserName" onClick={() => handleSort("firstName")} active={sortBy === "firstName"} sortOrder={sortOrder} />
-                <TableLabel name="EmailAddress" onClick={() => handleSort("emailAddress")} active={sortBy === "emailAddress"} sortOrder={sortOrder} />
-                <TableLabel name="DOB" onClick={() => handleSort("dOB")} active={sortBy === "dOB"} sortOrder={sortOrder} />
-                <TableLabel name="Gender" onClick={() => handleSort("gender")} active={sortBy === "gender"} sortOrder={sortOrder} />
-                <TableLabel name="Password" onClick={() => handleSort("password")} active={sortBy === "password"} sortOrder={sortOrder} />
-                <TableLabel name="Action" />
+                <TableLabelControl name="#" onClick={() => handleSort("id")} active={sortBy === "id"} sortOrder={sortOrder} />
+                <TableLabelControl
+                  name="UserName"
+                  onClick={() => handleSort("firstName")}
+                  active={sortBy === "firstName"}
+                  sortOrder={sortOrder}
+                  filterValue={columnFilters["firstName"] || ""} // Pass filterValue
+                  onFilterChange={(value) => handleColumnFilterChange("firstName", value)} // Pass onFilterChange
+                />
+                <TableLabelControl name="EmailAddress" onClick={() => handleSort("emailAddress")} active={sortBy === "emailAddress"} sortOrder={sortOrder} 
+                filterValue={columnFilters["emailAddress"] || ""} // Pass filterValue
+                onFilterChange={(value) => handleColumnFilterChange("emailAddress", value)}/>
+                <TableLabelControl name="DOB" onClick={() => handleSort("dOB")} active={sortBy === "dOB"} sortOrder={sortOrder} 
+                filterValue={columnFilters["dOB"] || ""} // Pass filterValue
+                onFilterChange={(value) => handleColumnFilterChange("dOB", value)}/>
+                <TableLabelControl name="Gender" onClick={() => handleSort("gender")} active={sortBy === "gender"} sortOrder={sortOrder} 
+                filterValue={columnFilters["gender"] || ""} // Pass filterValue
+                onFilterChange={(value) => handleColumnFilterChange("gender", value)}/>
+                <TableLabelControl name="Password" onClick={() => handleSort("password")} active={sortBy === "password"} sortOrder={sortOrder} 
+                filterValue={columnFilters["password"] || ""} // Pass filterValue
+                onFilterChange={(value) => handleColumnFilterChange("password", value)}/>
               </TableRow>
             </TableHead>
             <TableBody>
