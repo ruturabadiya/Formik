@@ -13,6 +13,8 @@
   }
 }
 
+@import url("https://cdn.syncfusion.com/ej2/material.css");
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

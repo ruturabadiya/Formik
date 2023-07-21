@@ -21,20 +21,21 @@ const List = () => {
 
   useEffect(() => {
     const filtered = USERS.filter((user) => {
-      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-      const emailAddress = user.emailAddress.toLowerCase();
 
       // Check global search query
       const globalSearchMatch =
-        fullName.includes(searchQuery.toLowerCase()) ||
-        emailAddress.includes(searchQuery.toLowerCase());
+        `${user.firstName} ${user.lastName}`.includes(searchQuery.toLowerCase()) ||
+        user.emailAddress.includes(searchQuery.toLowerCase()) ||
+        user.dOB.toDateString().includes(searchQuery) ||
+        user.gender.includes(searchQuery.toString()) ||
+        user.password.includes(searchQuery.toString());
 
       // Check column filters (if any)
       const columnFilterMatch = Object.keys(columnFilters).every((column) => {
         const value = columnFilters[column].toLowerCase();
         return (
-          (user as any)[column as keyof IData]?.toString().toLowerCase().includes(value) ||
-          (user as any)[column as keyof IData]?.toString().toLowerCase().includes(value)
+          (user as any)[column]?.toString().toLowerCase().includes(value) ||
+          (user as any)[column]?.toString().toLowerCase().includes(value)
         );
       });
 
@@ -152,10 +153,17 @@ const List = () => {
     setPage(0);
   };
 
-  const highlightSearchQuery = (text: string, searchQuery: string): string => {
-    const regex = new RegExp(searchQuery, "gi");
-    return text.replace(regex, (match: string) => `<mark>${match}</mark>`);
+
+  const highlightSearchQuery1 = (text: string, columnFilter: string): string => {
+
+    if (columnFilter) {
+      const regexFilter = new RegExp(columnFilter, 'gi');
+      text = text.replace(regexFilter, (match: string) => `<mark>${match}</mark>`);
+    }
+
+    return text;
   };
+
 
   const handleColumnFilterChange = (column: string, value: string) => {
     // Update column filters
@@ -173,12 +181,6 @@ const List = () => {
             onChange={handleSearchQueryChange}
             placeholder="Search..."
           />
-            {/* <input
-            type="text"
-            value={columnFilters["firstName"] || ""}
-            onChange={(e) => handleColumnFilterChange("firstName", e.target.value)}
-            placeholder="Filter by First Name"
-          /> */}
           <input className="Addbutton" type="submit" value="+  Add" onClick={handleAddClick} />
         </div>
         <TableContainer>
@@ -191,21 +193,41 @@ const List = () => {
                   onClick={() => handleSort("firstName")}
                   active={sortBy === "firstName"}
                   sortOrder={sortOrder}
-                  filterValue={columnFilters["firstName"] || ""} // Pass filterValue
+                  filterValue={columnFilters["firstName" || 'lastName'] || ""} // Pass filterValue
                   onFilterChange={(value) => handleColumnFilterChange("firstName", value)} // Pass onFilterChange
                 />
-                <TableLabelControl name="EmailAddress" onClick={() => handleSort("emailAddress")} active={sortBy === "emailAddress"} sortOrder={sortOrder} 
-                filterValue={columnFilters["emailAddress"] || ""} // Pass filterValue
-                onFilterChange={(value) => handleColumnFilterChange("emailAddress", value)}/>
-                <TableLabelControl name="DOB" onClick={() => handleSort("dOB")} active={sortBy === "dOB"} sortOrder={sortOrder} 
-                filterValue={columnFilters["dOB"] || ""} // Pass filterValue
-                onFilterChange={(value) => handleColumnFilterChange("dOB", value)}/>
-                <TableLabelControl name="Gender" onClick={() => handleSort("gender")} active={sortBy === "gender"} sortOrder={sortOrder} 
-                filterValue={columnFilters["gender"] || ""} // Pass filterValue
-                onFilterChange={(value) => handleColumnFilterChange("gender", value)}/>
-                <TableLabelControl name="Password" onClick={() => handleSort("password")} active={sortBy === "password"} sortOrder={sortOrder} 
-                filterValue={columnFilters["password"] || ""} // Pass filterValue
-                onFilterChange={(value) => handleColumnFilterChange("password", value)}/>
+                <TableLabelControl
+                  name="EmailAddress"
+                  onClick={() => handleSort("emailAddress")}
+                  active={sortBy === "emailAddress"}
+                  sortOrder={sortOrder}
+                  filterValue={columnFilters["emailAddress"] || ""} // Pass filterValue
+                  onFilterChange={(value) => handleColumnFilterChange("emailAddress", value)}
+                />
+                <TableLabelControl
+                  name="DOB"
+                  onClick={() => handleSort("dOB")}
+                  active={sortBy === "dOB"}
+                  sortOrder={sortOrder}
+                  filterValue={columnFilters["dOB"] || ""} // Pass filterValue
+                  onFilterChange={(value) => handleColumnFilterChange("dOB", value)}
+                />
+                <TableLabelControl
+                  name="Gender"
+                  onClick={() => handleSort("gender")}
+                  active={sortBy === "gender"}
+                  sortOrder={sortOrder}
+                  filterValue={columnFilters["gender"] || ""} // Pass filterValue
+                  onFilterChange={(value) => handleColumnFilterChange("gender", value)}
+                />
+                <TableLabelControl
+                  name="Password"
+                  onClick={() => handleSort("password")}
+                  active={sortBy === "password"}
+                  sortOrder={sortOrder}
+                  filterValue={columnFilters["password"] || ""} // Pass filterValue
+                  onFilterChange={(value) => handleColumnFilterChange("password", value)}
+                />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -214,11 +236,17 @@ const List = () => {
                   (data) => (
                     <TableRow key={data.id}>
                       <TableCell align="left">{data.id}</TableCell>
-                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(`${data.firstName} ${data.lastName}`, searchQuery) }}></TableCell>
-                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.emailAddress, searchQuery) }}></TableCell>
-                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.dOB.toDateString(), searchQuery) }}></TableCell>
-                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.gender, searchQuery) }}></TableCell>
-                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.password, searchQuery) }}></TableCell>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(`${data.firstName} ${data.lastName}`, columnFilters["firstName"]) }}>
+                      </TableCell>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(data.emailAddress, columnFilters["emailAddress"]) }}>
+                      </TableCell>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(data.dOB.toLocaleDateString(), columnFilters["dOB"]) }}>
+                      </TableCell>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(data.gender, columnFilters["gender"]) }}>
+                      </TableCell>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(data.password, columnFilters["password"]) }}>
+                      </TableCell>
+
                       <TableCell align="left">
                         <Button variant="outlined" onClick={() => handleEditClick(data.id)}>
                           Edit
@@ -233,7 +261,7 @@ const List = () => {
                 )
               ) : (
                 <TableRow>
-                  <TableCell  colSpan={7}>No Data available</TableCell>
+                  <TableCell colSpan={7}>No Data available</TableCell>
                 </TableRow>
               )}
             </TableBody>
