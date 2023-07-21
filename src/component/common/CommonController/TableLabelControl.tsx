@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent } from 'react';
 import { TableCell, IconButton, TextField as MuiTextField } from '@mui/material';
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -22,8 +22,8 @@ export const TableLabelControl: React.FC<TableControllerProps> = ({
 }) => {
 
   return (
-    <TableCell align="center" style={{ fontWeight: '800', cursor: 'pointer' }} onClick={onClick}>
-  <div style={{ display: 'flex', alignItems: 'center' }}>
+    <TableCell align="center" style={{ fontWeight: '800', cursor: 'pointer' }}>
+  <div style={{ display: 'flex', alignItems: 'center' }} onClick={onClick}>
     <div>{name}</div>
     {active && sortOrder && (
       <IconButton size="small">
