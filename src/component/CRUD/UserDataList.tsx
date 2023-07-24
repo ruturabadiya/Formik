@@ -1,58 +1,83 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, TablePagination } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+  TablePagination,
+} from "@mui/material";
 import { USERS } from "../user";
 import { TableFilterControl, TableSortControl } from "../common/CommonController/TableSortFilterControl";
 import DeleteUser from "./DeleteUser";
 import { showToastSuccess } from "../../Toast/toastUtils";
 import { DateRangeFilterControl } from "../common/CommonController/DateRangePicker";
 import { IData } from "../../InterFace/commonInterface";
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import { DropdownFilterControl } from "../common/CommonController/DropDownFilterControl";
+
+interface DropdownOption {
+  value: string;
+  label: string;
+}
 
 const List = () => {
   const navigate = useNavigate();
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [userToDelete, setUserToDelete] = useState<IData | null>(null);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(2);
+  const [rowsPerPage, setRowsPerPage] = useState(6);
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<IData[]>([]);
   const [columnFilters, setColumnFilters] = useState<{ [key: string]: string }>({});
+  const [genderFilter, setGenderFilter] = useState<string>(""); // New state to hold the selected gender filter
 
   useEffect(() => {
     const filtered = USERS.filter((user) => {
-      // Check global search query
       const globalSearchMatch =
         `${user.firstName} ${user.lastName}`.includes(searchQuery.toLowerCase()) ||
         user.emailAddress.includes(searchQuery.toLowerCase()) ||
         user.gender.includes(searchQuery.toString()) ||
         user.password.includes(searchQuery.toString());
-  
-      // Check column filters (if any)
-      const columnFilterMatch = Object.keys(columnFilters).every((column) => {
+
+      const columnFiltersMatch = Object.keys(columnFilters).every((column) => {
         if (column === "dOB" && columnFilters[column] !== "") {
           const [startDateStr, endDateStr] = columnFilters[column].split(",");
           const startDate = dayjs(startDateStr, "DD-MM-YYYY");
           const endDate = dayjs(endDateStr, "DD-MM-YYYY");
           const userDOB = dayjs(user.dOB);
-          return userDOB.isBefore(endDate) && userDOB.isAfter(startDate); // Use isBefore and isAfter here
+          return userDOB.isBefore(endDate) && userDOB.isAfter(startDate);
         }
-  
+
+        if (column === "firstName" || column === "lastName") {
+          const firstNameValue = columnFilters["firstName"] || "";
+          const lastNameValue = columnFilters["lastName"] || "";
+          const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+          return fullName.includes(firstNameValue) && fullName.includes(lastNameValue);
+        }
+
         const value = columnFilters[column].toLowerCase();
         return (
           (user as any)[column]?.toString().toLowerCase().includes(value) ||
-          (user as any)[column]?.toString().toLowerCase().includes(value)
+          (user as any)[column]?.toString().toUpperCase().includes(value)
         );
       });
-  
-      return globalSearchMatch && columnFilterMatch;
+
+      // Include genderFilterMatch in the filtering logic
+      const genderFilterMatch =
+        !genderFilter || user.gender.toLowerCase() === genderFilter.toLowerCase();
+
+      return globalSearchMatch && columnFiltersMatch && genderFilterMatch;
     });
-  
+
     setFilteredUsers(filtered);
-  }, [searchQuery, columnFilters, USERS]);
-  
+  }, [searchQuery, columnFilters, genderFilter, USERS]);
+
 
   const handleAddClick = () => {
     navigate("/add");
@@ -121,8 +146,11 @@ const List = () => {
   };
 
   const handleColumnFilterChange = (column: string, value: string) => {
-    // Update column filters
-    setColumnFilters((prevFilters) => ({ ...prevFilters, [column]: value }));
+    if (column === "gender") {
+      setGenderFilter(value); // Update genderFilter state with the selected value
+    } else {
+      setColumnFilters((prevFilters) => ({ ...prevFilters, [column]: value }));
+    }
     setPage(0);
   };
 
@@ -157,15 +185,11 @@ const List = () => {
     return 0;
   });
 
-  const [filterValue, setFilterValue] = React.useState('');
-
-  // Callback function to handle filter changes
-  const handleFilterChange = (column: string, value: string) => {
-    // Update column filters
-    setColumnFilters((prevFilters) => ({ ...prevFilters, [column]: value }));
-    setPage(0);
-  };
-  
+  const genderOptions: DropdownOption[] = [
+    { value: "", label: "All" }, // Include an option to show all genders
+    { value: "male", label: "Male" },
+    { value: "female", label: "Female" },
+  ];
 
   return (
     <>
@@ -219,8 +243,8 @@ const List = () => {
                 <TableCell />
                 <TableFilterControl
                   name="FirstName"
-                  filterValue={columnFilters["firstName" || 'lastName'] || ""}
-                  onFilterChange={(value) => handleColumnFilterChange("firstName", value)}
+                  filterValue={columnFilters["firstName" || "lastName"] || ""}
+                  onFilterChange={(value) => handleColumnFilterChange("firstName" || "lastName", value)}
                 />
                 <TableFilterControl
                   name="emailAddress"
@@ -228,18 +252,25 @@ const List = () => {
                   onFilterChange={(value) => handleColumnFilterChange("emailAddress", value)}
                 />
                 <TableCell className="rangePicker">
-  <DateRangeFilterControl
-    name="DOB"
-    filterValue={columnFilters["dOB"] || ""}
-    onFilterChange={(value) => handleFilterChange("dOB", value)} // Pass the correct column name here
-  />
-</TableCell>
-
-                <TableFilterControl
-                  name="gender"
-                  filterValue={columnFilters["gender"] || ""}
-                  onFilterChange={(value) => handleColumnFilterChange("gender", value)}
-                />
+                  <DateRangeFilterControl
+                    name="DOB"
+                    filterValue={columnFilters["dOB"] || ""}
+                    onFilterChange={(value) => handleColumnFilterChange("dOB", value)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <DropdownFilterControl
+                    name="gender"
+                    filterValue={genderFilter}
+                    onFilterChange={(value) => handleColumnFilterChange("gender", value)}
+                    select={true}
+                    selectOptions={[
+                      { value: "", label: "All" },
+                      { value: "male", label: "Male" },
+                      { value: "female", label: "Female" },
+                    ]}
+                  />
+                </TableCell>
                 <TableFilterControl
                   name="password"
                   filterValue={columnFilters["password"] || ""}
@@ -284,7 +315,7 @@ const List = () => {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[2, 4, 6]}
+          rowsPerPageOptions={[6, 12, 15]}
           component="div"
           count={filteredUsers.length}
           rowsPerPage={rowsPerPage}
