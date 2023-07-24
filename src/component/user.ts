@@ -14,7 +14,7 @@ export const USERS =[
         firstName:"test",
         lastName:"test",
         emailAddress:"rutu@gmail.com",
-        dOB: new Date("01-12-2001"), 
+        dOB: new Date("12-23-2001"), 
         gender: "Male",
         password: "Test7834",
         cPassword: "Test7834",
