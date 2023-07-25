@@ -32,35 +32,37 @@ const List = () => {
   const [filteredUsers, setFilteredUsers] = useState<IData[]>([]);
   const [columnFilters, setColumnFilters] = useState<{ [key: string]: string }>({});
   const [genderFilter, setGenderFilter] = useState<string>(""); // New state to hold the selected gender filter
+  const [mutableUsers, setMutableUsers] = useState(USERS);
 
   useEffect(() => {
-    const filtered = USERS.filter((user) => {
+    const filterUsers = () => {
+    const filtered = mutableUsers.filter((user) => {
       const globalSearchMatch =
         `${user.firstName} ${user.lastName}`.includes(searchQuery.toLowerCase()) ||
         user.emailAddress.includes(searchQuery.toLowerCase()) ||
         user.gender.includes(searchQuery.toString()) ||
         user.password.includes(searchQuery.toString());
 
-      const columnFiltersMatch = Object.keys(columnFilters).every((column) => {
-        if (column === "dOB" && columnFilters[column] !== "") {
-          const [startDateStr, endDateStr] = columnFilters[column].split(",");
+      const columnFiltersMatch = Object.keys(columnFilters).every((columnName) => {
+        if (columnName === "dOB" && columnFilters[columnName] !== "") {
+          const [startDateStr, endDateStr] = columnFilters[columnName].split(",");
           const startDate = dayjs(startDateStr, "DD-MM-YYYY");
           const endDate = dayjs(endDateStr, "DD-MM-YYYY");
           const userDOB = dayjs(user.dOB);
           return userDOB.isBefore(endDate) && userDOB.isAfter(startDate);
         }
 
-        if (column === "firstName" || column === "lastName") {
+        if (columnName === "firstName" || columnName === "lastName") {
           const firstNameValue = columnFilters["firstName"] || "";
           const lastNameValue = columnFilters["lastName"] || "";
           const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
           return fullName.includes(firstNameValue) && fullName.includes(lastNameValue);
         }
 
-        const value = columnFilters[column].toLowerCase();
+        const value = columnFilters[columnName].toLowerCase();
         return (
-          (user as any)[column]?.toString().toLowerCase().includes(value) ||
-          (user as any)[column]?.toString().toUpperCase().includes(value)
+          (user as any)[columnName]?.toString().toLowerCase().includes(value) ||
+          (user as any)[columnName]?.toString().toUpperCase().includes(value)
         );
       });
 
@@ -72,8 +74,9 @@ const List = () => {
     });
 
     setFilteredUsers(filtered);
-  }, [searchQuery, columnFilters, genderFilter, USERS]);
-
+  }
+  filterUsers();
+  }, [searchQuery, columnFilters, genderFilter, mutableUsers]);
 
   const handleAddClick = () => {
     navigate("/add");
@@ -88,18 +91,38 @@ const List = () => {
     setShowDeleteConfirmation(true);
   };
 
+  // const handleDeleteConfirm1 = () => {
+  //   if (userToDelete) {
+  //     const index = USERS.findIndex((user) => user.id === userToDelete.id);
+  //     if (index !== -1) {
+  //       USERS.splice(index, 1);
+
+  //       if (page > 0 && USERS.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length === 0) {
+  //         setPage(page - 1);
+  //       } else if (index >= page * rowsPerPage && index < (page + 1) * rowsPerPage) {
+  //         setPage(page);
+  //       }
+  //     }
+  //     showToastSuccess('deleted');
+  //     setUserToDelete(null);
+  //     setShowDeleteConfirmation(false);
+  //   }
+  // };
+
   const handleDeleteConfirm = () => {
     if (userToDelete) {
-      const index = USERS.findIndex((user) => user.id === userToDelete.id);
+      const index = mutableUsers.findIndex((user) => user.id === userToDelete.id);
       if (index !== -1) {
-        USERS.splice(index, 1);
-
-        if (page > 0 && USERS.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length === 0) {
-          setPage(page - 1);
-        } else if (index >= page * rowsPerPage && index < (page + 1) * rowsPerPage) {
-          setPage(page);
-        }
+        mutableUsers.splice(index, 1);
       }
+
+      // Update the filteredUsers state after deletion
+      setFilteredUsers([...mutableUsers]);
+
+      if (page > 0 && mutableUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length === 0) {
+        setPage(page - 1);
+      }
+
       showToastSuccess('deleted');
       setUserToDelete(null);
       setShowDeleteConfirmation(false);
@@ -141,11 +164,11 @@ const List = () => {
     setPage(0);
   };
 
-  const handleColumnFilterChange = (column: string, value: string) => {
-    if (column === "gender") {
+  const handleColumnFilterChange = (columnName: string, value: string) => {
+    if (columnName === "gender") {
       setGenderFilter(value); // Update genderFilter state with the selected value
     } else {
-      setColumnFilters((prevFilters) => ({ ...prevFilters, [column]: value }));
+      setColumnFilters((prevFilters) => ({ ...prevFilters, [columnName]: value }));
     }
     setPage(0);
   };
@@ -185,7 +208,6 @@ const List = () => {
     setColumnFilters({});
     setGenderFilter("");
     setSearchQuery("");
-    // Clear sorting
    // setSortBy("");
   //  setSortOrder("");
   };
@@ -239,6 +261,8 @@ const List = () => {
                   active={sortBy === "password"}
                   sortOrder={sortOrder}
                 />
+                <TableSortControl name="Actions"/>
+
               </TableRow>
               <TableRow>
                 <TableCell />
@@ -290,14 +314,14 @@ const List = () => {
                       </TableCell>
                       <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.emailAddress, columnFilters["emailAddress"]) }}>
                       </TableCell>
-                      <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.dOB.toLocaleDateString(), columnFilters["dOB"]) }}>
+                      <TableCell align="center" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.dOB.toLocaleDateString(), columnFilters["dOB"]) }}>
                       </TableCell>
-                      <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.gender, columnFilters["gender"]) }}>
+                      <TableCell align="center" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.gender, columnFilters["gender"]) }}>
                       </TableCell>
                       <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.password, columnFilters["password"]) }}>
                       </TableCell>
-                      <TableCell align="left">
-                        <Button variant="outlined" onClick={() => handleEditClick(data.id)}>
+                      <TableCell align="left" style={{width: "18%"}}>
+                        <Button variant="outlined" onClick={() => handleEditClick(data.id)} style={{marginLeft: "-84%"}}>
                           Edit
                         </Button>
                         &nbsp;

@@ -7,48 +7,42 @@ import { DateRange, DateRangePicker } from '@mui/x-date-pickers-pro';
 
 
 interface DateRangeFilterControlProps {
-    filterValue?: string; // New prop for filtering
-    onFilterChange?: (value: string) => void; // Callback for filtering
+    filterValue?: string; 
+    onFilterChange?: (value: string) => void; 
   }
   export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
-      filterValue,
-      onFilterChange,
-    }) => {
-      const [selectedRange, setSelectedRange] = React.useState<DateRange<Dayjs>>()
+    filterValue,
+    onFilterChange,
+  }) => {
+    const [selectedRange, setSelectedRange] = React.useState<DateRange<Dayjs> | null>(null);
   
-      const handleDateChange = (date: DateRange<Dayjs>) => {
-        setSelectedRange(date);
-    
-        // Convert the selected date range to a string format that suits your data needs
-        const formattedDateRange = `${date[0]!.format('DD-MM-YYYY')},${date[1]!.format('DD-MM-YYYY')}`;
-    
-        // Call the onFilterChange callback to update the filter value in the parent component
-        if (onFilterChange) {
-          onFilterChange(formattedDateRange);
-        }
-      };
+    const handleDateChange = (date: DateRange<Dayjs>) => {
+      setSelectedRange(date);
   
-      return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div  style={{
-          marginLeft: "-29%",
-          width: "207px",
-         }}>
-      <DemoContainer
-        components={[
-          'DateRangePicker',
-        ]}
-      >
-        <div className='dateRange'>
-        <DemoItem  component="DateRangePicker">
-          <DateRangePicker
-            onChange={handleDateChange}
-            value={selectedRange}
-          />
-        </DemoItem>
+      // Convert the selected date range to a string format that suits your data needs
+      const formattedDateRange = `${date[0]?.format('DD-MM-YYYY')},${date[1]?.format('DD-MM-YYYY')}`;
+  
+      // Call the onFilterChange callback to update the filter value in the parent component
+      if (onFilterChange) {
+        onFilterChange(formattedDateRange);
+      }
+    };
+  
+    return (
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <div style={{ marginLeft: "-3%", width: "269px" }}>
+          <DemoContainer components={['DateRangePicker']}>
+            <div className='dateRange'>
+              <DemoItem component="DateRangePicker">
+                <DateRangePicker
+                  onChange={handleDateChange}
+                  value={selectedRange || [null, null]} 
+                />
+              </DemoItem>
+            </div>
+          </DemoContainer>
         </div>
-      </DemoContainer>
-      </div>
-    </LocalizationProvider>
-  );
-}
+      </LocalizationProvider>
+    );
+  };
+  

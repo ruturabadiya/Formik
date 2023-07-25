@@ -33,8 +33,8 @@ export const TableSortControl: React.FC<TableSortControlProps> = ({
 
 interface TableFilterControlProps {
   name: string;
-  filterValue?: string; // New prop for filtering
-  onFilterChange?: (value: string) => void; // Callback for filtering
+  filterValue?: string;  
+  onFilterChange?: (value: string) => void; 
 }
 
 export const TableFilterControl: React.FC<TableFilterControlProps> = ({
@@ -49,10 +49,10 @@ export const TableFilterControl: React.FC<TableFilterControlProps> = ({
           variant="outlined"
           size="small"
           value={filterValue}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => onFilterChange && onFilterChange(e.target.value)} // Specify the type of 'e'
-          placeholder={`Filter ${name}`}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => onFilterChange && onFilterChange(e.target.value)} 
+          placeholder={`${name}`}
           style={{ marginTop: 8,  marginLeft: "-48%",
-            width:" 61%"}}
+          width: "76%"}}
         />
       )}
     </TableCell>
