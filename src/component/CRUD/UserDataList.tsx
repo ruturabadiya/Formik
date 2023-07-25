@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Button,
-  TablePagination,
-} from "@mui/material";
+import {Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Button,TablePagination} from "@mui/material";
 import { USERS } from "../user";
 import { TableFilterControl, TableSortControl } from "../common/CommonController/TableSortFilterControl";
 import DeleteUser from "./DeleteUser";
@@ -19,10 +10,6 @@ import { IData } from "../../InterFace/commonInterface";
 import dayjs from 'dayjs';
 import { DropdownFilterControl } from "../common/CommonController/DropDownFilterControl";
 
-interface DropdownOption {
-  value: string;
-  label: string;
-}
 
 const List = () => {
   const navigate = useNavigate();
@@ -132,7 +119,7 @@ const List = () => {
     }
   };
 
-  const highlightSearchQuery1 = (text: string, columnFilter: string): string => {
+  const highlightSearchQuery = (text: string, columnFilter: string): string => {
     if (columnFilter) {
       const regexFilter = new RegExp(columnFilter, 'gi');
       text = text.replace(regexFilter, (match: string) => `<mark>${match}</mark>`);
@@ -185,11 +172,6 @@ const List = () => {
     return 0;
   });
 
-  const genderOptions: DropdownOption[] = [
-    { value: "", label: "All" }, // Include an option to show all genders
-    { value: "male", label: "Male" },
-    { value: "female", label: "Female" },
-  ];
 
   return (
     <>
@@ -252,8 +234,7 @@ const List = () => {
                   onFilterChange={(value) => handleColumnFilterChange("emailAddress", value)}
                 />
                 <TableCell className="rangePicker">
-                  <DateRangeFilterControl
-                    name="DOB"
+                  <DateRangeFilterControl                   
                     filterValue={columnFilters["dOB"] || ""}
                     onFilterChange={(value) => handleColumnFilterChange("dOB", value)}
                   />
@@ -284,15 +265,15 @@ const List = () => {
                   (data) => (
                     <TableRow key={data.id}>
                       <TableCell align="left">{data.id}</TableCell>
-                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(`${data.firstName} ${data.lastName}`, columnFilters["firstName"]) }}>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(`${data.firstName} ${data.lastName}`, columnFilters["firstName"]) }}>
                       </TableCell>
-                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(data.emailAddress, columnFilters["emailAddress"]) }}>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.emailAddress, columnFilters["emailAddress"]) }}>
                       </TableCell>
-                      <TableCell align="center" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(data.dOB.toLocaleDateString(), columnFilters["dOB"]) }}>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.dOB.toLocaleDateString(), columnFilters["dOB"]) }}>
                       </TableCell>
-                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(data.gender, columnFilters["gender"]) }}>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.gender, columnFilters["gender"]) }}>
                       </TableCell>
-                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(data.password, columnFilters["password"]) }}>
+                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.password, columnFilters["password"]) }}>
                       </TableCell>
                       <TableCell align="left">
                         <Button variant="outlined" onClick={() => handleEditClick(data.id)}>

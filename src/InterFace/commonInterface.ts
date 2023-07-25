@@ -7,6 +7,5 @@ export interface IData {
     gender: string;
     password: string;
     cPassword: string;
-    [key: string]: string | number | Date; 
   }
   

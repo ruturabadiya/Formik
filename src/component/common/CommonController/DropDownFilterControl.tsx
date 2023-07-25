@@ -32,7 +32,7 @@ interface DropdownOption {
           name={name}
           value={filterValue}
           onChange={handleSelectChange}
-          style={{width: "100%",
+          style={{width: "40%",
             height: "5vh"}}
         >
           {selectOptions.map((option) => (
@@ -50,7 +50,6 @@ interface DropdownOption {
       <input
         type="text"
         className="filter-input"
-        placeholder={`Filter ${name}`}
         value={filterValue}
         onChange={(e) => onFilterChange(e.target.value)}
       />

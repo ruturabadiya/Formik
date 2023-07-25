@@ -1,27 +1,20 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRange, DateRangePicker } from '@mui/x-date-pickers-pro';
-import { LicenseInfo } from '@mui/x-license-pro';
 
-LicenseInfo.setLicenseKey('');
 
 interface DateRangeFilterControlProps {
-    name: string;
     filterValue?: string; // New prop for filtering
     onFilterChange?: (value: string) => void; // Callback for filtering
   }
   export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
-      name,
       filterValue,
       onFilterChange,
     }) => {
-      const [selectedRange, setSelectedRange] = React.useState<DateRange<Dayjs>>([
-        filterValue ? dayjs(filterValue.split(',')[0]) : dayjs('2001-01-01'),
-        filterValue ? dayjs(filterValue.split(',')[1]) : dayjs('2023-07-24'),
-      ])
+      const [selectedRange, setSelectedRange] = React.useState<DateRange<Dayjs>>()
   
       const handleDateChange = (date: DateRange<Dayjs>) => {
         setSelectedRange(date);
@@ -37,18 +30,25 @@ interface DateRangeFilterControlProps {
   
       return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div  style={{
+          marginLeft: "-29%",
+          width: "207px",
+         }}>
       <DemoContainer
         components={[
           'DateRangePicker',
         ]}
       >
+        <div className='dateRange'>
         <DemoItem  component="DateRangePicker">
           <DateRangePicker
             onChange={handleDateChange}
             value={selectedRange}
           />
         </DemoItem>
+        </div>
       </DemoContainer>
+      </div>
     </LocalizationProvider>
   );
 }

@@ -19,17 +19,13 @@ import { IData } from "../../InterFace/commonInterface";
 import dayjs from 'dayjs';
 import { DropdownFilterControl } from "../common/CommonController/DropDownFilterControl";
 
-interface DropdownOption {
-  value: string;
-  label: string;
-}
 
 const List = () => {
   const navigate = useNavigate();
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [userToDelete, setUserToDelete] = useState<IData | null>(null);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(6);
+  const [rowsPerPage, setRowsPerPage] = useState(3);
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -123,16 +119,16 @@ const List = () => {
     setPage(0);
   };
 
-  const handleSort = (column: string) => {
-    if (sortBy === column) {
+  const handleSort = (columnName: string) => {
+    if (sortBy === columnName) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
-      setSortBy(column);
+      setSortBy(columnName);
       setSortOrder("asc");
     }
   };
 
-  const highlightSearchQuery1 = (text: string, columnFilter: string): string => {
+  const highlightSearchQuery = (text: string, columnFilter: string): string => {
     if (columnFilter) {
       const regexFilter = new RegExp(columnFilter, 'gi');
       text = text.replace(regexFilter, (match: string) => `<mark>${match}</mark>`);
@@ -185,11 +181,15 @@ const List = () => {
     return 0;
   });
 
-  const genderOptions: DropdownOption[] = [
-    { value: "", label: "All" }, // Include an option to show all genders
-    { value: "male", label: "Male" },
-    { value: "female", label: "Female" },
-  ];
+  const handleClearAllFilters = () => {
+    setColumnFilters({});
+    setGenderFilter("");
+    setSearchQuery("");
+    // Clear sorting
+   // setSortBy("");
+  //  setSortOrder("");
+  };
+  
 
   return (
     <>
@@ -207,7 +207,7 @@ const List = () => {
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
-                <TableSortControl name="#" onClick={() => handleSort("id")} active={sortBy === "id"} sortOrder={sortOrder} />
+                <TableSortControl name="#" onClick={() => handleSort("id")} active={sortBy === "id"} sortOrder={sortOrder} style={{width: "4%"}} />
                 <TableSortControl
                   name="UserName"
                   onClick={() => handleSort("firstName")}
@@ -225,6 +225,7 @@ const List = () => {
                   onClick={() => handleSort("dOB")}
                   active={sortBy === "dOB"}
                   sortOrder={sortOrder}
+                  style={{marginLeft: "112px"}}
                 />
                 <TableSortControl
                   name="Gender"
@@ -251,9 +252,8 @@ const List = () => {
                   filterValue={columnFilters["emailAddress"] || ""}
                   onFilterChange={(value) => handleColumnFilterChange("emailAddress", value)}
                 />
-                <TableCell className="rangePicker">
-                  <DateRangeFilterControl
-                    name="DOB"
+                <TableCell className="rangePicker" style={{marginLeft: "112px"}}>
+                  <DateRangeFilterControl 
                     filterValue={columnFilters["dOB"] || ""}
                     onFilterChange={(value) => handleColumnFilterChange("dOB", value)}
                   />
@@ -276,6 +276,8 @@ const List = () => {
                   filterValue={columnFilters["password"] || ""}
                   onFilterChange={(value) => handleColumnFilterChange("password", value)}
                 />
+                <TableCell>
+                <button onClick={handleClearAllFilters}>Clear All</button> </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -283,16 +285,16 @@ const List = () => {
                 (rowsPerPage > 0 ? sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : sortedUsers).map(
                   (data) => (
                     <TableRow key={data.id}>
-                      <TableCell align="left">{data.id}</TableCell>
-                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(`${data.firstName} ${data.lastName}`, columnFilters["firstName"]) }}>
+                      <TableCell align="left" style={{width:'1%'}}>{data.id}</TableCell>
+                      <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(`${data.firstName} ${data.lastName}`, columnFilters["firstName"]) }}>
                       </TableCell>
-                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(data.emailAddress, columnFilters["emailAddress"]) }}>
+                      <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.emailAddress, columnFilters["emailAddress"]) }}>
                       </TableCell>
-                      <TableCell align="center" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(data.dOB.toLocaleDateString(), columnFilters["dOB"]) }}>
+                      <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.dOB.toLocaleDateString(), columnFilters["dOB"]) }}>
                       </TableCell>
-                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(data.gender, columnFilters["gender"]) }}>
+                      <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.gender, columnFilters["gender"]) }}>
                       </TableCell>
-                      <TableCell align="left" dangerouslySetInnerHTML={{ __html: highlightSearchQuery1(data.password, columnFilters["password"]) }}>
+                      <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.password, columnFilters["password"]) }}>
                       </TableCell>
                       <TableCell align="left">
                         <Button variant="outlined" onClick={() => handleEditClick(data.id)}>
@@ -315,7 +317,7 @@ const List = () => {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[6, 12, 15]}
+          rowsPerPageOptions={[3, 6, 9]}
           component="div"
           count={filteredUsers.length}
           rowsPerPage={rowsPerPage}
