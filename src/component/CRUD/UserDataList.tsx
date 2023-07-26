@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Button,TablePagination} from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, TablePagination } from "@mui/material";
 import { USERS } from "../user";
 import { TableFilterControl, TableSortControl } from "../common/CommonController/TableSortFilterControl";
 import DeleteUser from "./DeleteUser";
@@ -10,7 +10,9 @@ import { IData } from "../../InterFace/commonInterface";
 import dayjs, { Dayjs } from 'dayjs';
 import { DropdownFilterControl } from "../common/CommonController/DropDownFilterControl";
 import { StartDateFilterControl } from "../common/CommonController/StartDateControl";
-import { selectOptions } from "../common/CommonController/DropDownOptions";
+import { formatDate, selectOptions } from "../common/CommonController/Common";
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { format } from "date-fns";
 
 
 const List = () => {
@@ -34,11 +36,13 @@ const List = () => {
   useEffect(() => {
 
     const filtered = mutableUsers.filter((user) => {
+      const searchQueryLower = searchQuery.toLowerCase(); // Convert search query to lowercase
+
       const globalSearchMatch =
-        `${user.firstName} ${user.lastName}`.includes(searchQuery.toLowerCase()) ||
-        user.emailAddress.includes(searchQuery.toLowerCase()) ||
-        user.gender.includes(searchQuery.toString()) ||
-        user.password.includes(searchQuery.toString());
+        `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`.includes(searchQueryLower) ||
+        user.emailAddress.toLowerCase().includes(searchQueryLower) ||
+        user.gender.toLowerCase().includes(searchQueryLower) ||
+        user.password.includes(searchQuery);
 
       const columnFiltersMatch = Object.keys(columnFilters).every((columnName) => {
         if (columnName === "dOB" && columnFilters[columnName] !== "") {
@@ -56,15 +60,14 @@ const List = () => {
           return fullName.includes(firstNameValue) && fullName.includes(lastNameValue);
         }
 
-        const value = columnFilters[columnName].toLowerCase();
+        const value = columnFilters[columnName];
         return (
-          (user as any)[columnName]?.toString().toLowerCase().includes(value) ||
-          (user as any)[columnName]?.toString().toUpperCase().includes(value)
+          (user as any)[columnName]?.toString().includes(value) ||
+          (user as any)[columnName]?.toString().includes(value)
         );
       });
-
       const genderFilterMatch =
-        !genderFilter || user.gender.toLowerCase() === genderFilter.toLowerCase();
+        !genderFilter || user.gender === genderFilter;
 
       return globalSearchMatch && columnFiltersMatch && genderFilterMatch;
     });
@@ -194,9 +197,15 @@ const List = () => {
     setGenderFilter(''); // Clear the filterValue when the clear icon is clicked.
   };
 
-const handleStartDateFilterChange = (date: Dayjs | null) => {
-  setStartDateFilter(date);
-};
+  const handleStartDateFilterChange = (date: Dayjs | null) => {
+    setStartDateFilter(date);
+  };
+
+  const handleRefresh = () => {
+    // Call this function to refresh the page
+    window.location.reload();
+  };
+
   return (
     <>
       <div className="table">
@@ -208,16 +217,17 @@ const handleStartDateFilterChange = (date: Dayjs | null) => {
             onChange={handleSearchQueryChange}
           />
           <input className="Addbutton" type="submit" value="+ Add" onClick={handleAddClick} />
+          <RefreshIcon onClick={handleRefresh} style={{ color: "black", marginLeft: "1040%" }} />
         </div>
         <TableContainer>
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
-                <TableSortControl 
-                  name="#" 
-                  onClick={() => handleSort("id")} 
-                  active={sortBy === "id"} 
-                  sortOrder={sortOrder} style={{width: "4%"}} 
+                <TableSortControl
+                  name="#"
+                  onClick={() => handleSort("id")}
+                  active={sortBy === "id"}
+                  sortOrder={sortOrder} style={{ width: "4%" }}
                 />
                 <TableSortControl
                   name="UserName"
@@ -236,7 +246,7 @@ const handleStartDateFilterChange = (date: Dayjs | null) => {
                   onClick={() => handleSort("dOB")}
                   active={sortBy === "dOB"}
                   sortOrder={sortOrder}
-                  style={{marginLeft: "112px"}}
+                  style={{ marginLeft: "112px" }}
                 />
                 <TableSortControl
                   name="Gender"
@@ -250,37 +260,38 @@ const handleStartDateFilterChange = (date: Dayjs | null) => {
                   active={sortBy === "password"}
                   sortOrder={sortOrder}
                 />
-                <TableSortControl name="Actions"/>
+                <TableSortControl name="Actions" />
               </TableRow>
 
               <TableRow>
                 <TableCell />
                 <TableFilterControl
-                  name="FirstName"
+                  name="first Name"
                   filterValue={columnFilters["firstName" || "lastName"] || ""}
                   onFilterChange={(value) => handleColumnFilterChange("firstName" || "lastName", value)}
                   onClearFilter={() => handleColumnFilterChange("firstName" || "lastName", "")}
                 />
                 <TableFilterControl
-                  name="emailAddress"
+                  name="email Address"
                   filterValue={columnFilters["emailAddress"] || ""}
                   onFilterChange={(value) => handleColumnFilterChange("emailAddress", value)}
-                  onClearFilter={() => handleColumnFilterChange("emailAddress" , "")}
+                  onClearFilter={() => handleColumnFilterChange("emailAddress", "")}
                 />
-                <TableCell className="rangePicker" style={{marginLeft: "112px"}}>
-                  <DateRangeFilterControl 
+                <TableCell className="rangePicker" style={{ marginLeft: "112px" }}>
+                  <DateRangeFilterControl
                     name="dOB"
                     filterValue={columnFilters["dOB"] || ""}
                     onFilterChange={(value) => handleColumnFilterChange("dOB", value)}
                     resetDate={resetDate} // Pass the resetDate prop
                     style={{ height: '1%' }}
+                    onClearFilter={() => handleColumnFilterChange("dOB", "")}
                   />
                   <StartDateFilterControl
                     name="startDateFilter"
                     filterValue={startDateFilter}
                     onFilterChange={handleStartDateFilterChange}
                     resetDate={false}
-                    style={{    marginLeft: "64%"}}
+                   // style={{ marginLeft: "64%" }}
                   />
 
                 </TableCell>
@@ -314,7 +325,7 @@ const handleStartDateFilterChange = (date: Dayjs | null) => {
                       </TableCell>
                       <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.emailAddress, columnFilters["emailAddress"]) }}>
                       </TableCell>
-                      <TableCell  dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.dOB.toLocaleDateString(), columnFilters["dOB"]) }}   style={{textAlign:"center"}}>
+                      <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(formatDate(data.dOB), columnFilters["dOB"]) }} style={{ textAlign: "center" }}>
                       </TableCell>
                       <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.gender, columnFilters["gender"]) }}>
                       </TableCell>

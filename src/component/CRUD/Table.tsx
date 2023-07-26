@@ -284,6 +284,7 @@ const List = () => {
                     filterValue={columnFilters["dOB"] || ""}
                     onFilterChange={(value) => handleColumnFilterChange("dOB", value)}
                     resetDate={resetDate} // Pass the resetDate prop
+                    onClearFilter={() => handleColumnFilterChange("dOB", "")}
                   />
                 </TableCell>
                 <TableCell>

@@ -46,7 +46,7 @@ export const TableFilterControl: React.FC<TableFilterControlProps> = ({
   onClearFilter,
 }) => {
   return (
-    <TableCell align="center" style={{ fontWeight: '800', cursor: 'pointer'}}>
+    <TableCell align="center" style={{ fontWeight: '800', cursor: 'pointer',width: "13%"}}>
 <div>
       {filterValue !== undefined && (
         <MuiTextField
@@ -60,7 +60,7 @@ export const TableFilterControl: React.FC<TableFilterControlProps> = ({
         />
       )}
        {filterValue && (
-      <HighlightOffIcon onClick={() => onClearFilter && onClearFilter()} style={{marginLeft: "4px",marginTop: "8%"}}/>
+      <HighlightOffIcon onClick={onClearFilter} style={{marginLeft: "4px",marginTop: "8%"}}/>
        )}
        {/* <div onClick={() => onClearFilter && onClearFilter()} style={{marginLeft: "81px",marginTop: "-15%"}}>X</div> */}
           </div>

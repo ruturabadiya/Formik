@@ -41,7 +41,7 @@
 
 .table{
   background-color: aliceblue;
-  
+  width: 95%;
 }
 
 .addSearch{
@@ -57,10 +57,10 @@
 }
 
 .Addbutton{
-    margin-left: 1115%;
-    width: 100%;
-    position: absolute;
-    height: 100%;
+  margin-left: 1091%;
+  width: 100%;
+  position: absolute;
+  height: 100%;
 }
 
 .content{
@@ -180,10 +180,20 @@
 .startEndDateBox{
   height: 1.5%;
     position: absolute;
-    width: 200px;
+    width: 294px;
     margin-left: -2%;
 }
 
 .dateText{
   text-align: center;
+}
+
+.dateClear{
+  margin-left: 13%;
+    margin-top: 1%;
+    position: fixed;
+}
+.startDate{
+  margin-left: 137%;
+  margin-top: -13%;
 }

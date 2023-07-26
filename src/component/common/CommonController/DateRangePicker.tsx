@@ -4,7 +4,7 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRange, DateRangePicker } from '@mui/x-date-pickers-pro';
-
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 interface DateRangeFilterControlProps {
   name: string;
@@ -12,12 +12,14 @@ interface DateRangeFilterControlProps {
   onFilterChange?: (value: string) => void;
   resetDate: boolean;
   style?: React.CSSProperties;
+  onClearFilter: () => void;
 }
 export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
   name,
   filterValue,
   onFilterChange,
   resetDate,
+  onClearFilter,
 }) => {
   const [selectedRange, setSelectedRange] = React.useState<DateRange<Dayjs> | undefined>(undefined);
   const [key, setKey] = React.useState<number>(Date.now()); // State to trigger remount
@@ -44,25 +46,46 @@ export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
     }
   };
 
+  const handleClearFilter = () => {
+    setSelectedRange(undefined);
+    setKey(Date.now()); // Trigger remount
+    // Call the onClearFilter callback to notify the parent component of the filter being cleared
+    if (onClearFilter) {
+      onClearFilter();
+    }
+  };
+
   const pickerKey = selectedRange
     ? (selectedRange[0]?.format('DD-MM-YYYY') ?? '') + (selectedRange[1]?.format('DD-MM-YYYY') ?? '')
     : 'empty';
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div style={{ marginLeft: '-3%', width: '269px' }}>
-        <DemoContainer components={['DateRangePicker']}>
-          <DemoItem component='DateRangePicker'>
-            <div className='startEndDateBox'>
-              <DateRangePicker
-                key={pickerKey} // Utilize the key to trigger remount
-                onChange={handleDateChange}
-                value={selectedRange}
-              />
-            </div>
-          </DemoItem>
-        </DemoContainer>
+    <>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <div style={{ marginLeft: '-3%', width: '269px' }}>
+          <DemoContainer components={['DateRangePicker']}>
+            <DemoItem component='DateRangePicker'>
+              <div className='startEndDateBox'>
+                <DateRangePicker
+                  key={key} // Utilize the key to trigger remount
+                  onChange={handleDateChange}
+                  value={selectedRange}
+                />
+              </div>
+            </DemoItem>
+          </DemoContainer>
+        </div>
+      </LocalizationProvider>
+      <div className='dateClear'>
+        <HighlightOffIcon onClick={handleClearFilter} />
       </div>
-    </LocalizationProvider>
+    </>
   );
 };
+
+
+
+
+
+
+

@@ -3,6 +3,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { Stack } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 interface StartDateFilterControlProps {
   name: string;
@@ -10,6 +11,7 @@ interface StartDateFilterControlProps {
   onFilterChange?: (value: Dayjs | null) => void;
   resetDate: boolean;
   style?: React.CSSProperties;
+  onClearFilter?: () => void;
 }
 
 export const StartDateFilterControl: React.FC<StartDateFilterControlProps> = ({
@@ -17,6 +19,7 @@ export const StartDateFilterControl: React.FC<StartDateFilterControlProps> = ({
   filterValue,
   onFilterChange,
   resetDate,
+  onClearFilter,
 }) => {
   const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(filterValue || null);
   const [key, setKey] = React.useState<number>(Date.now()); // State to trigger remount
@@ -39,9 +42,13 @@ export const StartDateFilterControl: React.FC<StartDateFilterControlProps> = ({
   };
 
   return (
+    <>
     <Stack spacing={2}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div style={{    marginLeft: "64%"}}>
+        <div style={{   
+    marginLeft: "83%",
+    width: "52%"
+}}>
         <DatePicker
           key={key} // This key will trigger the remount when resetDate changes
           value={selectedDate}
@@ -56,5 +63,9 @@ export const StartDateFilterControl: React.FC<StartDateFilterControlProps> = ({
         </div>
       </LocalizationProvider>
     </Stack>
+    <div className="startDate">
+    <HighlightOffIcon onClick={() => onClearFilter && onClearFilter()}/>
+    </div>
+    </>
   );
 };
