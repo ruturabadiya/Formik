@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Button,
-  TablePagination,
-} from "@mui/material";
+import {Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Button,TablePagination} from "@mui/material";
 import { USERS } from "../user";
 import { TableFilterControl, TableSortControl } from "../common/CommonController/TableSortFilterControl";
 import DeleteUser from "./DeleteUser";
 import { showToastSuccess } from "../../Toast/toastUtils";
 import { DateRangeFilterControl } from "../common/CommonController/DateRangePicker";
 import { IData } from "../../InterFace/commonInterface";
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { DropdownFilterControl } from "../common/CommonController/DropDownFilterControl";
+import { StartDateFilterControl } from "../common/CommonController/StartDateControl";
+import { selectOptions } from "../common/CommonController/DropDownOptions";
 
 
 const List = () => {
@@ -31,11 +24,15 @@ const List = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<IData[]>([]);
   const [columnFilters, setColumnFilters] = useState<{ [key: string]: string }>({});
-  const [genderFilter, setGenderFilter] = useState<string>(""); // New state to hold the selected gender filter
+  const [genderFilter, setGenderFilter] = useState<string>("");
   const [mutableUsers, setMutableUsers] = useState(USERS);
+  const [filteredData, setFilteredData] = useState(USERS);
+  const [startDateFilter, setStartDateFilter] = useState<Dayjs | null>(null);
+  const [resetDate, setResetDate] = useState(false);
+
 
   useEffect(() => {
-    const filterUsers = () => {
+
     const filtered = mutableUsers.filter((user) => {
       const globalSearchMatch =
         `${user.firstName} ${user.lastName}`.includes(searchQuery.toLowerCase()) ||
@@ -66,7 +63,6 @@ const List = () => {
         );
       });
 
-      // Include genderFilterMatch in the filtering logic
       const genderFilterMatch =
         !genderFilter || user.gender.toLowerCase() === genderFilter.toLowerCase();
 
@@ -74,16 +70,14 @@ const List = () => {
     });
 
     setFilteredUsers(filtered);
-  }
-  filterUsers();
   }, [searchQuery, columnFilters, genderFilter, mutableUsers]);
 
   const handleAddClick = () => {
-    navigate("/add");
+    navigate("/addedit");
   };
 
   const handleEditClick = (id: number) => {
-    navigate(`/edit/${id}`);
+    navigate(`/addedit/${id}`);
   };
 
   const handleDeleteClick = (user: IData) => {
@@ -91,23 +85,6 @@ const List = () => {
     setShowDeleteConfirmation(true);
   };
 
-  // const handleDeleteConfirm1 = () => {
-  //   if (userToDelete) {
-  //     const index = USERS.findIndex((user) => user.id === userToDelete.id);
-  //     if (index !== -1) {
-  //       USERS.splice(index, 1);
-
-  //       if (page > 0 && USERS.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length === 0) {
-  //         setPage(page - 1);
-  //       } else if (index >= page * rowsPerPage && index < (page + 1) * rowsPerPage) {
-  //         setPage(page);
-  //       }
-  //     }
-  //     showToastSuccess('deleted');
-  //     setUserToDelete(null);
-  //     setShowDeleteConfirmation(false);
-  //   }
-  // };
 
   const handleDeleteConfirm = () => {
     if (userToDelete) {
@@ -208,11 +185,18 @@ const List = () => {
     setColumnFilters({});
     setGenderFilter("");
     setSearchQuery("");
-   // setSortBy("");
-  //  setSortOrder("");
+    setResetDate(true); // Request reset of date in DateRangeFilterControl
+    // setSortBy("");
+    // setSortOrder("");
   };
-  
 
+  const handleClearFilter = () => {
+    setGenderFilter(''); // Clear the filterValue when the clear icon is clicked.
+  };
+
+const handleStartDateFilterChange = (date: Dayjs | null) => {
+  setStartDateFilter(date);
+};
   return (
     <>
       <div className="table">
@@ -229,7 +213,12 @@ const List = () => {
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
-                <TableSortControl name="#" onClick={() => handleSort("id")} active={sortBy === "id"} sortOrder={sortOrder} style={{width: "4%"}} />
+                <TableSortControl 
+                  name="#" 
+                  onClick={() => handleSort("id")} 
+                  active={sortBy === "id"} 
+                  sortOrder={sortOrder} style={{width: "4%"}} 
+                />
                 <TableSortControl
                   name="UserName"
                   onClick={() => handleSort("firstName")}
@@ -262,25 +251,38 @@ const List = () => {
                   sortOrder={sortOrder}
                 />
                 <TableSortControl name="Actions"/>
-
               </TableRow>
+
               <TableRow>
                 <TableCell />
                 <TableFilterControl
                   name="FirstName"
                   filterValue={columnFilters["firstName" || "lastName"] || ""}
                   onFilterChange={(value) => handleColumnFilterChange("firstName" || "lastName", value)}
+                  onClearFilter={() => handleColumnFilterChange("firstName" || "lastName", "")}
                 />
                 <TableFilterControl
                   name="emailAddress"
                   filterValue={columnFilters["emailAddress"] || ""}
                   onFilterChange={(value) => handleColumnFilterChange("emailAddress", value)}
+                  onClearFilter={() => handleColumnFilterChange("emailAddress" , "")}
                 />
                 <TableCell className="rangePicker" style={{marginLeft: "112px"}}>
                   <DateRangeFilterControl 
+                    name="dOB"
                     filterValue={columnFilters["dOB"] || ""}
                     onFilterChange={(value) => handleColumnFilterChange("dOB", value)}
+                    resetDate={resetDate} // Pass the resetDate prop
+                    style={{ height: '1%' }}
                   />
+                  <StartDateFilterControl
+                    name="startDateFilter"
+                    filterValue={startDateFilter}
+                    onFilterChange={handleStartDateFilterChange}
+                    resetDate={false}
+                    style={{    marginLeft: "64%"}}
+                  />
+
                 </TableCell>
                 <TableCell>
                   <DropdownFilterControl
@@ -288,20 +290,18 @@ const List = () => {
                     filterValue={genderFilter}
                     onFilterChange={(value) => handleColumnFilterChange("gender", value)}
                     select={true}
-                    selectOptions={[
-                      { value: "", label: "All" },
-                      { value: "male", label: "Male" },
-                      { value: "female", label: "Female" },
-                    ]}
+                    selectOptions={selectOptions}
+                    onClearFilter={handleClearFilter}
                   />
                 </TableCell>
                 <TableFilterControl
                   name="password"
                   filterValue={columnFilters["password"] || ""}
                   onFilterChange={(value) => handleColumnFilterChange("password", value)}
+                  onClearFilter={() => handleColumnFilterChange("password", "")}
                 />
                 <TableCell>
-                <button onClick={handleClearAllFilters}>Clear All</button> </TableCell>
+                  <button onClick={handleClearAllFilters}>Clear All</button> </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -309,19 +309,19 @@ const List = () => {
                 (rowsPerPage > 0 ? sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : sortedUsers).map(
                   (data) => (
                     <TableRow key={data.id}>
-                      <TableCell align="left" style={{width:'1%'}}>{data.id}</TableCell>
-                      <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(`${data.firstName} ${data.lastName}`, columnFilters["firstName"]) }}>
+                      <TableCell >{data.id}</TableCell>
+                      <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(`${data.firstName} ${data.lastName}`, columnFilters["firstName"]) }}>
                       </TableCell>
-                      <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.emailAddress, columnFilters["emailAddress"]) }}>
+                      <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.emailAddress, columnFilters["emailAddress"]) }}>
                       </TableCell>
-                      <TableCell align="center" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.dOB.toLocaleDateString(), columnFilters["dOB"]) }}>
+                      <TableCell  dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.dOB.toLocaleDateString(), columnFilters["dOB"]) }}   style={{textAlign:"center"}}>
                       </TableCell>
-                      <TableCell align="center" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.gender, columnFilters["gender"]) }}>
+                      <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.gender, columnFilters["gender"]) }}>
                       </TableCell>
-                      <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.password, columnFilters["password"]) }}>
+                      <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.password, columnFilters["password"]) }}>
                       </TableCell>
-                      <TableCell align="left" style={{width: "18%"}}>
-                        <Button variant="outlined" onClick={() => handleEditClick(data.id)} style={{marginLeft: "-84%"}}>
+                      <TableCell>
+                        <Button variant="outlined" onClick={() => handleEditClick(data.id)}>
                           Edit
                         </Button>
                         &nbsp;
@@ -334,7 +334,7 @@ const List = () => {
                 )
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7}>No Data available</TableCell>
+                  <TableCell colSpan={7} style={{ width: "116%" }}>No Data available</TableCell>
                 </TableRow>
               )}
             </TableBody>

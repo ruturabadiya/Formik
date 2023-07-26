@@ -204,14 +204,16 @@ const List = () => {
     return 0;
   });
 
+  const [resetDate, setResetDate] = useState(false);
+
   const handleClearAllFilters = () => {
     setColumnFilters({});
     setGenderFilter("");
     setSearchQuery("");
-   // setSortBy("");
-  //  setSortOrder("");
+    setResetDate(true); // Request reset of date in DateRangeFilterControl
+    // setSortBy("");
+    // setSortOrder("");
   };
-  
 
   return (
     <>
@@ -278,12 +280,14 @@ const List = () => {
                 />
                 <TableCell className="rangePicker" style={{marginLeft: "112px"}}>
                   <DateRangeFilterControl 
+                    name="dOB"
                     filterValue={columnFilters["dOB"] || ""}
                     onFilterChange={(value) => handleColumnFilterChange("dOB", value)}
+                    resetDate={resetDate} // Pass the resetDate prop
                   />
                 </TableCell>
                 <TableCell>
-                  <DropdownFilterControl
+                  {/* <DropdownFilterControl
                     name="gender"
                     filterValue={genderFilter}
                     onFilterChange={(value) => handleColumnFilterChange("gender", value)}
@@ -293,7 +297,7 @@ const List = () => {
                       { value: "male", label: "Male" },
                       { value: "female", label: "Female" },
                     ]}
-                  />
+                  /> */}
                 </TableCell>
                 <TableFilterControl
                   name="password"

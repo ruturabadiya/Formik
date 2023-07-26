@@ -18,7 +18,8 @@ export const DropdownFieldController: React.FC<SelectControllerProps> = ({
   as,
 }) => {
   const { setFieldValue, values }: any = useFormikContext();
-  const selectedValue = values ? values[name] : "Select your gender";
+  const selectedValue = values[name] || "Select your gender"; 
+
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const newValue = e.target.value;
     setFieldValue(name, newValue);
