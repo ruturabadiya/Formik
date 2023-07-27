@@ -24,7 +24,7 @@ interface DatePickerControllerProps {
           placeholderText={placeholder}
           selected={selectedDate}
           onChange={(date,e:any) => { setFieldValue(name,date)}}
-          dateFormat="DD-MM-yyyy"
+          dateFormat="dd-MM-yyyy"
           className="form-control"
         />
       </div>

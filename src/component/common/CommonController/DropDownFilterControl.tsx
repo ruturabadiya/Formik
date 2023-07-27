@@ -63,7 +63,7 @@ export const DropdownFilterControl: React.FC<DropdownFilterControlProps> = ({
           style={{
             position: 'absolute',
             top: '64%',
-            right: '-195px',
+            right: ' -52px',
             transform: 'translateY(-50%)',
             cursor: 'pointer',
           }}
@@ -73,3 +73,4 @@ export const DropdownFilterControl: React.FC<DropdownFilterControlProps> = ({
     </div>
   );
 };
+

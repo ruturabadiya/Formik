@@ -7,7 +7,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 interface StartDateFilterControlProps {
   name: string;
-  filterValue?: Dayjs | null;
+  filterValue?: string;
   onFilterChange?: (value: Dayjs | null) => void;
   resetDate: boolean;
   style?: React.CSSProperties;
@@ -21,51 +21,51 @@ export const StartDateFilterControl: React.FC<StartDateFilterControlProps> = ({
   resetDate,
   onClearFilter,
 }) => {
-  const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(filterValue || null);
-  const [key, setKey] = React.useState<number>(Date.now()); // State to trigger remount
+  const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(
+    filterValue ? dayjs(filterValue) : null
+  );
 
-  // Effect to handle resetting date when parent requests resetDate
   React.useEffect(() => {
     if (resetDate) {
       setSelectedDate(null);
-      setKey(Date.now()); // Trigger remount
     }
   }, [resetDate]);
 
+  React.useEffect(() => {
+    setSelectedDate(filterValue ? dayjs(filterValue) : null);
+  }, [filterValue]);
+
   const handleDateChange = (date: Dayjs | null) => {
     setSelectedDate(date);
-
-    // Call the onFilterChange callback to update the filter value in the parent component
     if (onFilterChange) {
       onFilterChange(date);
     }
   };
 
+  const handleClearFilter = () => {
+    setSelectedDate(null);
+    if (onClearFilter) {
+      onClearFilter();
+    }
+  };
+
   return (
     <>
-    <Stack spacing={2}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div style={{   
-    marginLeft: "83%",
-    width: "52%"
-}}>
-        <DatePicker
-          key={key} // This key will trigger the remount when resetDate changes
-          value={selectedDate}
-          onChange={(newValue, context) => {
-            if (context.validationError == null) {
-              handleDateChange(newValue);
-            }
-          }}
-          minDate={dayjs('2022-01-01')}
-          maxDate={dayjs('2022-12-31')}
-        />
-        </div>
-      </LocalizationProvider>
-    </Stack>
-    <div className="startDate">
-    <HighlightOffIcon onClick={() => onClearFilter && onClearFilter()}/>
-    </div>
+      <Stack spacing={2}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <div style={{ marginLeft: "56%", width: "35%" }}>
+            <DatePicker
+              value={selectedDate}
+              onChange={(date) => {
+                handleDateChange(date); // Pass the date argument to handleDateChange
+              }}
+            />
+          </div>
+        </LocalizationProvider>
+      </Stack>
+      <div className="startDate">
+        <HighlightOffIcon onClick={handleClearFilter} />
+      </div>
     </>
   );
 };

@@ -176,7 +176,7 @@
 .rangePicker{
   width: 20%;
 }
-
+/* 
 .startEndDateBox{
   height: 1.5%;
     position: absolute;
@@ -196,4 +196,27 @@
 .startDate{
   margin-left: 137%;
   margin-top: -13%;
+} */
+
+		
+.startEndDateBox {
+  height: 1.5%;
+  position: absolute;
+  width: 294px;
+  margin-left: -2%;
+  margin-top: -4.5px;
+}
+.dateText{
+  text-align: center;
+}
+
+.dateClear{
+  margin-left: 13%;
+    margin-top: 1%;
+    position: absolute;
+}
+.startDate {
+  
+  margin-left: 93%;
+  margin-top: -7%;
 }

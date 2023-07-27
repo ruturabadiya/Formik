@@ -12,7 +12,6 @@ import { DropdownFilterControl } from "../common/CommonController/DropDownFilter
 import { StartDateFilterControl } from "../common/CommonController/StartDateControl";
 import { formatDate, selectOptions } from "../common/CommonController/Common";
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { format } from "date-fns";
 
 
 const List = () => {
@@ -28,7 +27,6 @@ const List = () => {
   const [columnFilters, setColumnFilters] = useState<{ [key: string]: string }>({});
   const [genderFilter, setGenderFilter] = useState<string>("");
   const [mutableUsers, setMutableUsers] = useState(USERS);
-  const [filteredData, setFilteredData] = useState(USERS);
   const [startDateFilter, setStartDateFilter] = useState<Dayjs | null>(null);
   const [resetDate, setResetDate] = useState(false);
 
@@ -69,11 +67,18 @@ const List = () => {
       const genderFilterMatch =
         !genderFilter || user.gender === genderFilter;
 
+
+      if (startDateFilter) {
+        const userDOB = dayjs(user.dOB);
+        return userDOB.isAfter(startDateFilter);
+      }
+
       return globalSearchMatch && columnFiltersMatch && genderFilterMatch;
     });
 
+
     setFilteredUsers(filtered);
-  }, [searchQuery, columnFilters, genderFilter, mutableUsers]);
+  }, [searchQuery, columnFilters, genderFilter, mutableUsers, startDateFilter]);
 
   const handleAddClick = () => {
     navigate("/addedit");
@@ -188,18 +193,32 @@ const List = () => {
     setColumnFilters({});
     setGenderFilter("");
     setSearchQuery("");
-    setResetDate(true); // Request reset of date in DateRangeFilterControl
-    // setSortBy("");
-    // setSortOrder("");
+    setResetDate(true);
+    setStartDateFilter(null); // Request reset of date in DateRangeFilterControl
   };
 
   const handleClearFilter = () => {
-    setGenderFilter(''); // Clear the filterValue when the clear icon is clicked.
+    setGenderFilter('');
+    setStartDateFilter(null); // Clear the filterValue when the clear icon is clicked.
   };
 
-  const handleStartDateFilterChange = (date: Dayjs | null) => {
-    setStartDateFilter(date);
+  // const handleFilterChange = (selectedDate: Dayjs | null) => {
+  //   // Filter your data based on the selected date here and update the state
+  //   if (selectedDate) {
+  //     // Example: Filter data to show only entries after the selected date
+  //     const filteredData = mutableUsers.filter((user) => dayjs(user.dOB).isAfter(selectedDate));
+  //     setMutableUsers(filteredData); // Update the mutableUsers state with the filtered data
+  //   } else {
+  //     // If no date is selected, reset the data to the original list of users
+  //     setMutableUsers(USERS);
+  //   }
+  // };
+
+  const handleFilterChange = (selectedDate: Dayjs | null) => {
+    setStartDateFilter(selectedDate);
+    setPage(0); // Reset the page when a new filter is applied
   };
+
 
   const handleRefresh = () => {
     // Call this function to refresh the page
@@ -217,7 +236,7 @@ const List = () => {
             onChange={handleSearchQueryChange}
           />
           <input className="Addbutton" type="submit" value="+ Add" onClick={handleAddClick} />
-          <RefreshIcon onClick={handleRefresh} style={{ color: "black", marginLeft: "1040%" }} />
+          <RefreshIcon onClick={handleRefresh} style={{ color: "black", marginLeft: "1078%" }} />
         </div>
         <TableContainer>
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
@@ -230,13 +249,13 @@ const List = () => {
                   sortOrder={sortOrder} style={{ width: "4%" }}
                 />
                 <TableSortControl
-                  name="UserName"
+                  name="User Name"
                   onClick={() => handleSort("firstName")}
                   active={sortBy === "firstName"}
                   sortOrder={sortOrder}
                 />
                 <TableSortControl
-                  name="EmailAddress"
+                  name="Email Address"
                   onClick={() => handleSort("emailAddress")}
                   active={sortBy === "emailAddress"}
                   sortOrder={sortOrder}
@@ -266,36 +285,34 @@ const List = () => {
               <TableRow>
                 <TableCell />
                 <TableFilterControl
-                  name="first Name"
+                  name="FirstName"
                   filterValue={columnFilters["firstName" || "lastName"] || ""}
                   onFilterChange={(value) => handleColumnFilterChange("firstName" || "lastName", value)}
                   onClearFilter={() => handleColumnFilterChange("firstName" || "lastName", "")}
                 />
                 <TableFilterControl
-                  name="email Address"
+                  name="EmailAddress"
                   filterValue={columnFilters["emailAddress"] || ""}
                   onFilterChange={(value) => handleColumnFilterChange("emailAddress", value)}
                   onClearFilter={() => handleColumnFilterChange("emailAddress", "")}
                 />
-                <TableCell className="rangePicker" style={{ marginLeft: "112px" }}>
+                <TableCell className="rangePicker" style={{ marginLeft: "112px", width: "30%" }}>
                   <DateRangeFilterControl
-                    name="dOB"
+                    name="DOB"
                     filterValue={columnFilters["dOB"] || ""}
                     onFilterChange={(value) => handleColumnFilterChange("dOB", value)}
                     resetDate={resetDate} // Pass the resetDate prop
-                    style={{ height: '1%' }}
                     onClearFilter={() => handleColumnFilterChange("dOB", "")}
                   />
                   <StartDateFilterControl
-                    name="startDateFilter"
-                    filterValue={startDateFilter}
-                    onFilterChange={handleStartDateFilterChange}
-                    resetDate={false}
-                   // style={{ marginLeft: "64%" }}
+                    name="DOB"
+                    filterValue={columnFilters['dOB'] || ""}
+                    onFilterChange={handleFilterChange}
+                    resetDate={resetDate}
+                    onClearFilter={handleClearFilter}
                   />
-
                 </TableCell>
-                <TableCell>
+                <TableCell style={{ width: "10%" }}>
                   <DropdownFilterControl
                     name="gender"
                     filterValue={genderFilter}

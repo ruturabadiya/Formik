@@ -32,19 +32,34 @@ export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
     }
   }, [resetDate]);
 
+  // const handleDateChange = (date: DateRange<Dayjs> | undefined) => {
+  //   setSelectedRange(date);
+
+  //   // Convert the selected date range to a string format that suits your data needs
+  //   const formattedDateRange = date
+  //     ? `${date[0]?.format('DD-MM-YYYY') ?? ''},${date[1]?.format('DD-MM-YYYY') ?? ''}`
+  //     : '';
+
+  //   // Call the onFilterChange callback to update the filter value in the parent component
+  //   if (onFilterChange) {
+  //     onFilterChange(formattedDateRange);
+  //   }
+  // };
+
   const handleDateChange = (date: DateRange<Dayjs> | undefined) => {
     setSelectedRange(date);
-
+  
     // Convert the selected date range to a string format that suits your data needs
     const formattedDateRange = date
-      ? `${date[0]?.format('DD-MM-YYYY') ?? ''},${date[1]?.format('DD-MM-YYYY') ?? ''}`
+      ? `${date[0]?.format('dd/MM/YYYY') ?? ''},${date[1]?.format('/MM/YYYY') ?? ''}`
       : '';
-
+  
     // Call the onFilterChange callback to update the filter value in the parent component
     if (onFilterChange) {
       onFilterChange(formattedDateRange);
     }
   };
+  
 
   const handleClearFilter = () => {
     setSelectedRange(undefined);
@@ -55,14 +70,10 @@ export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
     }
   };
 
-  const pickerKey = selectedRange
-    ? (selectedRange[0]?.format('DD-MM-YYYY') ?? '') + (selectedRange[1]?.format('DD-MM-YYYY') ?? '')
-    : 'empty';
-
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div style={{ marginLeft: '-3%', width: '269px' }}>
+        <div style={{ marginLeft: '-3%', width: '269px',height: "3px"}}>
           <DemoContainer components={['DateRangePicker']}>
             <DemoItem component='DateRangePicker'>
               <div className='startEndDateBox'>
