@@ -48,7 +48,7 @@ export const StartDateFilterControl: React.FC<StartDateFilterControlProps> = ({
       onClearFilter();
     }
   };
-
+  const formattedDate = selectedDate ? selectedDate.format('dd/MM/YYYY') : '';
   return (
     <>
       <Stack spacing={2}>
@@ -59,6 +59,7 @@ export const StartDateFilterControl: React.FC<StartDateFilterControlProps> = ({
               onChange={(date) => {
                 handleDateChange(date); // Pass the date argument to handleDateChange
               }}
+              format="DD-MM-YYYY"
             />
           </div>
         </LocalizationProvider>

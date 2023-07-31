@@ -11,7 +11,6 @@ interface DateRangeFilterControlProps {
   filterValue?: string;
   onFilterChange?: (value: string) => void;
   resetDate: boolean;
-  style?: React.CSSProperties;
   onClearFilter: () => void;
 }
 export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
@@ -32,35 +31,20 @@ export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
     }
   }, [resetDate]);
 
-  // const handleDateChange = (date: DateRange<Dayjs> | undefined) => {
-  //   setSelectedRange(date);
-
-  //   // Convert the selected date range to a string format that suits your data needs
-  //   const formattedDateRange = date
-  //     ? `${date[0]?.format('DD-MM-YYYY') ?? ''},${date[1]?.format('DD-MM-YYYY') ?? ''}`
-  //     : '';
-
-  //   // Call the onFilterChange callback to update the filter value in the parent component
-  //   if (onFilterChange) {
-  //     onFilterChange(formattedDateRange);
-  //   }
-  // };
-
   const handleDateChange = (date: DateRange<Dayjs> | undefined) => {
     setSelectedRange(date);
-  
+
     // Convert the selected date range to a string format that suits your data needs
     const formattedDateRange = date
-      ? `${date[0]?.format('dd/MM/YYYY') ?? ''},${date[1]?.format('/MM/YYYY') ?? ''}`
+      ? `${date[0]?.format('DD-MM-YYYY') ?? ''},${date[1]?.format('DD-MM-YYYY') ?? ''}`
       : '';
-  
+
     // Call the onFilterChange callback to update the filter value in the parent component
     if (onFilterChange) {
       onFilterChange(formattedDateRange);
     }
   };
   
-
   const handleClearFilter = () => {
     setSelectedRange(undefined);
     setKey(Date.now()); // Trigger remount
@@ -81,6 +65,7 @@ export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
                   key={key} // Utilize the key to trigger remount
                   onChange={handleDateChange}
                   value={selectedRange}
+                  format="DD-MM-YYYY"
                 />
               </div>
             </DemoItem>

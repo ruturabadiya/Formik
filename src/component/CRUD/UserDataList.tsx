@@ -158,8 +158,7 @@ const List = () => {
     setPage(0);
   };
 
-  const sortedUsers = [...filteredUsers];
-  sortedUsers.sort((a: any, b: any) => {
+  const sortUsers = (a: any, b: any) => {
     const dateA = new Date(a[sortBy]);
     const dateB = new Date(b[sortBy]);
 
@@ -187,7 +186,9 @@ const List = () => {
     }
 
     return 0;
-  });
+  };
+
+  const sortedUsers = [...filteredUsers].sort(sortUsers);
 
   const handleClearAllFilters = () => {
     setColumnFilters({});
@@ -202,17 +203,6 @@ const List = () => {
     setStartDateFilter(null); // Clear the filterValue when the clear icon is clicked.
   };
 
-  // const handleFilterChange = (selectedDate: Dayjs | null) => {
-  //   // Filter your data based on the selected date here and update the state
-  //   if (selectedDate) {
-  //     // Example: Filter data to show only entries after the selected date
-  //     const filteredData = mutableUsers.filter((user) => dayjs(user.dOB).isAfter(selectedDate));
-  //     setMutableUsers(filteredData); // Update the mutableUsers state with the filtered data
-  //   } else {
-  //     // If no date is selected, reset the data to the original list of users
-  //     setMutableUsers(USERS);
-  //   }
-  // };
 
   const handleFilterChange = (selectedDate: Dayjs | null) => {
     setStartDateFilter(selectedDate);
@@ -285,13 +275,13 @@ const List = () => {
               <TableRow>
                 <TableCell />
                 <TableFilterControl
-                  name="FirstName"
+                  name="First Name"
                   filterValue={columnFilters["firstName" || "lastName"] || ""}
                   onFilterChange={(value) => handleColumnFilterChange("firstName" || "lastName", value)}
                   onClearFilter={() => handleColumnFilterChange("firstName" || "lastName", "")}
                 />
                 <TableFilterControl
-                  name="EmailAddress"
+                  name="Email Address"
                   filterValue={columnFilters["emailAddress"] || ""}
                   onFilterChange={(value) => handleColumnFilterChange("emailAddress", value)}
                   onClearFilter={() => handleColumnFilterChange("emailAddress", "")}
@@ -301,7 +291,7 @@ const List = () => {
                     name="DOB"
                     filterValue={columnFilters["dOB"] || ""}
                     onFilterChange={(value) => handleColumnFilterChange("dOB", value)}
-                    resetDate={resetDate} // Pass the resetDate prop
+                    resetDate={resetDate} 
                     onClearFilter={() => handleColumnFilterChange("dOB", "")}
                   />
                   <StartDateFilterControl
@@ -314,7 +304,7 @@ const List = () => {
                 </TableCell>
                 <TableCell style={{ width: "10%" }}>
                   <DropdownFilterControl
-                    name="gender"
+                    name="Gender"
                     filterValue={genderFilter}
                     onFilterChange={(value) => handleColumnFilterChange("gender", value)}
                     select={true}
@@ -323,7 +313,7 @@ const List = () => {
                   />
                 </TableCell>
                 <TableFilterControl
-                  name="password"
+                  name="Password"
                   filterValue={columnFilters["password"] || ""}
                   onFilterChange={(value) => handleColumnFilterChange("password", value)}
                   onClearFilter={() => handleColumnFilterChange("password", "")}
