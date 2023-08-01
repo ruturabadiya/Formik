@@ -18,6 +18,7 @@ import { DateRangeFilterControl } from "../common/CommonController/DateRangePick
 import { IData } from "../../InterFace/commonInterface";
 import dayjs from 'dayjs';
 import { DropdownFilterControl } from "../common/CommonController/DropDownFilterControl";
+import { formatDate } from "../common/CommonController/Common";
 
 
 const List = () => {
@@ -230,16 +231,21 @@ const List = () => {
         <TableContainer>
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
             <TableHead>
-              <TableRow>
-                <TableSortControl name="#" onClick={() => handleSort("id")} active={sortBy === "id"} sortOrder={sortOrder} style={{width: "4%"}} />
+            <TableRow>
                 <TableSortControl
-                  name="UserName"
+                  name="#"
+                  onClick={() => handleSort("id")}
+                  active={sortBy === "id"}
+                  sortOrder={sortOrder}
+                />
+                <TableSortControl
+                  name="User Name"
                   onClick={() => handleSort("firstName")}
                   active={sortBy === "firstName"}
                   sortOrder={sortOrder}
                 />
                 <TableSortControl
-                  name="EmailAddress"
+                  name="Email Address"
                   onClick={() => handleSort("emailAddress")}
                   active={sortBy === "emailAddress"}
                   sortOrder={sortOrder}
@@ -249,7 +255,6 @@ const List = () => {
                   onClick={() => handleSort("dOB")}
                   active={sortBy === "dOB"}
                   sortOrder={sortOrder}
-                  style={{marginLeft: "112px"}}
                 />
                 <TableSortControl
                   name="Gender"
@@ -263,8 +268,7 @@ const List = () => {
                   active={sortBy === "password"}
                   sortOrder={sortOrder}
                 />
-                <TableSortControl name="Actions"/>
-
+                <TableSortControl name="Actions" />
               </TableRow>
               <TableRow>
                 <TableCell />
@@ -278,7 +282,7 @@ const List = () => {
                   filterValue={columnFilters["emailAddress"] || ""}
                   onFilterChange={(value) => handleColumnFilterChange("emailAddress", value)}
                 />
-                <TableCell className="rangePicker" style={{marginLeft: "112px"}}>
+                <TableCell className="rangePicker" >
                   <DateRangeFilterControl 
                     name="dOB"
                     filterValue={columnFilters["dOB"] || ""}
@@ -314,19 +318,19 @@ const List = () => {
                 (rowsPerPage > 0 ? sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : sortedUsers).map(
                   (data) => (
                     <TableRow key={data.id}>
-                      <TableCell align="left" style={{width:'1%'}}>{data.id}</TableCell>
-                      <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(`${data.firstName} ${data.lastName}`, columnFilters["firstName"]) }}>
+                      <TableCell className="id">{data.id}</TableCell>
+                      <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(`${data.firstName} ${data.lastName}`, columnFilters["firstName"]) }}>
                       </TableCell>
-                      <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.emailAddress, columnFilters["emailAddress"]) }}>
+                      <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.emailAddress, columnFilters["emailAddress"]) }}>
                       </TableCell>
-                      <TableCell align="center" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.dOB.toLocaleDateString(), columnFilters["dOB"]) }}>
+                      <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(formatDate(data.dOB), columnFilters["dOB"]) }}>
                       </TableCell>
-                      <TableCell align="center" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.gender, columnFilters["gender"]) }}>
+                      <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.gender, columnFilters["gender"]) }}>
                       </TableCell>
-                      <TableCell align="left" style={{width: "18%"}} dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.password, columnFilters["password"]) }}>
+                      <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(data.password, columnFilters["password"]) }}>
                       </TableCell>
-                      <TableCell align="left" style={{width: "18%"}}>
-                        <Button variant="outlined" onClick={() => handleEditClick(data.id)} style={{marginLeft: "-84%"}}>
+                      <TableCell className="action">
+                        <Button variant="outlined" onClick={() => handleEditClick(data.id)}>
                           Edit
                         </Button>
                         &nbsp;

@@ -21,7 +21,7 @@ export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
   onClearFilter,
 }) => {
   const [selectedRange, setSelectedRange] = React.useState<DateRange<Dayjs> | undefined>(undefined);
-  const [key, setKey] = React.useState<number>(Date.now()); // State to trigger remount
+  const [key, setKey] = React.useState<number>(Date.now()); 
 
   // Effect to handle resetting date when parent requests resetDate
   React.useEffect(() => {
@@ -34,12 +34,10 @@ export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
   const handleDateChange = (date: DateRange<Dayjs> | undefined) => {
     setSelectedRange(date);
 
-    // Convert the selected date range to a string format that suits your data needs
     const formattedDateRange = date
       ? `${date[0]?.format('DD-MM-YYYY') ?? ''},${date[1]?.format('DD-MM-YYYY') ?? ''}`
       : '';
 
-    // Call the onFilterChange callback to update the filter value in the parent component
     if (onFilterChange) {
       onFilterChange(formattedDateRange);
     }
@@ -47,8 +45,7 @@ export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
   
   const handleClearFilter = () => {
     setSelectedRange(undefined);
-    setKey(Date.now()); // Trigger remount
-    // Call the onClearFilter callback to notify the parent component of the filter being cleared
+    setKey(Date.now()); 
     if (onClearFilter) {
       onClearFilter();
     }
@@ -57,15 +54,16 @@ export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div style={{ marginLeft: '-3%', width: '269px',height: "3px"}}>
+        <div className='DateRange'>
           <DemoContainer components={['DateRangePicker']}>
             <DemoItem component='DateRangePicker'>
               <div className='startEndDateBox'>
-                <DateRangePicker
-                  key={key} // Utilize the key to trigger remount
+              <DateRangePicker
+                  key={key} 
                   onChange={handleDateChange}
                   value={selectedRange}
-                  format="DD-MM-YYYY"
+                  format='DD-MM-YYYY'
+                  className='customDatePicker' 
                 />
               </div>
             </DemoItem>
@@ -78,10 +76,3 @@ export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
     </>
   );
 };
-
-
-
-
-
-
-

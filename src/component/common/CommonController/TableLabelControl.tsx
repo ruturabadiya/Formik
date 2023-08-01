@@ -22,8 +22,8 @@ export const TableLabelControl: React.FC<TableControllerProps> = ({
 }) => {
 
   return (
-    <TableCell align="center" style={{ fontWeight: '800', cursor: 'pointer',width: "14% "}}>
-  <div style={{ display: 'flex', alignItems: 'center' }} onClick={onClick}>
+    <TableCell className='tableLableBox'>
+  <div className='tableLable' onClick={onClick}>
     <div>{name}</div>
     {active && sortOrder && (
       <IconButton size="small">

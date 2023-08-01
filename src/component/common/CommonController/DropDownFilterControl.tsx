@@ -29,19 +29,13 @@ export const DropdownFilterControl: React.FC<DropdownFilterControlProps> = ({
   };
 
   return (
-    <div style={{ position: 'relative', display: 'inline-block' }}>
+    <div className='dropdownfilter'>
       {select && (
         <select
           className="filter-dropdown"
           name={name}
           value={filterValue}
           onChange={handleSelectChange}
-          style={{
-            width: "107%",
-            height: "6vh",
-            marginTop: "15%",
-            backgroundColor: "#f0f8ff"
-          }}
         >
           {selectOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -59,14 +53,7 @@ export const DropdownFilterControl: React.FC<DropdownFilterControlProps> = ({
         />
       )}
       {filterValue && (
-        <HighlightOffIcon
-          style={{
-            position: 'absolute',
-            top: '64%',
-            right: ' -52px',
-            transform: 'translateY(-50%)',
-            cursor: 'pointer',
-          }}
+        <HighlightOffIcon className='ClearBtn'
           onClick={onClearFilter}
         />
       )}

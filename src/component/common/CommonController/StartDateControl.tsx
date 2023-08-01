@@ -10,7 +10,6 @@ interface StartDateFilterControlProps {
   filterValue?: string;
   onFilterChange?: (value: Dayjs | null) => void;
   resetDate: boolean;
-  style?: React.CSSProperties;
   onClearFilter?: () => void;
 }
 
@@ -31,10 +30,6 @@ export const StartDateFilterControl: React.FC<StartDateFilterControlProps> = ({
     }
   }, [resetDate]);
 
-  React.useEffect(() => {
-    setSelectedDate(filterValue ? dayjs(filterValue) : null);
-  }, [filterValue]);
-
   const handleDateChange = (date: Dayjs | null) => {
     setSelectedDate(date);
     if (onFilterChange) {
@@ -45,21 +40,22 @@ export const StartDateFilterControl: React.FC<StartDateFilterControlProps> = ({
   const handleClearFilter = () => {
     setSelectedDate(null);
     if (onClearFilter) {
-      onClearFilter();
+      onClearFilter(); 
     }
   };
-  const formattedDate = selectedDate ? selectedDate.format('dd/MM/YYYY') : '';
+
   return (
     <>
       <Stack spacing={2}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <div style={{ marginLeft: "56%", width: "35%" }}>
+          <div className='startDateBox'>
             <DatePicker
               value={selectedDate}
               onChange={(date) => {
-                handleDateChange(date); // Pass the date argument to handleDateChange
+                handleDateChange(date); 
               }}
               format="DD-MM-YYYY"
+              className='customDatePicker'
             />
           </div>
         </LocalizationProvider>

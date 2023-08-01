@@ -9,7 +9,6 @@ interface TableSortControlProps {
   onClick?: () => void;
   active?: boolean;
   sortOrder?: "asc" | "desc" | string;
-  style?: React.CSSProperties;
 }
 
 export const TableSortControl: React.FC<TableSortControlProps> = ({
@@ -19,8 +18,8 @@ export const TableSortControl: React.FC<TableSortControlProps> = ({
   sortOrder,
 }) => {
   return (
-    <TableCell align="center" style={{ fontWeight: '800', cursor: 'pointer' }}>
-      <div style={{ display: 'flex', alignItems: 'center' }} onClick={onClick}>
+    <TableCell className='tableSort'>
+      <div className='tableLable' onClick={onClick}>
         <div>{name}</div>
         {active && sortOrder && (
           <IconButton size="small">
@@ -46,7 +45,7 @@ export const TableFilterControl: React.FC<TableFilterControlProps> = ({
   onClearFilter,
 }) => {
   return (
-    <TableCell align="center" style={{ fontWeight: '800', cursor: 'pointer',width: "13%"}}>
+    <TableCell className='tableLableBox'>
 <div>
       {filterValue !== undefined && (
         <MuiTextField
@@ -55,12 +54,11 @@ export const TableFilterControl: React.FC<TableFilterControlProps> = ({
           value={filterValue}
           onChange={(e: ChangeEvent<HTMLInputElement>) => onFilterChange && onFilterChange(e.target.value)} 
           placeholder={`${name}`}
-          style={{ marginTop: 8,  marginLeft: "-23%",
-          width: "76%"}}
+          className='filterBox'
         />
       )}
        {filterValue && (
-      <HighlightOffIcon onClick={onClearFilter} style={{marginLeft: "4px",marginTop: "8%"}}/>
+      <HighlightOffIcon onClick={onClearFilter} className='clearTextField'/>
        )}
        {/* <div onClick={() => onClearFilter && onClearFilter()} style={{marginLeft: "81px",marginTop: "-15%"}}>X</div> */}
           </div>
