@@ -21,7 +21,7 @@ export const StartDateFilterControl: React.FC<StartDateFilterControlProps> = ({
   onClearFilter,
 }) => {
   const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(
-    filterValue ? dayjs(filterValue) : null
+    filterValue ? dayjs(filterValue, 'DD-MM-YYYY') : null
   );
 
   React.useEffect(() => {

@@ -34,7 +34,7 @@ const List = () => {
   useEffect(() => {
 
     const filtered = mutableUsers.filter((user) => {
-      const searchQueryLower = searchQuery.toLowerCase(); // Convert search query to lowercase
+      const searchQueryLower = searchQuery.toLowerCase();
 
       const globalSearchMatch =
         `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`.includes(searchQueryLower) ||
@@ -59,23 +59,17 @@ const List = () => {
         }
 
         const value = columnFilters[columnName];
-        return (
-          (user as any)[columnName]?.toString().includes(value) ||
-          (user as any)[columnName]?.toString().includes(value)
-        );
+          return (
+            (user as any)[columnName]?.toString().includes(value) ||
+            (user as any)[columnName]?.toString().includes(value)
+          );
       });
-      const genderFilterMatch =
-        !genderFilter || user.gender === genderFilter;
+      const genderFilterMatch = !genderFilter || user.gender === genderFilter;
 
+      const startDateFilterMatch = !startDateFilter || dayjs(user.dOB).isAfter(startDateFilter);
 
-      if (startDateFilter) {
-        const userDOB = dayjs(user.dOB);
-        return userDOB.isAfter(startDateFilter);
-      }
-
-      return globalSearchMatch && columnFiltersMatch && genderFilterMatch;
+      return globalSearchMatch && columnFiltersMatch && genderFilterMatch && startDateFilterMatch;
     });
-
 
     setFilteredUsers(filtered);
   }, [searchQuery, columnFilters, genderFilter, mutableUsers, startDateFilter]);
@@ -93,7 +87,6 @@ const List = () => {
     setShowDeleteConfirmation(true);
   };
 
-
   const handleDeleteConfirm = () => {
     if (userToDelete) {
       const index = mutableUsers.findIndex((user) => user.id === userToDelete.id);
@@ -107,7 +100,6 @@ const List = () => {
       if (page > 0 && mutableUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length === 0) {
         setPage(page - 1);
       }
-
       showToastSuccess('deleted');
       setUserToDelete(null);
       setShowDeleteConfirmation(false);
@@ -197,11 +189,13 @@ const List = () => {
     setStartDateFilter(null); 
   };
 
-  const handleClearFilter = () => {
+  const handleClearGenderFilter = () => {
     setGenderFilter('');
-    setStartDateFilter(null);
   };
 
+  const handleClearStartDateFilter = () => {
+    setStartDateFilter(null);
+  };
 
   const handleFilterChange = (selectedDate: Dayjs | null) => {
     setStartDateFilter(selectedDate);
@@ -296,7 +290,7 @@ const List = () => {
                     filterValue={columnFilters['dOB'] || ""}
                     onFilterChange={handleFilterChange}
                     resetDate={resetDate}
-                    onClearFilter={handleClearFilter}
+                    onClearFilter={handleClearStartDateFilter}
                   />
                 </TableCell>
                 <TableCell className="gender">
@@ -306,7 +300,7 @@ const List = () => {
                     onFilterChange={(value) => handleColumnFilterChange("gender", value)}
                     select={true}
                     selectOptions={selectOptions}
-                    onClearFilter={handleClearFilter}
+                    onClearFilter={handleClearGenderFilter}
                   />
                 </TableCell>
                 <TableFilterControl
