@@ -299,5 +299,54 @@ position:relative;
   width: 89%;
 }
 .gender{
-  width: 10%;
+  width: 100%;
+}
+
+.pagination-container{
+  display: flex;
+  list-style: none;
+}
+
+.pagination-page{
+padding: 10px;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.pagination-disabled{
+  cursor: not-allowed;
+  
+}
+
+.pagination-active{
+border: 2px solid #000;
+  font-weight: bold;
+}
+
+.pagination-previous{
+  padding: 10px;
+  border-radius: 6px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.pagination-break{
+  padding: 10px;
+}
+
+.pagination-next{
+  padding: 10px;
+  border-radius: 6px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.delete{
+  margin-left: 75px !important;
+  margin-top: -58px !important;
+}
+.edit{
+  margin-top:  4% !important;
 }

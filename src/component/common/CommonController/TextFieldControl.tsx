@@ -1,5 +1,6 @@
 import React from 'react';
 import { Field, ErrorMessage } from 'formik';
+import { TableCell } from '@mui/material';
 
 interface LocalControllerProps {
   name: string;
@@ -27,3 +28,16 @@ export const TextFieldController: React.FunctionComponent<LocalControllerProps> 
 
 
 
+interface TableControllerProps {
+  value: string;
+}
+
+export const TableController: React.FC<TableControllerProps> = ({
+  value
+}) => (
+  <>
+    <TableCell align="left" style={{ fontWeight: '800' }}>
+      {value}
+    </TableCell>
+  </>
+);

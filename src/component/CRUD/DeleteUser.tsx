@@ -1,9 +1,10 @@
 import React from "react";
 import { IData } from "../../InterFace/commonInterface";
 import Button from '@mui/material/Button';
+import { IUser } from "../../InterFace/userDataInterface";
 
 interface DeleteUserProps {
-  user: IData | null;
+  user: IData | null | IUser;
   onCancel: () => void;
   onConfirm: () => void;
 }
