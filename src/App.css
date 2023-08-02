@@ -298,13 +298,14 @@ position:relative;
 .noDataText{
   width: 89%;
 }
-.gender{
-  width: 100%;
+.genderField{
+  width: 10%;
 }
 
 .pagination-container{
   display: flex;
   list-style: none;
+  margin-top: 30px;
 }
 
 .pagination-page{
@@ -313,6 +314,7 @@ padding: 10px;
   border-radius: 6px;
   margin-right: 10px;
   cursor: pointer;
+ /* height: 25px; */
 }
 
 .pagination-disabled{
@@ -350,3 +352,47 @@ border: 2px solid #000;
 .edit{
   margin-top:  4% !important;
 }
+
+.container{
+  display: flex;
+  list-style: none;
+}
+
+.page{
+padding: 10px;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  margin-right: 10px;
+  cursor: pointer;
+  height: 30px;
+}
+
+.disabled {
+  pointer-events: none; 
+  opacity: 0.6; 
+  filter: blur(2px); 
+}
+.active{
+border: 2px solid #000;
+  font-weight: bold;
+  background: black;
+}
+
+.previous{
+  padding: 10px;
+  border-radius: 6px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.break{
+  padding: 10px;
+}
+
+.next{
+  padding: 10px;
+  border-radius: 6px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+

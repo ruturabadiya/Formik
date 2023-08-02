@@ -293,7 +293,7 @@ const List = () => {
                     onClearFilter={handleClearStartDateFilter}
                   />
                 </TableCell>
-                <TableCell className="gender">
+                <TableCell className="genderField">
                   <DropdownFilterControl
                     name="Gender"
                     filterValue={genderFilter}
