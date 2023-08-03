@@ -74,6 +74,9 @@ const List = () => {
     setFilteredUsers(filtered);
   }, [searchQuery, columnFilters, genderFilter, mutableUsers, startDateFilter]);
 
+  const handleNewUserClick = () => {
+    navigate('/newUser');
+  };
   const handleAddClick = () => {
     navigate("/addedit");
   };
@@ -217,6 +220,7 @@ const List = () => {
             value={searchQuery}
             onChange={handleSearchQueryChange}
           />
+          <button onClick={handleNewUserClick}/>
           <input className="Addbutton" type="submit" value="+ Add" onClick={handleAddClick} />
           <RefreshIcon onClick={handleRefresh} className="refreshBtn" />
         </div>

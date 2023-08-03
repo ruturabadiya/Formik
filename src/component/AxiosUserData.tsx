@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, MenuItem, Select } from "@mui/material";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { TableSortControl } from "./common/CommonController/TableSortFilterControl";
 import { IUser } from "../InterFace/userDataInterface";
@@ -11,83 +11,102 @@ const API_URL = "https://api.slingacademy.com/v1/sample-data/users";
 const AxiosUserData = () => {
   const [data, setData] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
-  const [totalPages, setTotalPages] = useState(1);
-  const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [tableOptions, setTableOptions] = useState({
+    currentPage: 1,
+    pageSize: 5,
+    totalPages: 1
+  });
+
+  const isInitialRender = useRef(true);
 
   useEffect(() => {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+
+    setLoading(true);
     fetchData();
-    
-  }, [ currentPage, pageSize, searchKeyword]);
+  }, [tableOptions.currentPage, tableOptions.pageSize, searchKeyword]);
+
 
   const fetchData = () => {
     setLoading(true);
+    let apiUrl = `${API_URL}?offset=${(tableOptions.currentPage - 1) * tableOptions.pageSize}&limit=${tableOptions.pageSize}`;
+    if (searchKeyword) {
+      apiUrl += `&search=${encodeURIComponent(searchKeyword)}`;
+    }
     axios
-      .get(`${API_URL}?offset=${(currentPage - 1) * pageSize}&limit=${pageSize}&search=${searchKeyword}`)
+      .get(apiUrl)
       .then((response) => {
         setData(response.data.users);
-        setTotalPages(Math.ceil(response.data.total_users / pageSize));
+        setTableOptions((prevOptions) => ({
+          ...prevOptions,
+          totalPages: Math.ceil(response.data.total_users / tableOptions.pageSize)
+        }));
         setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        setLoading(false);
+        setLoading(false); // Set loading to false in case of error
       });
+
   };
 
   const handleRefresh = () => {
-    window.location.reload();
+    setData([]);
+    setSearchKeyword("");
+    setTableOptions((prevOptions) => ({
+      ...prevOptions,
+      currentPage: 1,
+      pageSize: 5
+    }));
+    fetchData();
   };
 
+
   const handlePageChange = ({ selected }: { selected: number }) => {
-    if (selected >= 0 && selected < totalPages) {
-      setCurrentPage(selected + 1);
+    if (selected >= 0 && selected < tableOptions.totalPages) {
+      setTableOptions((prevOptions) => ({
+        ...prevOptions,
+        currentPage: selected + 1
+      }));
     }
   };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchKeyword(event.target.value);
-    setCurrentPage(1);
-  };  
+  const handlePageSizeChange = (event: any) => {
+    const newPageSize = event.target.value as number;
+    setTableOptions((prevOptions) => ({
+      ...prevOptions,
+      pageSize: newPageSize,
+      currentPage: 1
+    }));
+  };
 
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(event.target.value);
+    setTableOptions((prevOptions) => ({
+      ...prevOptions,
+      currentPage: 1
+    }));
+  };
 
   const highlightSearchQuery = (text: string, searchKeyword: string): string => {
     const regex = new RegExp(searchKeyword, "gi");
     return text.replace(regex, (match: string) => `<mark>${match}</mark>`);
   };
 
-  useEffect(() => {
-    const filteredData = data.filter((user: IUser) => {
-      return (
-        user.first_name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        user.last_name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        user.street.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        user.state.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        user.city.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        user.country.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        user.job.toLowerCase().includes(searchKeyword.toLowerCase())
-      );
-    });
-    setFilteredUsers(filteredData);
-  }, [data, searchKeyword]);
-
   return (
     <>
       <div className="table">
         <div className="addSearch">
           <input
+            className="searchInput"
             type="text"
             placeholder="Search..."
             value={searchKeyword}
-            onChange={handleSearchChange}
-          />
-          <input
-            className="Addbutton"
-            type="submit"
-            value="+ Add"
+            onChange={handleSearch}
           />
           <RefreshIcon onClick={handleRefresh} className="refreshBtn" />
         </div>
@@ -95,34 +114,15 @@ const AxiosUserData = () => {
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
-                <TableSortControl
-                  name="#"
-                />
-                <TableSortControl
-                  name="First Name"
-                />
-                <TableSortControl
-                  name="Last Name"
-                />
-                <TableSortControl
-                  name="Email Address"
-                />
-                <TableSortControl
-                  name="Street"
-                />
-                <TableSortControl
-                  name="State"
-                />
-                <TableSortControl
-                  name="Country"
-                />
-                <TableSortControl
-                  name="City"
-                />
-                <TableSortControl
-                  name="Job"
-                />
-                <TableSortControl name="Actions" />
+                <TableSortControl name="#" />
+                <TableSortControl name="First Name" />
+                <TableSortControl name="Last Name" />
+                <TableSortControl name="Email Address" />
+                <TableSortControl name="Street" />
+                <TableSortControl name="State" />
+                <TableSortControl name="Country" />
+                <TableSortControl name="City" />
+                <TableSortControl name="Job" />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -130,8 +130,8 @@ const AxiosUserData = () => {
                 <TableRow>
                   <TableCell colSpan={8}>Loading...</TableCell>
                 </TableRow>
-               ) : filteredUsers.length > 0 ? (
-                filteredUsers.map((userData: IUser) => (
+              ) : data.length > 0 ? (
+                data.map((userData: IUser) => (
                   <TableRow key={userData.id}>
                     <TableCell className="id">{userData.id}</TableCell>
                     <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(userData.first_name, searchKeyword) }}></TableCell>
@@ -142,15 +142,6 @@ const AxiosUserData = () => {
                     <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(userData.country, searchKeyword) }}></TableCell>
                     <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(userData.city, searchKeyword) }}></TableCell>
                     <TableCell dangerouslySetInnerHTML={{ __html: highlightSearchQuery(userData.job, searchKeyword) }}></TableCell>
-                    <TableCell className="action">
-                      <Button variant="outlined" className="edit">
-                        Edit
-                      </Button>
-                      &nbsp;
-                      <Button variant="outlined" color="error" className="delete">
-                        Delete
-                      </Button>
-                    </TableCell>
                   </TableRow>
                 ))
               ) : (
@@ -163,24 +154,30 @@ const AxiosUserData = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <div className="pagination">
+          <Select value={tableOptions.pageSize} onChange={handlePageSizeChange} className="pageSize">
+            <MenuItem value={5}>5</MenuItem>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={15}>15</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+          </Select>
+          <ReactPaginate
+            previousLabel={"Previous"}
+            nextLabel={"Next"}
+            breakLabel={"..."}
+            pageCount={tableOptions.totalPages}
+            onPageChange={handlePageChange}
+            containerClassName={'container'}
+            previousLinkClassName={tableOptions.currentPage === 1 ? 'previous disabled' : 'previous'}
+            breakClassName={'break'}
+            nextLinkClassName={(tableOptions.currentPage - 1) === tableOptions.totalPages ? 'next disabled' : 'next'}
+            pageClassName={'page'}
+            activeClassName={'active'}
+            forcePage={tableOptions.currentPage - 1}
+          />
+        </div>
       </div>
-      <div className="pagination">
-        <ReactPaginate
-          previousLabel={"Previous"}
-          nextLabel={"Next"}
-          breakLabel={"..."}
-          pageCount={totalPages}
-          onPageChange={handlePageChange}
-          containerClassName={'container'}
-          previousLinkClassName={currentPage === 1 ? 'previous disabled' : 'previous'}
-          breakClassName={'break'}
-          nextLinkClassName={currentPage === totalPages ? 'next disabled' : 'next'}
-          pageClassName={'page'}
-          activeClassName={'active'}
-          activeLinkClassName={currentPage === 1 ? 'active' : 'active disabled'}
-          forcePage={0}
-        />
-      </div>
+
     </>
   );
 };
