@@ -1,4 +1,4 @@
-import * as React from 'react';
+import  React from 'react';
 import { Dayjs } from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';

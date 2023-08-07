@@ -1,4 +1,4 @@
-import * as React from 'react';
+import  React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { Stack } from '@mui/material';

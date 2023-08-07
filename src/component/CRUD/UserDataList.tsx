@@ -96,22 +96,24 @@ const List = () => {
     if (userToDelete) {
       const index = mutableUsers.findIndex((user) => user.id === userToDelete.id);
       if (index !== -1) {
-        mutableUsers.splice(index, 1);
+        const newMutableUsers = [...mutableUsers];
+        newMutableUsers.splice(index, 1);
+        setMutableUsers(newMutableUsers);
+        
+        // Update the filteredUsers state after deletion
+        setFilteredUsers(newMutableUsers);
+  
+        if (tableOptions.page > 0 && newMutableUsers.slice(tableOptions.page * tableOptions.rowsPerPage, tableOptions.page * tableOptions.rowsPerPage + tableOptions.rowsPerPage).length === 0) {
+          setTableOptions((prevOptions) => ({
+            ...prevOptions,
+            page: tableOptions.page - 1
+          }));
+        }
+        
+        showToastSuccess('deleted');
+        setUserToDelete(null);
+        setShowDeleteConfirmation(false);
       }
-
-      // Update the filteredUsers state after deletion
-      setFilteredUsers([...mutableUsers]);
-
-      if (tableOptions.page > 0 && mutableUsers.slice(tableOptions.page * tableOptions.rowsPerPage, tableOptions.page * tableOptions.rowsPerPage + tableOptions.rowsPerPage).length === 0) {
-       setTableOptions((prevOptions) => ({
-          ...prevOptions,
-          page:tableOptions.page - 1
-       }))
-       //setPage(page - 1);
-      }
-      showToastSuccess('deleted');
-      setUserToDelete(null);
-      setShowDeleteConfirmation(false);
     }
   };
 
@@ -233,7 +235,6 @@ const List = () => {
     }));
   };
   
-
   const handleRefresh = () => {
     setSortBy("");
     setColumnFilters({});
@@ -246,9 +247,12 @@ const List = () => {
       page: 0,
       rowsPerPage: 3,
     }));
+    console.log(USERS);
     setMutableUsers([...USERS]);
   };
-
+const handleProduct = () => {
+  navigate("./productData");
+};
   return (
     <>
       <div className="table">
@@ -260,6 +264,7 @@ const List = () => {
             onChange={handleSearchQueryChange}
           />
           <button className="userDataBtn" onClick={handleNewUserClick} >User Data</button>
+          <button className="productBtn" onClick={handleProduct} >Product Data</button>
           <input className="Addbutton" type="submit" value="+ Add" onClick={handleAddClick} />
           <RefreshIcon onClick={handleRefresh} className="refreshBtn" />
         </div>
@@ -400,7 +405,7 @@ const List = () => {
           page={tableOptions.page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        />     
       </div>
       {showDeleteConfirmation && (
         <DeleteUser

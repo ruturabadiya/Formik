@@ -8,6 +8,7 @@ import { USERS } from "../user";
 import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
 import { DatePickerController } from "../common/CommonController/DatePickerControl";
 import { DropdownFieldController } from "../common/CommonController/SelectDropDownControl";
+import { selectGenderOptions } from "../common/CommonController/Common";
 
 const AddEditUser = () => {
   const initialValues: IData = {
@@ -101,10 +102,10 @@ const AddEditUser = () => {
               onChange={handleChange}
               placeholder="Enter your Date of Birth"
             />
-            <DropdownFieldController
+           <DropdownFieldController
               name="gender"
               onChange={handleChange}
-              as="select"
+              selectOptions={selectGenderOptions}
               placeholder="Select your Gender"
             />
             <TextFieldController

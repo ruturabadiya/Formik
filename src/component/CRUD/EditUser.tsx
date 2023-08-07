@@ -5,10 +5,10 @@ import { IData } from "../../InterFace/commonInterface";
 import { dataValidation } from "../../validate/validation";
 import { TextFieldController } from "../common/CommonController/TextFieldControl";
 import { USERS } from "../user";
-
 import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
 import { DatePickerController } from "../common/CommonController/DatePickerControl";
 import { DropdownFieldController } from "../common/CommonController/SelectDropDownControl";
+import { selectGenderOptions } from "../common/CommonController/Common";
 
 const EditUser = () => {
   const { id } = useParams<{ id: string | undefined }>();
@@ -85,12 +85,12 @@ const EditUser = () => {
                 onChange={handleChange}
                 placeholder="Enter your Date of Birth"
               />
-              <DropdownFieldController
-                name="gender"
-                onChange={handleChange}
-                as="select"
-                placeholder="Select your Gender"
-              />
+             <DropdownFieldController
+              name="gender"
+              onChange={handleChange}
+              selectOptions={selectGenderOptions}
+              placeholder="Select your Gender"
+            />
               <TextFieldController
                 name="password"
                 type="password"

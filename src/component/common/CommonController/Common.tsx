@@ -11,3 +11,15 @@ export const selectOptions = [
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   }
+
+  export const selectProductOptions = [
+    { value: "men's clothing", key: "men's clothing" },
+    { value: "jewelery", key: "jewelery" },
+    { value: "electronics", key: "electronics" },
+    { value: "women's clothing", key: "women's clothing" },
+  ];
+
+export const selectGenderOptions = [
+    { value: "Male", key: "Male" },
+    { value: "Female", key: "Female" },
+  ];

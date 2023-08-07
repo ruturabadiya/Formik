@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
 import { DatePickerController } from "../common/CommonController/DatePickerControl";
 import { DropdownFieldController } from "../common/CommonController/SelectDropDownControl";
+import { selectGenderOptions } from "../common/CommonController/Common";
 
 const Add = () => {
   const navigate = useNavigate();
@@ -80,11 +81,11 @@ const Add = () => {
                 placeholder="Enter your Date of Birth"
               />
               <DropdownFieldController
-                name="gender"
-                onChange={handleChange}
-                as="select"
-                placeholder="Select your Gender"
-              />
+              name="gender"
+              onChange={handleChange}
+              selectOptions={selectGenderOptions}
+              placeholder="Select your Gender"
+            />
               <TextFieldController
                 name="password"
                 type="password"

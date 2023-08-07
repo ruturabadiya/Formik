@@ -1,24 +1,23 @@
 import { ErrorMessage, useFormikContext } from 'formik';
 import { ChangeEvent, SelectHTMLAttributes } from 'react';
 
+interface DropdownOption {
+  value: string;
+  key: string;
+}
 interface SelectControllerProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange'> {
   name: string;
+  selectOptions: DropdownOption[];
   onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
-  as: string;
 }
-
-const dropdown = [
-  { key: 'male', value: 'Male' },
-  { key: 'female', value: 'Female' }
-];
 
 export const DropdownFieldController: React.FC<SelectControllerProps> = ({
   name,
   placeholder,
-  as,
+  selectOptions,
 }) => {
   const { setFieldValue, values }: any = useFormikContext();
-  const selectedValue = values[name] || "Select your gender"; 
+  const selectedValue = values[name] || placeholder; 
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const newValue = e.target.value;
@@ -35,7 +34,7 @@ export const DropdownFieldController: React.FC<SelectControllerProps> = ({
           onChange={handleSelectChange}
         >
           <option value="">{selectedValue}</option>
-          {dropdown.map(option => (
+          {selectOptions.map(option => (
             <option key={option.value} value={option.value}>
               {option.key}
             </option>

@@ -17,7 +17,7 @@ export const TextFieldController: React.FunctionComponent<LocalControllerProps> 
 }) => (
   <>
     <div className="field">
-      <Field name={name} type={type} placeholder={placeholder} onChange={onChange} />
+      <Field name={name} type={type} placeholder={placeholder} onChange={onChange}  />
     </div>
     <div className='row p-0 m-0 w-100'>
       <ErrorMessage name={name} component="div" className="text-danger" />
@@ -39,5 +39,27 @@ export const TableController: React.FC<TableControllerProps> = ({
     <TableCell align="left" style={{ fontWeight: '800' }}>
       {value}
     </TableCell>
+  </>
+);
+
+interface TextAreaControllerProps {
+  name: string;
+  placeholder: string;
+  onChange: (e: React.ChangeEvent<any>) => void;
+}
+
+export const TextAreaController: React.FunctionComponent<TextAreaControllerProps> = ({
+  name,
+  placeholder = `enter your ${name}`,
+  onChange,
+}) => (
+  <>
+    <div className="descriptionBox">
+      <textarea className='textarea' name={name} placeholder={placeholder} onChange={onChange}  />
+    </div>
+    <div className='row p-0 m-0 w-100'>
+      <ErrorMessage name={name} component="div" className="text-danger" />
+    </div>
+
   </>
 );

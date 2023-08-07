@@ -5,7 +5,9 @@ import AddEditUser from './component/CRUD/AddEditUser';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AxiosUserData from './component/AxiosUserData';
+import AxiosUserData from './Axios/AxiosUserData';
+import AddUpdateProduct from './Axios/AxiosAddUpdateData';
+import ProductData from './Axios/ProductData';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
             <Route path="/addedit"  element={<AddEditUser />} />
             <Route path="/addedit/:id"  element={<AddEditUser />} />
             <Route path='/newUser' element={ <AxiosUserData/> }/>
+            <Route path='/productData' element={<ProductData/>}/>
+            <Route path='/addUpdateProduct' element={<AddUpdateProduct/>}/>
            </Routes>
         </Router> 
       </header>

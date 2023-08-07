@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, MenuItem, Select } from "@mui/material";
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { TableSortControl } from "./common/CommonController/TableSortFilterControl";
+import { TableSortControl } from "../component/common/CommonController/TableSortFilterControl";
 import { IUser } from "../InterFace/userDataInterface";
 import ReactPaginate from 'react-paginate';
 
@@ -56,7 +56,7 @@ const AxiosUserData = () => {
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        setLoading(false); // Set loading to false in case of error
+        setLoading(false); 
       });
 
   };
