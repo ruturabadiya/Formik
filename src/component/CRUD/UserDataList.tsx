@@ -18,8 +18,6 @@ const List = () => {
   const navigate = useNavigate();
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [userToDelete, setUserToDelete] = useState<IData | null>(null);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(3);
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,6 +27,10 @@ const List = () => {
   const [mutableUsers, setMutableUsers] = useState(USERS);
   const [startDateFilter, setStartDateFilter] = useState<Dayjs | null>(null);
   const [resetDate, setResetDate] = useState(false);
+  const [tableOptions,setTableOptions] =useState({
+    page:0,
+    rowsPerPage:3
+  })
 
 
   useEffect(() => {
@@ -66,7 +68,7 @@ const List = () => {
       });
       const genderFilterMatch = !genderFilter || user.gender === genderFilter;
 
-      const startDateFilterMatch = !startDateFilter || dayjs(user.dOB).isAfter(startDateFilter);
+      const startDateFilterMatch = !startDateFilter || dayjs(user.dOB).isAfter(startDateFilter) || dayjs(user.dOB).isSame(startDateFilter);
 
       return globalSearchMatch && columnFiltersMatch && genderFilterMatch && startDateFilterMatch;
     });
@@ -100,8 +102,12 @@ const List = () => {
       // Update the filteredUsers state after deletion
       setFilteredUsers([...mutableUsers]);
 
-      if (page > 0 && mutableUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length === 0) {
-        setPage(page - 1);
+      if (tableOptions.page > 0 && mutableUsers.slice(tableOptions.page * tableOptions.rowsPerPage, tableOptions.page * tableOptions.rowsPerPage + tableOptions.rowsPerPage).length === 0) {
+       setTableOptions((prevOptions) => ({
+          ...prevOptions,
+          page:tableOptions.page - 1
+       }))
+       //setPage(page - 1);
       }
       showToastSuccess('deleted');
       setUserToDelete(null);
@@ -114,12 +120,21 @@ const List = () => {
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
+    setTableOptions((prevOptions) => ({
+      ...prevOptions,
+      page:newPage
+    }))
+    //setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+    setTableOptions((prevOPtions) => ({
+      ...prevOPtions,
+      rowsPerPage:+event.target.value,
+      page:0
+    }))
+    // setRowsPerPage(+event.target.value);
+    // setPage(0);
   };
 
   const handleSort = (columnName: string) => {
@@ -141,7 +156,11 @@ const List = () => {
 
   const handleSearchQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
-    setPage(0);
+    setTableOptions((prevOptions) => ({
+      ...prevOptions,
+      page:0
+    }))
+    //setPage(0);
   };
 
   const sortUsers = (a: any, b: any) => {
@@ -180,15 +199,20 @@ const List = () => {
       setGenderFilter(value); 
     } else {
       setColumnFilters((prevFilters) => ({ ...prevFilters, [columnName]: value }));
+      setResetDate(false);
     }
-    setPage(0);
+    setTableOptions((prevOptions) => ({
+        ...prevOptions,
+        page:0
+    }))
+    //setPage(0);
   };
 
   const handleClearAllFilters = () => {
     setColumnFilters({});
     setGenderFilter("");
     setSearchQuery("");
-    setResetDate(true);
+    setResetDate(true); 
     setStartDateFilter(null); 
   };
 
@@ -202,12 +226,27 @@ const List = () => {
 
   const handleFilterChange = (selectedDate: Dayjs | null) => {
     setStartDateFilter(selectedDate);
-    setPage(0); 
+    setResetDate(false);
+    setTableOptions((prevOptions) => ({
+      ...prevOptions,
+      page: 0,
+    }));
   };
-
+  
 
   const handleRefresh = () => {
-    window.location.reload();
+    setSortBy("");
+    setColumnFilters({});
+    setGenderFilter("");
+    setSearchQuery("");
+    setResetDate(true); 
+    setStartDateFilter(null);
+    setTableOptions((prevOptions) => ({
+      ...prevOptions,
+      page: 0,
+      rowsPerPage: 3,
+    }));
+    setMutableUsers([...USERS]);
   };
 
   return (
@@ -220,7 +259,7 @@ const List = () => {
             value={searchQuery}
             onChange={handleSearchQueryChange}
           />
-          <button onClick={handleNewUserClick}/>
+          <button className="userDataBtn" onClick={handleNewUserClick} >User Data</button>
           <input className="Addbutton" type="submit" value="+ Add" onClick={handleAddClick} />
           <RefreshIcon onClick={handleRefresh} className="refreshBtn" />
         </div>
@@ -319,7 +358,7 @@ const List = () => {
             </TableHead>
             <TableBody>
               {filteredUsers.length > 0 ? (
-                (rowsPerPage > 0 ? sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : sortedUsers).map(
+                (tableOptions.rowsPerPage > 0 ? sortedUsers.slice(tableOptions.page * tableOptions.rowsPerPage, tableOptions.page * tableOptions.rowsPerPage + tableOptions.rowsPerPage) : sortedUsers).map(
                   (data) => (
                     <TableRow key={data.id}>
                       <TableCell className="id">{data.id}</TableCell>
@@ -357,8 +396,8 @@ const List = () => {
           rowsPerPageOptions={[3, 6, 9]}
           component="div"
           count={filteredUsers.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
+          rowsPerPage={tableOptions.rowsPerPage}
+          page={tableOptions.page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />

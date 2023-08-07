@@ -12,13 +12,20 @@ const AxiosUserData = () => {
   const [data, setData] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const isInitialRender = useRef(true);
   const [tableOptions, setTableOptions] = useState({
     currentPage: 1,
     pageSize: 5,
     totalPages: 1
   });
+  const [refreshData, setRefreshData] = useState(false);
 
-  const isInitialRender = useRef(true);
+  useEffect(() => {
+    if (refreshData) {
+      fetchData();
+      setRefreshData(false);
+    }
+  }, [refreshData]);
 
   useEffect(() => {
     if (isInitialRender.current) {
@@ -60,9 +67,10 @@ const AxiosUserData = () => {
     setTableOptions((prevOptions) => ({
       ...prevOptions,
       currentPage: 1,
-      pageSize: 5
+      pageSize: 5,
+      totalPages: 1 
     }));
-    fetchData();
+    setRefreshData(true);
   };
 
 

@@ -256,7 +256,8 @@ position:relative;
 }
 .refreshBtn{
   color: black;
-   margin-left: 1078%;
+  margin-left: 91%;
+  position: fixed;
 }
 .tableSort{
   text-align: center;
@@ -387,4 +388,11 @@ border: 2px solid #000;
 .pageSize{
   margin-left: -100px;
   height: 36px;
+}
+
+.userDataBtn{
+  margin-left: 930%;
+  background: black;
+  color: white;
+  font-weight: bolder;
 }
