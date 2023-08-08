@@ -23,7 +23,7 @@ export const DateRangeFilterControl: React.FC<DateRangeFilterControlProps> = ({
   const [selectedRange, setSelectedRange] = React.useState<DateRange<Dayjs> | undefined>(undefined);
   const [key, setKey] = React.useState<number>(Date.now()); 
 
-  // Effect to handle resetting date when parent requests resetDate
+   //Effect to handle resetting date when parent requests resetDate
   React.useEffect(() => {
     if (resetDate) {
       setSelectedRange(undefined);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import { IProduct } from "../InterFace/productDataInterfaace";
@@ -7,6 +7,8 @@ import { TextAreaController, TextFieldController } from "../component/common/Com
 import { DropdownFieldController } from "../component/common/CommonController/SelectDropDownControl";
 import { selectProductOptions } from "../component/common/CommonController/Common";
 import axios from "axios";
+import { ImageFieldController } from "../component/common/CommonController/ImageFieldControl";
+import { StarRatingsController } from "../component/common/CommonController/RatingControl";
 
 const AddEditProduct = () => {
   const initialValues: IProduct = {
@@ -15,7 +17,10 @@ const AddEditProduct = () => {
     price: 0.1,
     description: "",
     image: "",
-    category: ""
+    category: "",
+    rating: {
+      rate: 0
+    },
   };
 
   const { id } = useParams<{ id: string | undefined }>();
@@ -35,7 +40,7 @@ const AddEditProduct = () => {
     })
       .then((response) => {
         console.log(response.data);
-        navigate('/productData', { state: { addedProduct: response.data } });
+        navigate("/productData", { state: { addedProduct: response.data } });
       })
       .catch((error) => {
         console.error(error);
@@ -54,7 +59,7 @@ const AddEditProduct = () => {
         enableReinitialize={true}
         onSubmit={onSubmit}
       >
-        {({ handleChange, handleSubmit }) => (
+        {({ handleChange, handleSubmit, values, setFieldValue, errors }) => (
           <form className="row" autoComplete="off" onSubmit={handleSubmit}>
             <TextFieldController
               name="title"
@@ -71,16 +76,22 @@ const AddEditProduct = () => {
               onChange={handleChange}
               placeholder="Enter the Description"
             />
-            <TextFieldController
+            <ImageFieldController
               name="image"
               onChange={handleChange}
-              placeholder="select image"
             />
             <DropdownFieldController
               name="category"
               onChange={handleChange}
               selectOptions={selectProductOptions}
               placeholder="Select Category"
+            />
+            <StarRatingsController
+              name="rating.rate"
+              onChange={(fieldName, fieldValue) => {
+                setFieldValue(fieldName, fieldValue);
+              }}
+              
             />
             <div className="AddEditButton">
               <button className="button" type="submit">

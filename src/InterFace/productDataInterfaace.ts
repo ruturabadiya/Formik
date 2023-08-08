@@ -5,6 +5,9 @@ export interface IProduct{
     description:string;
     category:string;
     image:string;
+    rating: {
+        rate: number;
+    };
 }
 // "id": 1,
 // "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",

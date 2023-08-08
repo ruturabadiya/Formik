@@ -400,8 +400,9 @@ border: 2px solid #000;
 .productBtn{
   margin-left: -88%;
 }
-.abc{
+.productTable{
   background: aliceblue;
+  width: 75%;
 }
 .textarea{
   width: -webkit-fill-available;
@@ -413,3 +414,33 @@ border: 2px solid #000;
   display: flex;
 }
 
+.star{
+  margin-left: 31%;
+  margin-top: 5%;
+}
+
+/* AddEditProduct.css or your preferred stylesheet */
+.star-rating {
+  margin-top: 10px; /* Adjust spacing as needed */
+}
+/* AddEditProduct.css or your preferred stylesheet */
+/* AddEditProduct.css or your preferred stylesheet */
+.star-rating .filled-star {
+  color: #ffd700; /* Set the color of filled stars to yellow */
+}
+
+.star-rating .empty-star {
+  color: #ccc; /* Set the color of empty stars to light grey */
+}
+/* AddEditProduct.css */
+.star-rating-container {
+  margin-top: 10px;
+}
+
+.filled-star {
+  color: #ffd700; /* Color of filled stars */
+}
+
+.empty-star {
+  color: #ccc; /* Color of empty stars */
+}
