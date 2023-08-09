@@ -52,7 +52,6 @@ const ProductData = () => {
                 </TableCell>
                 <TableCell>{addedProduct.category}</TableCell>
                 <TableCell>
-                  {/* Display the rating number */}
                   {addedProduct.rating?.rate}
                 </TableCell>
                 <TableCell className="action">

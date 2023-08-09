@@ -415,32 +415,15 @@ border: 2px solid #000;
 }
 
 .star{
-  margin-left: 31%;
-  margin-top: 5%;
+  margin-top: 10%;
+  margin-left: -13%;
 }
 
-/* AddEditProduct.css or your preferred stylesheet */
-.star-rating {
-  margin-top: 10px; /* Adjust spacing as needed */
-}
-/* AddEditProduct.css or your preferred stylesheet */
-/* AddEditProduct.css or your preferred stylesheet */
-.star-rating .filled-star {
-  color: #ffd700; /* Set the color of filled stars to yellow */
+.preview-image{
+width: 20%;
+margin-top: 3%;
 }
 
-.star-rating .empty-star {
-  color: #ccc; /* Set the color of empty stars to light grey */
-}
-/* AddEditProduct.css */
-.star-rating-container {
-  margin-top: 10px;
-}
-
-.filled-star {
-  color: #ffd700; /* Color of filled stars */
-}
-
-.empty-star {
-  color: #ccc; /* Color of empty stars */
+.productSubmitBtn{
+  margin-top: 10%;
 }

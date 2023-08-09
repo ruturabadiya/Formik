@@ -16,7 +16,7 @@ interface StarRatingsControllerProps {
   
     return (
         <>
-      <div className="field">
+      <div className="star">
         <StarRatings
           rating={rating}
           starRatedColor="#ffd700"

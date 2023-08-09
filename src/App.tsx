@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import AxiosUserData from './Axios/AxiosUserData';
 import AddUpdateProduct from './Axios/AxiosAddUpdateData';
 import ProductData from './Axios/ProductData';
+import AddUpdate from './Axios/AddEditProduct';
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
             <Route path='/newUser' element={ <AxiosUserData/> }/>
             <Route path='/productData' element={<ProductData/>}/>
             <Route path='/addUpdateProduct' element={<AddUpdateProduct/>}/>
+            <Route path='/addUpdate' element={<AddUpdate/>}/>
+            <Route path='/addUpdate/:id' element={<AddUpdate/>}/>
            </Routes>
         </Router> 
       </header>

@@ -48,6 +48,9 @@ interface TextAreaControllerProps {
   onChange: (e: React.ChangeEvent<any>) => void;
 }
 
+const StyledTextareaField = (props:any) => (
+  <Field {...props} as="textarea" id="description" name="description" children={props.children}></Field>
+);
 export const TextAreaController: React.FunctionComponent<TextAreaControllerProps> = ({
   name,
   placeholder = `enter your ${name}`,
@@ -55,7 +58,10 @@ export const TextAreaController: React.FunctionComponent<TextAreaControllerProps
 }) => (
   <>
     <div className="descriptionBox">
-      <textarea className='textarea' name={name} placeholder={placeholder} onChange={onChange}  />
+      <StyledTextareaField
+              as={StyledTextareaField}
+              className='textarea' name={name}  placeholder={placeholder} onChange={onChange} 
+            />
     </div>
     <div className='row p-0 m-0 w-100'>
       <ErrorMessage name={name} component="div" className="text-danger" />

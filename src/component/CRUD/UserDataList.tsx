@@ -250,9 +250,14 @@ const List = () => {
     console.log(USERS);
     setMutableUsers([...USERS]);
   };
-const handleProduct = () => {
-  navigate("./productData");
+
+const handleAddProduct = () => {
+  navigate("./addUpdate");
 };
+const handleUpdateProduct = () => {
+  navigate('/addUpdate/18');
+};
+
   return (
     <>
       <div className="table">
@@ -264,7 +269,8 @@ const handleProduct = () => {
             onChange={handleSearchQueryChange}
           />
           <button className="userDataBtn" onClick={handleNewUserClick} >User Data</button>
-          <button className="productBtn" onClick={handleProduct} >Product Data</button>
+          <button className="productBtn" onClick={handleAddProduct} >Product Add</button>
+          <button className="productBtn" onClick={handleUpdateProduct} >Product update</button>
           <input className="Addbutton" type="submit" value="+ Add" onClick={handleAddClick} />
           <RefreshIcon onClick={handleRefresh} className="refreshBtn" />
         </div>
