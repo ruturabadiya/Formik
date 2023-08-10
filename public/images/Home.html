@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="./css/Home.css">
+</head>
+<body>
+    <div class="home-container">
+        <!-- --------------- 
+            Navbar - 1
+        ---------------------- -->
+        <header>
+            <div class="home-navbar-1">
+                <div class="home-nav1-left">
+                    <a href="#">Stories</a>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #333333;">
+                             Policy
+                            </a>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">Policy1</a></li>
+                              <li><a class="dropdown-item" href="#">Policy2</a></li>
+                              <li><a class="dropdown-item" href="#">Policy3</a></li>
+                            </ul>
+                          </li>
+                    </ul>
+                </div>
+                <div class="home-nav1-right">
+                    <img src="./images/user-img.png" alt="">    
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #333333;">
+                             Evan Donohue
+                            </a>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+                              <li><a class="dropdown-item" href="#">Help</a></li>
+                              <li><a class="dropdown-item" href="#">Logout</a></li>
+                            </ul>
+                          </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="home-nav1-end"></div>
+            <!-- ------------------
+                Navbar - 2
+            -------------------- -->
+            <div class="home-navbar-2">
+                <div class="home-nav2-left">
+                    <label><img src="./images/search.png" alt=""></label>
+                    <input type="text" placeholder="Search mission...">
+                </div>
+                <div class="home-nav2-right">
+                    <div class="partition"></div>
+                    <div class="selection">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #333333;">
+                                 Country
+                                </a>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">India</a></li>
+                                  <li><a class="dropdown-item" href="#">Australia</a></li>
+                                  <li><a class="dropdown-item" href="#">Germany</a></li>
+                                  <li><a class="dropdown-item" href="#">Russia</a></li>
+                                </ul>
+                              </li>
+                        </ul>
+                    </div>
+                    <div class="partition"></div>
+                    <div class="selection">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #333333;">
+                                 City
+                                </a>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Rajkot</a></li>
+                                  <li><a class="dropdown-item" href="#">Ahmedabad</a></li>
+                                  <li><a class="dropdown-item" href="#">Vadodara</a></li>
+                                  <li><a class="dropdown-item" href="#">Surat</a></li>
+                                </ul>
+                              </li>
+                        </ul>
+                    </div>
+                    <div class="partition"></div>
+                    <div class="selection">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #333333;">
+                                 Theme
+                                </a>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Theme-1</a></li>
+                                  <li><a class="dropdown-item" href="#">Theme-2</a></li>
+                                  <li><a class="dropdown-item" href="#">Theme-3</a></li>
+                                  <li><a class="dropdown-item" href="#">Theme-4</a></li>
+                                </ul>
+                              </li>
+                        </ul>
+                    </div>
+                    <div class="partition"></div>
+                    <div class="selection">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #333333;">
+                                 Skills
+                                </a>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Skill-1</a></li>
+                                  <li><a class="dropdown-item" href="#">Skill-2</a></li>
+                                  <li><a class="dropdown-item" href="#">Skill-3</a></li>
+                                  <li><a class="dropdown-item" href="#">Skill-4</a></li>
+                                </ul>
+                              </li>
+                        </ul>
+                    </div>
+                    <div class="partition"></div>
+                </div>
+            </div>
+            <div class="home-nav2-end"></div>
+        </header>
+        <!---------------------
+            Chips 
+        -------------------------- -->
+        <div class="home-chips">
+            <div class="chips">
+                <div class="chip">
+                    Tree Plantation
+                    <span class="closebtn" onclick="this.parentElement.style.display='none'">&times;</span>
+                </div>
+                <div class="chip">
+                    Canada
+                    <span class="closebtn" onclick="this.parentElement.style.display='none'">&times;</span>
+                </div>
+            </div>
+            <a class="close-chips" href="#">Clear All</a>
+        </div> 
+        <!-----------------------
+            Heading
+        -------------------------- -->
+        <div class="home-heading">
+            <div class="heading-left"><p>Explore <span>72 missions</span></p></div>
+            <div class="heading-right">
+                <div class="selection">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #333333;">
+                             Sort by
+                            </a>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">Sort-1</a></li>
+                              <li><a class="dropdown-item" href="#">Sort-2</a></li>
+                              <li><a class="dropdown-item" href="#">Sort-3</a></li>
+                              <li><a class="dropdown-item" href="#">Sort-4</a></li>
+                            </ul>
+                          </li>
+                    </ul>
+                </div>
+                <div class="images">
+                    <div class="circle-bg-img">
+                        <a><img src="./images/grid.png" alt=""></a>
+                    </div>
+                    <a><img src="./images/list.png" alt=""></a>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="list-view">
+            <div class="list-item">
+                <div class="list-left">
+                    <img src="./images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="">
+                    <div class="img-items">
+                        <div class="location">
+                            <img src="./images/pin.png" alt="">
+                            <span>Location</span>
+                        </div>
+                        <div class="features"></div>
+                    </div>
+                </div>
+                <div class="list-right"></div>
+            </div>
+        </div> -->
+
+        <div class="container">
+
+          <div class="row mb-5">
+              
+                <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                    <div class="card cardWidth shadow h-100">
+                        <img src="./images/Grow-Trees-On-the-path-to-environment-sustainability.png"
+                        class="card-img-top" alt="...">
+                        <div class="card-body">
+
+                            <div class="cardTitleAction">
+
+                             
+                              <!-- <button type="button" style="color: black; background-color: white; "
+                              class="btn btn-sm btn-outline-dark rounded-pill cardLocation"> -->
+                            
+                                <span class="text-wrap btn btn-sm rounded-pill cardTitleSubAction"
+                                style="background-color: white; color: #757575; "> 
+                               Environment  </span>
+                              
+                              </button>
+
+                            </div>
+
+                            <button type="button" style="color: black; background-color: white; "
+                            class="btn btn-sm btn-outline-dark float-end rounded-pill cardLocation">
+                            <i class="bi bi-geo-alt"></i>
+                            <span class="text-wrap">Toronto</span>
+                            </button>
+
+                        <button type="button" style="color: black; background-color: white; "
+                                class="btn btn-sm btn-outline-dark float-end rounded-pill cardLike">
+                                <i class="bi bi-suit-heart"></i>
+                            </button>
+                            <button type="button" style="color: black; background-color: white; "
+                            class="btn btn-sm btn-outline-dark float-end rounded-pill cardAddPeople">
+                            <i class="bi bi-person-plus"></i>
+                        </button>
+                        <h5 class="card-title cardTitle">Grow Trees - On the path to environment sustainability</h5>
+                        <p class="card-text cardText">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                eiusmod tempor incididunt ut labore...</p>
+                                
+                                <div class="mt-1 mb-4">
+                                    <span class="float-start">Tree Canada</span>
+                                    <span class="float-end">
+                                        <i class="bi bi-star-fill text-warning "></i>
+                                        <i class="bi bi-star-fill text-warning "></i>
+                                        <i class="bi bi-star-fill text-warning "></i>
+                                        <i class="bi bi-star-fill text-black-50 "></i>
+                                        <i class="bi bi-star-fill text-black-50 "></i>
+                                    </span>
+                                </div>
+                                <br>
+                                <div>
+                                    <div class="cardAction">
+                                        <span class="text-wrap btn btn-sm btn-outline-dark rounded-pill subAction"
+                                        style="background-color: white; color: #757575; ">
+                                        From 10/01/2019 until 25/02/2019 </span>
+                                    </div>
+
+                                <hr style=" z-index: -12; margin-left: -4.3%; margin-right: -4.3%;">
+                            </div>
+    
+                            <div class="row mt-4">
+                                <div class="col-6 text-wrap">
+                                    <span class="cardDedlineSeats"><i class="bi bi-person-check me-2 ms-3"></i>10</span>
+                                    <br style="margin: 0px;">
+                                    <span class="cardSmallText ms-4">Seats left</span>
+                                </div>
+                                <div class="col-6 text-wrap">
+                                    <span class="cardDedlineSeats"><i class="bi bi-clock me-2 ms-3"></i>03/10/2022</span>
+                                    <br style="padding: 0px;">
+                                    <span class="cardSmallText ms-5">Dedline</span>
+                                </div>
+                            </div>
+                            <hr style=" margin-left: -4.3%; margin-right: -4.3%;">
+                            
+                            <div class="cardAction mb-1">
+                                <button type="button" class="btn btn-outline-warning rounded-pill"
+                                style="margin-left: auto; margin-right: auto;">
+                                <span class="text-wrap">Apply</span>
+                                <i class="bi bi-arrow-right ms-2"></i>
+                                </button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+
+         <div class="container">
+
+            <div class="row mb-5">
+                
+                  <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                      <div class="card cardWidth shadow h-100">
+                          <img src="./images/Grow-Trees-On-the-path-to-environment-sustainability.png"
+                          class="card-img-top" alt="...">
+                          <div class="card-body">
+  
+                              <div class="cardTitleAction">
+  
+                               
+                                <!-- <button type="button" style="color: black; background-color: white; "
+                                class="btn btn-sm btn-outline-dark rounded-pill cardLocation"> -->
+                              
+                                  <span class="text-wrap btn btn-sm rounded-pill cardTitleSubAction"
+                                  style="background-color: white; color: #757575; "> 
+                                 Environment  </span>
+                                
+                                </button>
+  
+                              </div>
+  
+                              <button type="button" style="color: black; background-color: white; "
+                              class="btn btn-sm btn-outline-dark float-end rounded-pill cardLocation">
+                              <i class="bi bi-geo-alt"></i>
+                              <span class="text-wrap">Toronto</span>
+                              </button>
+  
+                          <button type="button" style="color: black; background-color: white; "
+                                  class="btn btn-sm btn-outline-dark float-end rounded-pill cardLike">
+                                  <i class="bi bi-suit-heart"></i>
+                              </button>
+                              <button type="button" style="color: black; background-color: white; "
+                              class="btn btn-sm btn-outline-dark float-end rounded-pill cardAddPeople">
+                              <i class="bi bi-person-plus"></i>
+                          </button>
+                          <h5 class="card-title cardTitle">Grow Trees - On the path to environment sustainability</h5>
+                          <p class="card-text cardText">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                  eiusmod tempor incididunt ut labore...</p>
+                                  <div class="mt-1 mb-4">
+                                      <span class="float-start">Tree Canada</span>
+                                      <span class="float-end">
+                                          <i class="bi bi-star-fill text-warning "></i>
+                                          <i class="bi bi-star-fill text-warning "></i>
+                                          <i class="bi bi-star-fill text-warning "></i>
+                                          <i class="bi bi-star-fill text-black-50 "></i>
+                                          <i class="bi bi-star-fill text-black-50 "></i>
+                                      </span>
+                                  </div>
+                                  <br>
+                                  <div>
+                                      <div class="cardAction">
+                                          <span class="text-wrap btn btn-sm btn-outline-dark rounded-pill subAction"
+                                          style="background-color: white; color: #757575; ">
+                                          From 10/01/2019 until 25/02/2019 </span>
+                                      </div>
+                                  <hr style=" z-index: -12; margin-left: -4.3%; margin-right: -4.3%;">
+                              </div>
+      
+                              <div class="row mt-4">
+                                  <div class="col-6 text-wrap">
+                                      <span class="cardDedlineSeats"><i class="bi bi-person-check me-2 ms-3"></i>10</span>
+                                      <br style="margin: 0px;">
+                                      <span class="cardSmallText ms-4">Seats left</span>
+                                  </div>
+                                  <div class="col-6 text-wrap">
+                                      <span class="cardDedlineSeats"><i class="bi bi-clock me-2 ms-3"></i>03/10/2022</span>
+                                      <br style="padding: 0px;">
+                                      <span class="cardSmallText ms-5">Dedline</span>
+                                  </div>
+                              </div>
+                              <hr style=" margin-left: -4.3%; margin-right: -4.3%;">
+                              
+                              <div class="cardAction mb-1">
+                                  <button type="button" class="btn btn-outline-warning rounded-pill"
+                                  style="margin-left: auto; margin-right: auto;">
+                                  <span class="text-wrap">Apply</span>
+                                  <i class="bi bi-arrow-right ms-2"></i>
+                                  </button>
+                          </div>
+                      </div>
+                      </div>
+                  </div>
+              </div>
+           </div>
+    </div>
+
+    <script src="./js/bootstrap.bundle.js"></script>
+    <script>
+        $(".close-chips").on("click",function(e){
+            $(".home-chips .chip").remove();
+            $(this).hide();
+        });
+        // $(".close-chips").on("click", function(e){
+        //     $(".close-chips").remove();
+        // });
+        $(".dropdown-menu li a").on("click", function(e){
+            $(".home-chips .chips").append('<div class="chip">'+$(this).text()+'<span class="closebtn" onclick="this.parentElement.style.display=\'none\'">&times;</span>');
+                $(".close-chips").show();
+            
+        })
+    </script>
+</body> 
+</html>

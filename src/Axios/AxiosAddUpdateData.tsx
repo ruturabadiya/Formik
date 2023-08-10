@@ -39,7 +39,6 @@ const AddEditProduct = () => {
       data: values,
     })
       .then((response) => {
-        console.log(response.data);
         navigate("/productData", { state: { addedProduct: response.data } });
       })
       .catch((error) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, Select } from "@mui/material";
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -12,7 +12,6 @@ const AxiosUserData = () => {
   const [data, setData] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const isInitialRender = useRef(true);
   const [tableOptions, setTableOptions] = useState({
     currentPage: 1,
     pageSize: 5,
@@ -28,11 +27,6 @@ const AxiosUserData = () => {
   }, [refreshData]);
 
   useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-      return;
-    }
-
     setLoading(true);
     fetchData();
   }, [tableOptions.currentPage, tableOptions.pageSize, searchKeyword]);

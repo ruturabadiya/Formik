@@ -1,0 +1,138 @@
+1.SELECT salesman.name AS "Salesman",
+customer.cust_name, customer.city 
+FROM salesman,customer 
+WHERE salesman.city=customer.city;
+
+2.SELECT  a.ord_no,a.purch_amt,
+b.cust_name,b.city 
+FROM orders a,customer b 
+WHERE a.customer_id=b.customer_id 
+AND a.purch_amt BETWEEN 500 AND 2000;
+
+3.SELECT a.cust_name AS "Customer Name", 
+a.city, b.name AS "Salesman", b.commission 
+FROM customer a 
+INNER JOIN salesman b 
+ON a.salesman_id=b.salesman_id;
+
+4.SELECT c.cus_name, c.city, s.name, s.commission
+FROM customer AS c
+JOIN salesman AS s
+ON c.salesman_id = s.salesman_id
+WHERE s.commission > 0.12
+
+5.SELECT c.cus_name, c.city, s.name, s.city, s.commission
+FROM customer AS c
+JOIN salesman AS s
+ON c.salesman_id = s.salesman_id
+WHERE c.city <> s.city
+AND s.commission > 0.12
+
+6.SELECT o.ord_no, o.ord_date, o.purch_amo, c.cus_name, c.grade, s.name, s.commission
+FROM customer AS c
+JOIN salesman AS s
+ON c.salesman_id = s.salesman_id
+JOIN orders AS o
+ON c.customer_id = o.customer_id
+AND c.salesman_id = o.salesman_id
+
+7.SELECT * 
+FROM orders 
+NATURAL JOIN customer  
+NATURAL JOIN salesman;
+
+8.SELECT c.cus_name, c.city, c.grade, s.name, s.city
+FROM customer AS c
+JOIN salesman AS s
+ON c.salesman_id = s.salesman_id
+ORDER BY c.customer_id ASC
+
+9.SELECT c.cus_name, c.city, c.grade, s.name, s.city
+FROM customer AS c
+JOIN salesman AS s
+ON c.salesman_id = s.salesman_id
+WHERE c.grade < 300
+ORDER BY c.customer_id ASC
+
+10.Select cus_name, customer.city, ord_no, ord_date, purch_amo
+
+from customer 
+left join orders on customer.customer_id = orders.customer_id
+
+order by ord_date
+
+11.SELECT c.cus_name, c.city, o.ord_no, o.ord_date, o.purch_amo, s.name, s.commission
+FROM customer AS c
+LEFT OUTER JOIN salesman AS s
+ON c.salesman_id = s.salesman_id
+LEFT OUTER JOIN orders AS o
+ON c.customer_id = o.customer_id
+AND c.salesman_id = o.salesman_id
+
+12.SELECT s.name, c.cus_name
+FROM customer AS c
+RIGHT OUTER JOIN salesman AS s
+ON c.salesman_id = s.salesman_id
+ORDER BY s.salesman_id
+
+13.SELECT s.name, c.cus_name, c.city, c.grade, o.ord_no, o.ord_date, o.purch_amo
+FROM customer AS c
+RIGHT OUTER JOIN salesman AS s
+ON c.salesman_id = s.salesman_id
+JOIN orders AS o
+ON c.customer_id = o.customer_id
+AND c.salesman_id = o.salesman_id
+
+14.SELECT a.cus_name,a.city,a.grade, 
+b.name AS "Salesman", 
+c.ord_no, c.ord_date, c.purch_amo 
+FROM customer a 
+RIGHT OUTER JOIN salesman b 
+ON b.salesman_id=a.salesman_id 
+LEFT OUTER JOIN orders c 
+ON c.customer_id=a.customer_id 
+WHERE c.purch_amt>=2000 
+AND a.grade IS NOT NULL;
+
+15.SELECT *
+FROM customer AS c
+RIGHT OUTER JOIN salesman AS s
+ON c.salesman_id = s.salesman_id
+LEFT OUTER JOIN orders AS o
+ON c.customer_id = o.customer_id
+AND c.salesman_id = o.salesman_id
+WHERE o.purch_amt >= 2000
+AND c.grade IS NOT NULL
+
+16.SELECT a.cus_name,a.city, b.ord_no,
+b.ord_date,b.purch_amo AS "Order Amount" 
+FROM customer a 
+FULL OUTER JOIN orders b 
+ON a.customer_id=b.customer_id 
+WHERE a.grade IS NOT NULL;
+
+17.SELECT *
+FROM customer AS c
+CROSS JOIN salesman AS s
+
+18.SELECT *
+FROM customer AS c
+CROSS JOIN salesman AS s
+WHERE s.city IS NOT NULL
+AND s.city <> c.city
+AND c.grade IS NOT NULL
+
+19.SELECT s.name AS "Salesman",
+       c.cus_name AS "Customer Name"
+  FROM salesman s
+  CROSS JOIN customer c
+  WHERE s.city IS NOT NULL
+    AND c.grade IS NOT NULL;
+
+20.SELECT s.name AS "Salesman",
+       c.cus_name AS "Customer Name"
+  FROM salesman s
+  CROSS JOIN customer c
+  WHERE s.city IS NOT NULL
+    AND s.city != c.city
+    AND c.grade IS NOT NULL;

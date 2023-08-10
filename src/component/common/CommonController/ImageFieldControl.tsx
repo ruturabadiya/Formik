@@ -1,12 +1,11 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import { ErrorMessage, useFormikContext } from 'formik';
 
 interface ImageFieldControllerProps {
   name: string;
   imageUrl?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void; 
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
-
 
 export const ImageFieldController: React.FC<ImageFieldControllerProps> = ({
   name,
@@ -14,49 +13,43 @@ export const ImageFieldController: React.FC<ImageFieldControllerProps> = ({
 }) => {
   const { setFieldValue, values }: any = useFormikContext();
   const imageData = values[name];
-  const [imageUrlState, setImageUrlState] = useState<string>();
+
   useEffect(() => {
-    if (imageUrl) {
+    if (imageUrl && !values[name]) {
       setFieldValue(name, imageUrl);
     }
-  }, [imageUrl, name, setFieldValue]);
-console.log(imageData,"xyz")
+  }, [imageUrl, name, setFieldValue, values]);
+
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedImage = e.target.files && e.target.files[0];
 
-    if (selectedImage) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const imageDataURL = event.target?.result as string;
-        setFieldValue(name, imageDataURL);
-      };
-
-      reader.readAsDataURL(selectedImage);
+    if (selectedImage) {   
+        setFieldValue(name, selectedImage);
     }
+  };
+console.log(imageData,"rutu")
+  const isValidImageType = (type: string): boolean => {
+    return type === 'image/jpeg' || type === 'image/png';
   };
 
   return (
     <div>
-      <div className="field">
+      <div className="productImage">
         <input
           type="file"
           name={name}
-          accept="image/jpg"
+          accept="image/*"
           onChange={handleImageChange}
         />
       </div>
-      {imageData && (
+      {imageData && isValidImageType(imageData.type) && (
         <div className="image-preview">
-          <img
-            src={imageData}
-            alt="Selected Image"
-            className="preview-image"
-          />
+          <img src={imageData?URL.createObjectURL(imageData): imageData}  className="preview-image" />
         </div>
       )}
-      <div className="row p-0 m-0 w-100">
-        <ErrorMessage name={name} component="div" className="text-danger" />
-      </div>
+      <ErrorMessage name={name} component="div" className="text-danger" />
     </div>
   );
 };
+
+///logic  imagedata type 

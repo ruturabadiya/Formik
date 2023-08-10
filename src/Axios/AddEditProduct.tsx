@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Formik } from 'formik';
@@ -13,69 +13,66 @@ import { Button } from '@mui/material';
 import { NumberFieldController } from '../component/common/CommonController/NumberFieldControl';
 
 const AddUpdateData = () => {
-
     const initialValues: IProduct = {
         id: 0,
-        title: "",
+        title: '',
         price: 0.1,
-        description: "",
-        image: "",
-        category: "",
+        description: '',
+        image: '',
+        category: '',
         rating: {
             rate: 0
         },
     };
     const { id } = useParams();
     const navigate = useNavigate();
-    const isInitialRender = useRef(true);
     const [userData, setUserData] = useState<any>(initialValues);
-    const [addedProduct, setAddedProduct] = useState<any>(null);
 
     useEffect(() => {
-        if (!isInitialRender.current) {
-            return;
-        }
-        isInitialRender.current = false;
-
-        const fetchProduct = async () => {
-            try {
-                if (id) {
-                    const response = await axios.get(`https://fakestoreapi.com/products/${id}`);
-                    setUserData(response.data);
-                }
-            } catch (error) {
-                console.error('Error fetching product:', error);
-            }
-        };
-
         if (id) {
-            fetchProduct();
+            axios.get(`https://fakestoreapi.com/products/${id}`)
+                .then((response) => {
+                    setUserData(response.data);
+                })
+                .catch((error) => {
+                    console.error('Error fetching product:', error);
+                });
         }
     }, [id]);
 
-    const onSubmit = async (values: IProduct) => {
-        try {
-            const isNewProduct = values.id === 0;
+    // useEffect(() => {
+    //     const abortController = new AbortController();
+    //     axios.get(`https://fakestoreapi.com/products/${id}`, {
+    //         signal: abortController.signal
+    //     })
+    //         .then((response) => {
+    //             setUserData(response.data);
+    //         })
+    //         .catch((error) => {
+    //             console.error('Error fetching product:', error);
+    //         });
+    //     return () => {
+    //         abortController.abort()
+    //     }
 
-            const requestData = {
-                ...values,
-                rating: { rate: values.rating.rate } // Include the rating.rate field
-            };
+    // }, [])
+    
+    const onSubmit = (values: IProduct) => {
+        const isNewProduct = values.id === 0; // Changed condition to check if it's a new product
 
-            const url = isNewProduct
-                ? 'https://fakestoreapi.com/products'
-                : `https://fakestoreapi.com/products/${values.id}`;
+        const url = isNewProduct
+            ? 'https://fakestoreapi.com/products'
+            : `https://fakestoreapi.com/products/${values.id}`;
 
-            const requestMethod = isNewProduct ? axios.post : axios.put;
+        const requestMethod = isNewProduct ? axios.post : axios.put;
 
-            const response = await requestMethod(url, requestData);
-
-            console.log(isNewProduct ? 'addProduct' : 'updateProduct', 'API response:', response.data);
-            setAddedProduct(response.data);
-            navigate('/');
-        } catch (error) {
-            console.error('Error:', error);
-        }
+        requestMethod(url, values) // Send the entire values object in the request
+            .then((response) => {
+                navigate('/');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
     };
 
     return (
@@ -107,7 +104,6 @@ const AddUpdateData = () => {
                             name="image"
                             onChange={handleChange}
                         />
-
                         <DropdownFieldController
                             name="category"
                             onChange={handleChange}
@@ -120,7 +116,6 @@ const AddUpdateData = () => {
                                 setFieldValue(fieldName, fieldValue);
                             }}
                         />
-
                         <Button type="submit" variant="contained" className='productSubmitBtn'>
                             {userData.id === 0 ? 'Add Product' : 'Update Product'}
                         </Button>

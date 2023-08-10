@@ -1,0 +1,22 @@
+With ID passwrod
+Scaffold-Dbcontext -provider Microsoft.EntityFrameworkCore.SqlServer -connection "Data Source=PCLPT160\SQL2019;DataBase=Muhafil;User ID=sa;Password=Tatva@123;" -OutputDir "Models" -ContextDir "Data"
+for windows cred
+Scaffold-Dbcontext -provider Microsoft.EntityFrameworkCore.SqlServer -connection "Data Source=PCLPT160\SQL2019;; initial catalog=Muhafil; Trusted_Connection=True" -OutputDir "Models" -ContextDir "Data"
+
+
+ef core tool
+ef sql - main, application
+ef design - in main
+
+
+
+another work around
+Scaffold-DbContext Name=ConnectionStrings:Employee Microsoft.EntityFrameworkCore.SqlServer -OutputDir DataModels -Context EmployeeDbContext
+
+-ContextDir DbContexts
+
+
+Scaffold-DbContext 'Server=PCLPT73\\SQL2019;Initial Catalog=EmployeeManagementSystem;Persist Security Info=False;User ID=sa;Password=Tatva@123;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False;Connection Timeout=30;' Microsoft.EntityFrameworkCore.SqlServer -OutputDir DataModels -Context EmployeeDbContext
+
+
+
