@@ -51,9 +51,9 @@ const ProductData = () => {
                   />
                 </TableCell>
                 <TableCell>{addedProduct.category}</TableCell>
-                <TableCell>
+                {/* <TableCell>
                   {addedProduct.rating?.rate}
-                </TableCell>
+                </TableCell> */}
                 <TableCell className="action">
                   <Button
                     variant="outlined"

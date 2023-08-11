@@ -412,3 +412,14 @@ margin-top: 2%;
   width: 100%;
   display: flex;
 }
+
+.toast {
+  position: fixed !important;
+  left: 47%;
+  transform: translateX(-50%);
+  color: #d82929;
+  padding: 10px 20px;
+  border-radius: 4px;
+  z-index: 999;
+  top: 56%;
+}
