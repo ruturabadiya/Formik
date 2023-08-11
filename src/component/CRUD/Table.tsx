@@ -32,7 +32,7 @@ const List = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<IData[]>([]);
   const [columnFilters, setColumnFilters] = useState<{ [key: string]: string }>({});
-  const [genderFilter, setGenderFilter] = useState<string>(""); // New state to hold the selected gender filter
+  const [genderFilter, setGenderFilter] = useState<string>("");
   const [mutableUsers, setMutableUsers] = useState(USERS);
 
   useEffect(() => {
@@ -116,8 +116,6 @@ const List = () => {
       if (index !== -1) {
         mutableUsers.splice(index, 1);
       }
-
-      // Update the filteredUsers state after deletion
       setFilteredUsers([...mutableUsers]);
 
       if (page > 0 && mutableUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length === 0) {
@@ -211,9 +209,7 @@ const List = () => {
     setColumnFilters({});
     setGenderFilter("");
     setSearchQuery("");
-    setResetDate(true); // Request reset of date in DateRangeFilterControl
-    // setSortBy("");
-    // setSortOrder("");
+    setResetDate(true);
   };
 
   return (
@@ -287,7 +283,7 @@ const List = () => {
                     name="dOB"
                     filterValue={columnFilters["dOB"] || ""}
                     onFilterChange={(value) => handleColumnFilterChange("dOB", value)}
-                    resetDate={resetDate} // Pass the resetDate prop
+                    resetDate={resetDate} 
                     onClearFilter={() => handleColumnFilterChange("dOB", "")}
                   />
                 </TableCell>

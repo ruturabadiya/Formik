@@ -16,7 +16,7 @@ const AddUpdateData = () => {
     const initialValues: IProduct = {
         id: 0,
         title: '',
-        price: 0.1,
+        price: 0,
         description: '',
         image: '',
         category: '',
@@ -58,7 +58,7 @@ const AddUpdateData = () => {
     // }, [])
     
     const onSubmit = (values: IProduct) => {
-        const isNewProduct = values.id === 0; // Changed condition to check if it's a new product
+        const isNewProduct = values.id === 0; 
 
         const url = isNewProduct
             ? 'https://fakestoreapi.com/products'
@@ -66,7 +66,7 @@ const AddUpdateData = () => {
 
         const requestMethod = isNewProduct ? axios.post : axios.put;
 
-        requestMethod(url, values) // Send the entire values object in the request
+        requestMethod(url, values) 
             .then((response) => {
                 navigate('/');
             })

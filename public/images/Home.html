@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https:ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./css/Home.css">
@@ -373,9 +373,6 @@
             $(".home-chips .chip").remove();
             $(this).hide();
         });
-        // $(".close-chips").on("click", function(e){
-        //     $(".close-chips").remove();
-        // });
         $(".dropdown-menu li a").on("click", function(e){
             $(".home-chips .chips").append('<div class="chip">'+$(this).text()+'<span class="closebtn" onclick="this.parentElement.style.display=\'none\'">&times;</span>');
                 $(".close-chips").show();
