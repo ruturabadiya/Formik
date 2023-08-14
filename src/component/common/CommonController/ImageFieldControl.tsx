@@ -50,7 +50,6 @@ export const ImageFieldController: React.FC<ImageFieldControllerProps> = ({
 
     reader.readAsDataURL(selectedImage);
   };
-console.log(imageData,"abc")
   return (
     <div>
       <div className="productImage">

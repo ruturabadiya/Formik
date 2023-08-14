@@ -9,6 +9,7 @@ import AxiosUserData from './Axios/AxiosUserData';
 import AddUpdateProduct from './Axios/AxiosAddUpdateData';
 import ProductData from './Axios/ProductData';
 import AddUpdate from './Axios/AddEditProduct';
+import MultipleImg from './component/MultipleImage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path='/addUpdateProduct' element={<AddUpdateProduct/>}/>
             <Route path='/addUpdate' element={<AddUpdate/>}/>
             <Route path='/addUpdate/:id' element={<AddUpdate/>}/>
+            <Route path='/multipleImage' element={<MultipleImg/>}/>
            </Routes>
         </Router> 
       </header>

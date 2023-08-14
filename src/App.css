@@ -368,7 +368,7 @@ border: 2px solid #000;
 }
 
 .userDataBtn{
-  margin-left: 930%;
+  margin-left: 900%;
   background: black;
   color: white;
   font-weight: bolder;
@@ -413,18 +413,48 @@ margin-top: 2%;
   display: flex;
 }
 
-.toast {
-  position: fixed !important;
-  left: 47%;
-  transform: translateX(-50%);
-  color: #d82929;
-  padding: 10px 20px;
-  border-radius: 4px;
-  z-index: 999;
-  top: 56%;
+.closeBtn{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: skyblue;
+  font-size: 1.5rem;
 }
 
-.custom-file-upload{
-font-size: 14px;
-    margin-left: 94px;
-  }
+.multipleImage {
+  width: 150px;
+  height: 150px;
+  margin: 5px;
+}
+
+.multiImg {
+  align-self: flex-start;
+  top: 20px; 
+}
+
+.imgBox {
+  display: inline-block;
+  position: relative;
+}
+
+.selectedImages {
+  margin-top: -290px;
+  margin-left: 10%;
+  position: fixed;
+}
+
+.imgCount {
+  left: 1%;
+  top: 83px; 
+  position: fixed;
+}
+
+.image {
+  top: 10px;
+  left: 10px;
+  height: -webkit-fit-available;
+  position: fixed;
+}

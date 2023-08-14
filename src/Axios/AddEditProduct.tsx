@@ -11,6 +11,8 @@ import { IProduct } from '../InterFace/productDataInterfaace';
 import { productValidation } from '../validate/productValidation';
 import { Button } from '@mui/material';
 import { NumberFieldController } from '../component/common/CommonController/NumberFieldControl';
+//import { MultipleImageSelect } from '../component/MultipleImage';
+
 
 const AddUpdateData = () => {
     const initialValues: IProduct = {
@@ -104,6 +106,10 @@ const AddUpdateData = () => {
                             name="image"
                             onChange={handleChange}
                         />
+                        {/* <MultipleImageSelect
+                        name="image"
+                        onChange={handleChange}
+                        /> */}
                         <DropdownFieldController
                             name="category"
                             onChange={handleChange}

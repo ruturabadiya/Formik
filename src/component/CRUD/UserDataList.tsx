@@ -252,12 +252,14 @@ const List = () => {
   };
 
 const handleAddProduct = () => {
-  navigate("./addUpdate");
+  navigate("/addUpdate");
 };
 const handleUpdateProduct = () => {
   navigate('/addUpdate/18');
 };
-
+const handleMultipleImage = () =>{
+  navigate('/multipleImage')
+}
   return (
     <>
       <div className="table">
@@ -268,6 +270,7 @@ const handleUpdateProduct = () => {
             value={searchQuery}
             onChange={handleSearchQueryChange}
           />
+          <button  onClick={handleMultipleImage}>Img</button>
           <button className="userDataBtn" onClick={handleNewUserClick} >User Data</button>
           <button className="productBtn" onClick={handleAddProduct} >Product Add</button>
           <button className="productBtn" onClick={handleUpdateProduct} >Product update</button>
