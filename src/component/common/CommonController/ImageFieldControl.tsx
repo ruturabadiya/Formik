@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { ErrorMessage, useFormikContext } from 'formik';
-import { showToastError } from '../../../Toast/toastUtils';
+import { toast } from 'react-toastify';
 
 interface ImageFieldControllerProps {
   name: string;
@@ -27,7 +27,7 @@ export const ImageFieldController: React.FC<ImageFieldControllerProps> = ({
 
     if (!['image/jpeg', 'image/png', 'image/svg+xml'].includes(selectedImage.type)) {
       e.target.value = '';
-      showToastError("Only png, jpeg, svg files are allowed");
+      toast.error("Only png, jpeg, svg files are allowed");
       setFieldValue(name, null);
       return;
   }
@@ -37,7 +37,7 @@ export const ImageFieldController: React.FC<ImageFieldControllerProps> = ({
     const maxSize = 100 * 1024; 
     if (selectedImage.size > maxSize) {
       e.target.value = '';
-      showToastError('Image size must be less than 100 KB');
+      toast.error('Image size must be less than 100 KB');
       setFieldValue(name,null);
       return;
     }

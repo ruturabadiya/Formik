@@ -15,28 +15,25 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-       <Router>
+        <Router>
           <Routes>
             <Route path="/" element={<List />} />
-            <Route path="/addedit"  element={<AddEditUser />} />
-            <Route path="/addedit/:id"  element={<AddEditUser />} />
-            <Route path='/newUser' element={ <AxiosUserData/> }/>
-            <Route path='/productData' element={<ProductData/>}/>
-            <Route path='/addUpdateProduct' element={<AddUpdateProduct/>}/>
-            <Route path='/addUpdate' element={<AddUpdate/>}/>
-            <Route path='/addUpdate/:id' element={<AddUpdate/>}/>
-            <Route path='/multipleImage' element={<MultipleImg/>}/>
-           </Routes>
-        </Router> 
+            <Route path="/addedit" element={<AddEditUser />} />
+            <Route path="/addedit/:id" element={<AddEditUser />} />
+            <Route path='/newUser' element={<AxiosUserData />} />
+            <Route path='/productData' element={<ProductData />} />
+            <Route path='/addUpdateProduct' element={<AddUpdateProduct />} />
+            <Route path='/addUpdate' element={<AddUpdate />} />
+            <Route path='/addUpdate/:id' element={<AddUpdate />} />
+            <Route path='/multipleImage' element={<MultipleImg />} />
+          </Routes>
+        </Router>
       </header>
       <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar
+        position='top-right'
         closeOnClick
-        pauseOnHover
-        draggable
         limit={1}
+        className='custom-toast-container'
       />
     </div>
   );

@@ -5,10 +5,10 @@ import { dataValidation } from "../../validate/validation";
 import { TextFieldController } from "../common/CommonController/TextFieldControl";
 import { USERS } from "../user";
 import { useNavigate } from "react-router-dom";
-import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
 import { DatePickerController } from "../common/CommonController/DatePickerControl";
 import { DropdownFieldController } from "../common/CommonController/SelectDropDownControl";
 import { selectGenderOptions } from "../common/CommonController/Common";
+import { toast } from "react-toastify";
 
 const Add = () => {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const Add = () => {
     const emailExists = USERS.some((user) => user.emailAddress === values.emailAddress);
 
     if (emailExists) {
-      showToastError("This Email Address already exists.");
+      toast.error("This Email Address already exists.");
       resetForm();
     } else {
       const nextId = USERS.length > 0 ? USERS[USERS.length - 1].id + 1 : 1;
@@ -38,7 +38,7 @@ const Add = () => {
       };
 
       USERS.push(newUser);
-      showToastSuccess("User added successfully");
+      toast.success("User added successfully");
       resetForm();
       setTimeout(() => {
         navigate("/");

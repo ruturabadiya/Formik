@@ -412,6 +412,7 @@ margin-top: 2%;
   width: 100%;
   display: flex;
 }
+/* MULTIPLE IMAGE */
 
 .closeBtn{
   position: absolute;
@@ -441,9 +442,11 @@ margin-top: 2%;
 }
 
 .selectedImages {
-  margin-top: -290px;
+  margin-top: -319px;
   margin-left: 10%;
   position: fixed;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .imgCount {
@@ -455,6 +458,53 @@ margin-top: 2%;
 .image {
   top: 10px;
   left: 10px;
-  height: -webkit-fit-available;
+  color: #282c34;
   position: fixed;
+}
+
+/* Custom toast container alignment */
+.Toastify__toast-container {
+  text-align: left;
+}
+
+.custom-toast-container {
+  white-space: pre-line;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.toastScoller{
+  max-height: 150px;
+  overflow: auto;
+}
+
+.fileNameContainer {
+  font-size: small;  
+  white-space: pre-line;
+}
+
+.fileInputContainer {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.fileInputContainer .image {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.fileInputLabel {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
 }

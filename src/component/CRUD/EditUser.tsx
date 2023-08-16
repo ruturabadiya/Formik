@@ -5,10 +5,10 @@ import { IData } from "../../InterFace/commonInterface";
 import { dataValidation } from "../../validate/validation";
 import { TextFieldController } from "../common/CommonController/TextFieldControl";
 import { USERS } from "../user";
-import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
 import { DatePickerController } from "../common/CommonController/DatePickerControl";
 import { DropdownFieldController } from "../common/CommonController/SelectDropDownControl";
 import { selectGenderOptions } from "../common/CommonController/Common";
+import { toast } from "react-toastify";
 
 const EditUser = () => {
   const { id } = useParams<{ id: string | undefined }>();
@@ -29,7 +29,7 @@ const EditUser = () => {
           user.emailAddress === values.emailAddress
       );
       if (emailExists) {
-        showToastError("Entered email address already exists.");
+        toast.error("Entered email address already exists.");
         return;
       }
     }
@@ -43,7 +43,7 @@ const EditUser = () => {
     else {
       USERS.push(updatedUser);
     }
-    showToastSuccess("User updated successfully");
+    toast.success("User updated successfully");
     setTimeout(() => {
       navigate("/");
     }, 2000);

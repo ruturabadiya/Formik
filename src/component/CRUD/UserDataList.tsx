@@ -4,7 +4,6 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Butto
 import { USERS } from "../user";
 import { TableFilterControl, TableSortControl } from "../common/CommonController/TableSortFilterControl";
 import DeleteUser from "./DeleteUser";
-import { showToastSuccess } from "../../Toast/toastUtils";
 import { DateRangeFilterControl } from "../common/CommonController/DateRangePicker";
 import { IData } from "../../InterFace/commonInterface";
 import dayjs, { Dayjs } from 'dayjs';
@@ -12,6 +11,7 @@ import { DropdownFilterControl } from "../common/CommonController/DropDownFilter
 import { StartDateFilterControl } from "../common/CommonController/StartDateControl";
 import { formatDate, selectOptions } from "../common/CommonController/Common";
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { toast } from "react-toastify";
 
 
 const List = () => {
@@ -110,7 +110,7 @@ const List = () => {
           }));
         }
         
-        showToastSuccess('deleted');
+        toast.success('deleted');
         setUserToDelete(null);
         setShowDeleteConfirmation(false);
       }

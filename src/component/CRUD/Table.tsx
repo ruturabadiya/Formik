@@ -13,12 +13,12 @@ import {
 import { USERS } from "../user";
 import { TableFilterControl, TableSortControl } from "../common/CommonController/TableSortFilterControl";
 import DeleteUser from "./DeleteUser";
-import { showToastSuccess } from "../../Toast/toastUtils";
 import { DateRangeFilterControl } from "../common/CommonController/DateRangePicker";
 import { IData } from "../../InterFace/commonInterface";
 import dayjs from 'dayjs';
 import { DropdownFilterControl } from "../common/CommonController/DropDownFilterControl";
 import { formatDate } from "../common/CommonController/Common";
+import { toast } from "react-toastify";
 
 
 const List = () => {
@@ -122,7 +122,7 @@ const List = () => {
         setPage(page - 1);
       }
 
-      showToastSuccess('deleted');
+      toast.success('deleted');
       setUserToDelete(null);
       setShowDeleteConfirmation(false);
     }

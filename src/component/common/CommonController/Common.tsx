@@ -23,3 +23,10 @@ export const selectGenderOptions = [
     { value: "Male", key: "Male" },
     { value: "Female", key: "Female" },
   ];
+
+  export const formatFileName = (fileName:any) => {
+    if (fileName.length > 15) {
+      return `${fileName.substring(0, 12)}...`;
+    }
+    return fileName;
+  };

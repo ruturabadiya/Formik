@@ -5,7 +5,7 @@ import { IData } from "../../InterFace/commonInterface";
 import { dataValidation } from "../../validate/validation";
 import { TextFieldController} from "../common/CommonController/TextFieldControl";
 import { USERS } from "../user";
-import { showToastError, showToastSuccess } from "../../Toast/toastUtils";
+import { toast } from "react-toastify";
 import { DatePickerController } from "../common/CommonController/DatePickerControl";
 import { DropdownFieldController } from "../common/CommonController/SelectDropDownControl";
 import { selectGenderOptions } from "../common/CommonController/Common";
@@ -38,7 +38,7 @@ const AddEditUser = () => {
   const onSubmit = (values: IData,{resetForm}:{resetForm: () => void }) => {
     const emailExists = USERS.some((user) => user.emailAddress === values.emailAddress);
     if (emailExists && (!isEditing || (isEditing && values.emailAddress !== userData!.emailAddress))) {
-      showToastError("This Email Address already exists.");
+      toast.error("This Email Address already exists.");
       resetForm();
       return;
     }
@@ -49,7 +49,7 @@ const AddEditUser = () => {
       const index = USERS.findIndex((user) => user.id === userData.id);
       USERS[index] = updatedUser;
 
-      showToastSuccess("User updated successfully");
+      toast.success("User updated successfully");
     } else {
       const nextId = USERS.length > 0 ? USERS[USERS.length - 1].id + 1 : 1;
 
@@ -60,7 +60,7 @@ const AddEditUser = () => {
 
       USERS.push(newUser);
       resetForm();
-      showToastSuccess("User added successfully");
+      toast.success("User added successfully");
     }
 
     setTimeout(() => {
