@@ -7,51 +7,46 @@ import { formatFileName } from './common/CommonController/Common';
 
 const MultipleImageSelect = () => {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [invalidFileTypes, setInvalidFileTypes] = useState<string[]>([]);
-  const [duplicateFileNames, setDuplicateFileNames] = useState<string[]>([]);
-  const [invalidSizeFileNames, setInvalidSizeFileNames] = useState<string[]>([]);
 
   const handleImageSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     const validFiles: File[] = [];
-    const newDuplicateFileNames: string[] = [];
     const newInvalidSizeFileNames: string[] = [];
-    const newInvalidFileTypes: string[] = [];
+    const newInvalidTypeFileNames: string[] = [];
+    const newDuplicateFileNames: string[] = [];
 
     files.forEach((file) => {
       if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/svg+xml') {
         if (file.size <= 100 * 1024) {
-          if (selectedImages.some((image) => image.name === file.name)) {
-            newDuplicateFileNames.push(file.name);
+          if (selectedImages.some(selectedImage => selectedImage.name === file.name)) {
+            newDuplicateFileNames.push(file.name); 
           } else {
             validFiles.push(file);
           }
         } else {
-          invalidSizeFileNames.push(file.name);
+          newInvalidSizeFileNames.push(file.name); 
         }
       } else {
-        invalidFileTypes.push(file.name);
+        newInvalidTypeFileNames.push(file.name); 
       }
     });
 
     setSelectedImages((prevImages) => [...prevImages, ...validFiles]);
-    setDuplicateFileNames((prevDup) => [...prevDup, ...newDuplicateFileNames]);
-    setInvalidSizeFileNames([ ...newInvalidSizeFileNames]);
-    setInvalidFileTypes([ ...newInvalidFileTypes]);
 
-    if (invalidFileTypes.length > 0 || newDuplicateFileNames.length > 0 || invalidSizeFileNames.length > 0) {
+    if (newInvalidTypeFileNames.length > 0 || newInvalidSizeFileNames.length > 0 || newDuplicateFileNames.length > 0 ) {
       const errorMessage =
-        ((newDuplicateFileNames.length > 0 ? `Invalid file(s) because they are already selected:\n ${newDuplicateFileNames.join(', ')}\n` : '') +
-          (invalidSizeFileNames.length > 0 ? `\nInvalid file(s) because the size is greater than 100 kb:\n ${invalidSizeFileNames.join(', ')}\n` : '') +
-          (invalidFileTypes.length > 0 ? `\nInvalid file type(s):\n  ${invalidFileTypes.join(', ')}` : '')).trim();
+      ((newDuplicateFileNames.length > 0 ? `Invalid file(s) because they are already selected:\n ${newDuplicateFileNames.join(', ')}\n` : '') +
+      (newInvalidSizeFileNames.length > 0 ? `\nInvalid file(s) because the size is greater than 100 kb:\n ${newInvalidSizeFileNames.join(', ')}\n` : '') +
+      (newInvalidTypeFileNames.length > 0 ? `\nInvalid file type(s):\n  ${newInvalidTypeFileNames.join(', ')}` : '')).trim();
 
-      const scrollableContent = (
-        <div className='toastScoller'>
-          {errorMessage}
-        </div>
-      );
+         const scrollableContent = (
+          <div className='toastScoller'>
+            {errorMessage}
+          </div>
+        ); 
+            
+        toast.error(scrollableContent);
 
-      toast.error(scrollableContent);
     }
   };
 
@@ -61,6 +56,10 @@ const MultipleImageSelect = () => {
     );
   };
 
+  const resetInputValue = (event:any) => {
+    event.currentTarget.value = null;
+  };
+
   return (
     <div className='multiImg'>
       <input
@@ -68,6 +67,7 @@ const MultipleImageSelect = () => {
         accept="image/png, image/jpeg"
         multiple
         onChange={handleImageSelect}
+        onClick={resetInputValue}
         className='image'
       />
       <div>

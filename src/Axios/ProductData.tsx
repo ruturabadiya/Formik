@@ -46,7 +46,7 @@ const ProductData = () => {
                 <TableCell>
                   <img
                     src={addedProduct.image}
-                    style={{ width: "50px", height: "50px" }}
+                    className="productDataImage"
                     alt="Product"
                   />
                 </TableCell>

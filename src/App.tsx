@@ -30,10 +30,10 @@ function App() {
         </Router>
       </header>
       <ToastContainer
+        autoClose={5000}
         position='top-right'
         closeOnClick
         limit={1}
-        className='custom-toast-container'
       />
     </div>
   );

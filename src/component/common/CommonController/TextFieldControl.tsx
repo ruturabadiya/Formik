@@ -36,7 +36,7 @@ export const TableController: React.FC<TableControllerProps> = ({
   value
 }) => (
   <>
-    <TableCell align="left" style={{ fontWeight: '800' }}>
+    <TableCell className='tableLableCon'>
       {value}
     </TableCell>
   </>

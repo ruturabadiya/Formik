@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { ErrorMessage, useFormikContext } from 'formik';
 import { toast } from 'react-toastify';
 
-interface ImageFieldControllerProps {
+export interface ImageFieldControllerProps {
   name: string;
   imageUrl?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;

@@ -21,7 +21,10 @@
   background-color: aliceblue;
   width: 95%;
 }
-
+.tableLableCon{
+  align-items: left;
+  font-weight: 800;
+}
 .addSearch{
   margin-left: 1%;
   margin-top: 1%;
@@ -381,6 +384,10 @@ border: 2px solid #000;
   background: aliceblue;
   width: 75%;
 }
+.productDataImage{
+  width: 50px;
+  height: 50px;
+}
 .textarea{
   width: -webkit-fill-available;
   height: 90px;
@@ -464,16 +471,12 @@ margin-top: 2%;
 
 /* Custom toast container alignment */
 .Toastify__toast-container {
-  text-align: left;
+  text-align: left; 
+  white-space: pre-line;
 }
 
-.custom-toast-container {
-  white-space: pre-line;
-  max-height: 300px;
-  overflow-y: auto;
-}
 .toastScoller{
-  max-height: 150px;
+  max-height: 120px;
   overflow: auto;
 }
 
