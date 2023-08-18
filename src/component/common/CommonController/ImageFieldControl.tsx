@@ -1,16 +1,14 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent} from 'react';
 import { ErrorMessage, useFormikContext } from 'formik';
 import { toast } from 'react-toastify';
 
-export interface ImageFieldControllerProps {
+interface ImageFieldControllerProps {
   name: string;
-  imageUrl?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const ImageFieldController: React.FC<ImageFieldControllerProps> = ({
   name,
-  imageUrl,
 }) => {
   const { setFieldValue, values }: any = useFormikContext();
   const imageData = values[name];

@@ -11,6 +11,7 @@ import { IProduct } from '../InterFace/productDataInterfaace';
 import { productValidation } from '../validate/productValidation';
 import { Button } from '@mui/material';
 import { NumberFieldController } from '../component/common/CommonController/NumberFieldControl';
+import MultipleImageSelect from '../component/MultipleImage';
 //import { MultipleImageSelect } from '../component/MultipleImage';
 
 
@@ -58,9 +59,9 @@ const AddUpdateData = () => {
     //     }
 
     // }, [])
-    
+
     const onSubmit = (values: IProduct) => {
-        const isNewProduct = values.id === 0; 
+        const isNewProduct = values.id === 0;
 
         const url = isNewProduct
             ? 'https://fakestoreapi.com/products'
@@ -68,7 +69,7 @@ const AddUpdateData = () => {
 
         const requestMethod = isNewProduct ? axios.post : axios.put;
 
-        requestMethod(url, values) 
+        requestMethod(url, values)
             .then((response) => {
                 navigate('/');
             })
@@ -102,14 +103,15 @@ const AddUpdateData = () => {
                             onChange={handleChange}
                             placeholder="Enter the Description"
                         />
-                        <ImageFieldController
+                        {/* <ImageFieldController
                             name="image"
                             onChange={handleChange}
-                        />
-                        {/* <MultipleImageSelect
-                        name="image"
-                        onChange={handleChange}
                         /> */}
+                        <MultipleImageSelect
+                            name="image"
+                            isMulti={false}
+                            onChange={handleChange}
+                        />
                         <DropdownFieldController
                             name="category"
                             onChange={handleChange}

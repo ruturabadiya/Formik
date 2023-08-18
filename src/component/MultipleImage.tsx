@@ -5,10 +5,18 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Tooltip } from '@mui/material';
 import { formatFileName } from './common/CommonController/Common';
 
-const MultipleImageSelect = () => {
+interface multiProps {
+  name:string;
+  isMulti: boolean;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+}
+
+export const MultipleImageSelect: React.FC<multiProps> = ({
+  isMulti
+}) => {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
 
-  const handleImageSelect = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleMultiImageSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     const validFiles: File[] = [];
     const newInvalidSizeFileNames: string[] = [];
@@ -19,33 +27,43 @@ const MultipleImageSelect = () => {
       if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/svg+xml') {
         if (file.size <= 100 * 1024) {
           if (selectedImages.some(selectedImage => selectedImage.name === file.name)) {
-            newDuplicateFileNames.push(file.name); 
+            newDuplicateFileNames.push(file.name);
           } else {
             validFiles.push(file);
           }
         } else {
-          newInvalidSizeFileNames.push(file.name); 
+          newInvalidSizeFileNames.push(file.name);
         }
       } else {
-        newInvalidTypeFileNames.push(file.name); 
+        newInvalidTypeFileNames.push(file.name);
       }
     });
 
-    setSelectedImages((prevImages) => [...prevImages, ...validFiles]);
+    if (!isMulti) {
+      if (validFiles.length > 0) {
+        setSelectedImages([validFiles[0]]);
+      } else if (newDuplicateFileNames.length > 0) {
+        setSelectedImages((prevImages) => [...prevImages])
+      } else if (newInvalidSizeFileNames.length > 0 || newInvalidTypeFileNames.length > 0) {
+        setSelectedImages([]);
+      }
+    } else {
+      setSelectedImages((prevImages) => [...prevImages, ...validFiles]);
+    }
 
-    if (newInvalidTypeFileNames.length > 0 || newInvalidSizeFileNames.length > 0 || newDuplicateFileNames.length > 0 ) {
+    if (newInvalidTypeFileNames.length > 0 || newInvalidSizeFileNames.length > 0 || newDuplicateFileNames.length > 0) {
       const errorMessage =
-      ((newDuplicateFileNames.length > 0 ? `Invalid file(s) because they are already selected:\n ${newDuplicateFileNames.join(', ')}\n` : '') +
-      (newInvalidSizeFileNames.length > 0 ? `\nInvalid file(s) because the size is greater than 100 kb:\n ${newInvalidSizeFileNames.join(', ')}\n` : '') +
-      (newInvalidTypeFileNames.length > 0 ? `\nInvalid file type(s):\n  ${newInvalidTypeFileNames.join(', ')}` : '')).trim();
+        ((newDuplicateFileNames.length > 0 ? `Invalid file(s) because they are already selected:\n ${newDuplicateFileNames.join(', ')}\n` : '') +
+          (newInvalidSizeFileNames.length > 0 ? `\nInvalid file(s) because the size is greater than 100 kb:\n ${newInvalidSizeFileNames.join(', ')}\n` : '') +
+          (newInvalidTypeFileNames.length > 0 ? `\nInvalid file type(s):\n  ${newInvalidTypeFileNames.join(', ')}` : '')).trim();
 
-         const scrollableContent = (
-          <div className='toastScoller'>
-            {errorMessage}
-          </div>
-        ); 
-            
-        toast.error(scrollableContent);
+      const scrollableContent = (
+        <div className='toastScoller'>
+          {errorMessage}
+        </div>
+      );
+      
+      toast.error(scrollableContent);
 
     }
   };
@@ -56,7 +74,7 @@ const MultipleImageSelect = () => {
     );
   };
 
-  const resetInputValue = (event:any) => {
+  const resetInputValue = (event: any) => {
     event.currentTarget.value = null;
   };
 
@@ -65,8 +83,8 @@ const MultipleImageSelect = () => {
       <input
         type="file"
         accept="image/png, image/jpeg"
-        multiple
-        onChange={handleImageSelect}
+        multiple={isMulti}
+        onChange={handleMultiImageSelect}
         onClick={resetInputValue}
         className='image'
       />
