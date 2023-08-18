@@ -41,10 +41,6 @@ export const ImageFieldController: React.FC<ImageFieldControllerProps> = ({
     }
 
     const reader = new FileReader();
-    reader.onload = (event) => {
-      const imageDataURL = event.target?.result as string;
-      setFieldValue(name, imageDataURL);
-    };
 
     reader.readAsDataURL(selectedImage);
   };

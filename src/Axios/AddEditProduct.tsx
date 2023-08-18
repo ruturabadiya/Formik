@@ -12,8 +12,6 @@ import { productValidation } from '../validate/productValidation';
 import { Button } from '@mui/material';
 import { NumberFieldController } from '../component/common/CommonController/NumberFieldControl';
 import MultipleImageSelect from '../component/MultipleImage';
-//import { MultipleImageSelect } from '../component/MultipleImage';
-
 
 const AddUpdateData = () => {
     const initialValues: IProduct = {
@@ -42,23 +40,6 @@ const AddUpdateData = () => {
                 });
         }
     }, [id]);
-
-    // useEffect(() => {
-    //     const abortController = new AbortController();
-    //     axios.get(`https://fakestoreapi.com/products/${id}`, {
-    //         signal: abortController.signal
-    //     })
-    //         .then((response) => {
-    //             setUserData(response.data);
-    //         })
-    //         .catch((error) => {
-    //             console.error('Error fetching product:', error);
-    //         });
-    //     return () => {
-    //         abortController.abort()
-    //     }
-
-    // }, [])
 
     const onSubmit = (values: IProduct) => {
         const isNewProduct = values.id === 0;
@@ -103,10 +84,6 @@ const AddUpdateData = () => {
                             onChange={handleChange}
                             placeholder="Enter the Description"
                         />
-                        {/* <ImageFieldController
-                            name="image"
-                            onChange={handleChange}
-                        /> */}
                         <MultipleImageSelect
                             name="image"
                             isMulti={false}
