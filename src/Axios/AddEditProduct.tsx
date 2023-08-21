@@ -11,7 +11,8 @@ import { IProduct } from '../InterFace/productDataInterfaace';
 import { productValidation } from '../validate/productValidation';
 import { Button } from '@mui/material';
 import { NumberFieldController } from '../component/common/CommonController/NumberFieldControl';
-import MultipleImageSelect from '../component/MultipleImage';
+import { MultipleImageSelect } from '../component/MultipleImage';
+
 
 const AddUpdateData = () => {
     const initialValues: IProduct = {
@@ -63,7 +64,7 @@ const AddUpdateData = () => {
         <div className="content">
             <Formik
                 initialValues={userData}
-                validationSchema={productValidation}
+                 validationSchema={productValidation}
                 enableReinitialize={true}
                 onSubmit={onSubmit}
             >
@@ -86,7 +87,7 @@ const AddUpdateData = () => {
                         />
                         <MultipleImageSelect
                             name="image"
-                            isMulti={false}
+                            isMulti={true}
                             onChange={handleChange}
                         />
                         <DropdownFieldController

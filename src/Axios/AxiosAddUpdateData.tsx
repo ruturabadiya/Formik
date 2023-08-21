@@ -75,10 +75,10 @@ const AddEditProduct = () => {
               onChange={handleChange}
               placeholder="Enter the Description"
             />
-            <ImageFieldController
+            {/* <ImageFieldController
               name="image"
               onChange={handleChange}
-            />
+            /> */}
             <DropdownFieldController
               name="category"
               onChange={handleChange}

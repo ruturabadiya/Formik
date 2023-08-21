@@ -9,7 +9,7 @@ import AxiosUserData from './Axios/AxiosUserData';
 import AddUpdateProduct from './Axios/AxiosAddUpdateData';
 import ProductData from './Axios/ProductData';
 import AddUpdate from './Axios/AddEditProduct';
-import MultipleImg from './component/MultipleImage';
+
 
 function App() {
 
