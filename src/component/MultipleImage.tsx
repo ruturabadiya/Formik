@@ -1,11 +1,10 @@
-import React, { useState, ChangeEvent, useEffect } from 'react';
+import React, { useState, ChangeEvent, useEffect,Component } from 'react';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Tooltip } from '@mui/material';
 import { formatFileName } from './common/CommonController/Common';
 import { ErrorMessage, useFormikContext } from 'formik';
-import { string } from 'yup';
 
 interface multiProps {
   name: string;
@@ -20,8 +19,13 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
 }) => {
   const { setFieldValue, values }: any = useFormikContext();
   const [imageData, setImageData] = useState<File[]>([]);
+  const [userData, setUserData] = useState(values[name]);
 
-  const userData = values[name];
+  useEffect(() => {
+    setUserData(values[name]);
+  }, []); 
+  
+  console.log("userdata:", userData)
 
   const handleMultiImageSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedImages = Array.from(event.target.files || []);
@@ -58,8 +62,7 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
         setImageData([]);
       }
     } else {
-      setFieldValue(name, [userData] ,[...validFiles]);
-      // setFieldValue(name, [userData , ...validFiles]);
+      setFieldValue(name, [...validFiles]);
       setImageData([...imageData, ...validFiles]);
     }
 
@@ -80,37 +83,34 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
 
       }
     }
-
   };
 
   const handleImageRemove = (indexToRemove: number) => {
-    if (indexToRemove === 1) {
-      // Remove userData
-      setFieldValue(name, null);
+    if (indexToRemove === -1) {
+      if (imageData.length > 0) {
+        setFieldValue(name, imageData);
+        setImageData(imageData);
+      }
+      else {
+        setFieldValue(name, null);
+      }
+      setUserData(null);
       return;
     }
-  
-    // Remove selected images
     const remainingImages = imageData.filter((_, index) => index !== indexToRemove);
     setImageData(remainingImages);
-  
     if (remainingImages.length > 0) {
       setFieldValue(name, remainingImages);
     } else {
-      setFieldValue(name, null);
+        if(userData == null){
+          setFieldValue(name, null);
+        }
     }
   };
-
 
   const resetInputValue = (event: any) => {
     event.currentTarget.value = null;
   };
-
-  const handleSingleImageRemove = () => {
-    setImageData([]);
-    setFieldValue(name, null);
-  };
-  debugger
 
   return (
     <div>
@@ -133,10 +133,7 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
                 src={userData}
                 alt='selected'
                 className='multipleImage' />
-              <div className='fileNameContainer'>
-                <span className='fileName'>{formatFileName(userData)}</span>
-              </div>
-              <CancelIcon className='closeBtn' onClick={handleSingleImageRemove} />
+              <CancelIcon className='closeBtn' onClick={() => handleImageRemove(-1)} />
             </div>
           ) : null}
         </div>
