@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useEffect,Component } from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,13 +19,12 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
 }) => {
   const { setFieldValue, values }: any = useFormikContext();
   const [imageData, setImageData] = useState<File[]>([]);
-  const [userData, setUserData] = useState(values[name]);
+ // const userData = values[name] || [] ;
+  const [userData,setUserData] = useState(values[name]);
 
-  useEffect(() => {
-    setUserData(values[name]);
-  }, []); 
-  
-  console.log("userdata:", userData)
+useEffect(() => {
+  setUserData(values[name]);
+}, [values[name]]);
 
   const handleMultiImageSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedImages = Array.from(event.target.files || []);
@@ -40,7 +39,7 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
           if (imageData.some(selectedImage => selectedImage.name === file.name)) {
             newDuplicateFileNames.push(file.name);
           } else {
-            validFiles.push(file);
+          validFiles.push(file);
           }
         } else {
           newInvalidSizeFileNames.push(file.name);
@@ -62,8 +61,25 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
         setImageData([]);
       }
     } else {
-      setFieldValue(name, [...validFiles]);
-      setImageData([...imageData, ...validFiles]);
+      debugger
+      if (Array.isArray(userData) && userData.every(item => item instanceof File) || userData === null) {
+        setFieldValue(name, userData, ...validFiles);
+        setImageData([...imageData, ...validFiles]);
+      } else {
+        debugger
+        if (Array.isArray(userData) && userData.every(item => item instanceof File) || userData === null) {
+          setFieldValue(name, ...validFiles);
+          setImageData([...imageData, ...validFiles]);
+        }else if (Array.isArray(userData) && userData.length >= 1 && Array.isArray(userData[0]) && userData[0].length >= 1 && userData.slice(1).every(item => item instanceof File) || userData === null) {
+          setFieldValue(name, ...validFiles);
+          setImageData([...imageData, ...validFiles]);
+        }
+         else {
+          debugger
+          setFieldValue(name, [...validFiles]);
+          setImageData([...imageData, ...validFiles, userData]);
+        }      
+      }      
     }
 
     if (newInvalidTypeFileNames.length > 0 || newInvalidSizeFileNames.length > 0 || newDuplicateFileNames.length > 0) {
@@ -87,31 +103,37 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
 
   const handleImageRemove = (indexToRemove: number) => {
     if (indexToRemove === -1) {
-      if (imageData.length > 0) {
-        setFieldValue(name, imageData);
-        setImageData(imageData);
-      }
-      else {
+      debugger
+      const remainingImages = imageData.filter((_, index) => index !== indexToRemove);
+      setImageData(remainingImages);
+      setUserData(null);
+      if (remainingImages.length > 0) {
+        setFieldValue(name, remainingImages);
+      } else {
         setFieldValue(name, null);
       }
-      setUserData(null);
       return;
     }
+  
     const remainingImages = imageData.filter((_, index) => index !== indexToRemove);
-    setImageData(remainingImages);
+  debugger
     if (remainingImages.length > 0) {
-      setFieldValue(name, remainingImages);
+      setFieldValue(name, [userData, ...remainingImages]); 
+      setImageData(remainingImages);
     } else {
-        if(userData == null){
-          setFieldValue(name, null);
-        }
+      debugger
+      setFieldValue(name, null);
+      setImageData([]);
+      setUserData(null);
     }
   };
+  
 
   const resetInputValue = (event: any) => {
     event.currentTarget.value = null;
   };
 
+  debugger
   return (
     <div>
       <div className="productImage">
@@ -126,33 +148,25 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
         />
       </div>
       {imageData.length === 0 ? (
-        <div>
-          {userData ? (
-            <div className='imgBox'>
-              <img
-                src={userData}
-                alt='selected'
-                className='multipleImage' />
-              <CancelIcon className='closeBtn' onClick={() => handleImageRemove(-1)} />
-            </div>
-          ) : null}
-        </div>
-      ) : (
-        <>
-          <div>
-            {userData ? (
-              <div className='imgBox'>
-                <img
-                  src={userData}
-                  alt='selected'
-                  className='multipleImage' />
-                {/* <div className='fileNameContainer'>
-                <span className='fileName'>{formatFileName(userData)}</span>
-              </div> */}
-                <CancelIcon className='closeBtn' onClick={() => handleImageRemove(1)} />
-              </div>
-            ) : null}
+  <div>
+     {userData ? (
+        <div className='imgBox'>
+          <div className='imageContainer'>
+          <img
+            src={typeof userData === 'string' ? userData : URL.createObjectURL(userData)}
+            alt='selected'
+            className='multipleImage'
+          />
+            <CancelIcon
+              className='closeBtn'
+              onClick={() => handleImageRemove(-1)}
+            />
           </div>
+        </div>
+      ) : null}
+  </div>
+) : (
+        <>
           {imageData && (
             <div>
               {imageData.length > 0 && (
@@ -165,14 +179,18 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
                   {imageData.map((image, index) => (
                     <div key={index} className='imgBox'>
                       <img
-                        src={URL.createObjectURL(image)}
+                        src={
+                          typeof image === 'string'  ? image : URL.createObjectURL(image as File)
+                        }
                         alt={`Selected ${index + 1}`}
                         className='multipleImage'
                       />
+
                       <div className='fileNameContainer'>
-                        <Tooltip title={image.name} placement='bottom'>
-                          <span className='fileName'>{formatFileName(image.name)}</span>
+                        <Tooltip title={typeof image === 'string' ? image : image.name} placement='bottom'>
+                          <span className='fileName'>{formatFileName(typeof image === 'string' ? image : image.name)}</span>
                         </Tooltip>
+
                       </div>
                       <CancelIcon className='closeBtn' onClick={() => handleImageRemove(index)} />
                     </div>
@@ -190,5 +208,6 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
     </div>
   );
 };
+
 
 export default MultipleImageSelect;
