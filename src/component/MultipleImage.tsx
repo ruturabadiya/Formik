@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Tooltip } from '@mui/material';
 import { formatFileName } from './common/CommonController/Common';
 import { ErrorMessage, useFormikContext } from 'formik';
+import { useDropzone } from 'react-dropzone';
 
 interface multiProps {
   name: string;
@@ -21,8 +22,8 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
   const [imageData, setImageData] = useState<(File | string)[]>([]);
   const userData = values[name];
 
-  const handleMultiImageSelect = (event: ChangeEvent<HTMLInputElement>) => {
-    const selectedImages = Array.from(event.target.files || []);
+  const handleMultiImageSelect = (acceptedFiles: File[], event?: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedImages = acceptedFiles;
     const validFiles: File[] = [];
     const newInvalidSizeFileNames: string[] = [];
     const newInvalidTypeFileNames: string[] = [];
@@ -56,7 +57,9 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
       } else if (newDuplicateFileNames.length > 0) {
         setFieldValue((prevImages: any) => [...prevImages]);
       } else if (newInvalidSizeFileNames.length > 0 || newInvalidTypeFileNames.length > 0) {
-        event.target.value = '';
+        if (event) {
+          event.target.value = '';
+      }
         setFieldValue(name, null);
         setImageData([]);
       }
@@ -106,23 +109,19 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
     }
   };
 
-
-  const resetInputValue = (event: any) => {
-    event.currentTarget.value = null;
-  };
+  const { getRootProps, getInputProps } = useDropzone({
+    multiple: isMulti,
+    onDrop: (acceptedFiles: File[]) => handleMultiImageSelect(acceptedFiles),
+  });
+  
 
   return (
     <div>
       <div className="productImage">
-        <input
-          type="file"
-          name={name}
-          accept="image/png, image/jpeg"
-          multiple={isMulti}
-          onChange={handleMultiImageSelect}
-          onClick={resetInputValue}
-          className='image'
-        />
+         <div {...getRootProps()} className='image-dropzone'>
+          <input {...getInputProps()} />
+          <p>Select Images..</p>
+        </div>
       </div>
       {imageData.length === 0 ? (
         <div>

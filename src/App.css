@@ -502,7 +502,7 @@ font-size: 14px;
 }
 
 .imgCount {
-  margin-left: -71%;
+  margin-left: 36%;
   margin-top: -7%;
   /* position: fixed; */
   font-size: 17px;
@@ -535,6 +535,20 @@ font-size: 14px;
   font-size: medium;
     color: red;
     margin-left: -41px;
-    margin-top: -8px;
+    margin-top: 3px;
     margin-bottom: 5px;
+}
+
+.image-dropzone {
+  border: 2px dashed #cccccc;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 104px;
+}
+p{
+  font-size: 15px;
+  align-items: flex-start;
 }
