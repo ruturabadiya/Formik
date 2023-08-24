@@ -530,3 +530,11 @@ font-size: 14px;
   font-size: small;
   white-space: pre-line;
 }
+
+.errorText{
+  font-size: medium;
+    color: red;
+    margin-left: -41px;
+    margin-top: -8px;
+    margin-bottom: 5px;
+}

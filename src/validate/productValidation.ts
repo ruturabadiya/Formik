@@ -26,5 +26,4 @@ export const productValidation = Yup.object({
   category: Yup.string().required('Please select a category'),
   image: Yup.mixed()
     .required('Image is required')
-    //.test('fileSize', 'Image size must be less than 100 KB', imageFileSizeValidator),
 });

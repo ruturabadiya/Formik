@@ -18,13 +18,8 @@ export const MultipleImageSelect: React.FC<multiProps> = ({
 
 }) => {
   const { setFieldValue, values }: any = useFormikContext();
-  const [imageData, setImageData] = useState<File[]>([]);
- // const userData = values[name] || [] ;
-  const [userData,setUserData] = useState(values[name]);
-
-useEffect(() => {
-  setUserData(values[name]);
-}, [values[name]]);
+  const [imageData, setImageData] = useState<(File | string)[]>([]);
+  const userData = values[name];
 
   const handleMultiImageSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedImages = Array.from(event.target.files || []);
@@ -36,10 +31,15 @@ useEffect(() => {
     selectedImages.forEach((file) => {
       if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/svg+xml') {
         if (file.size <= 100 * 1024) {
-          if (imageData.some(selectedImage => selectedImage.name === file.name)) {
+          if (
+            imageData.some(
+              (selectedImage) =>
+                selectedImage instanceof File && selectedImage.name === file.name
+            )
+          ) {
             newDuplicateFileNames.push(file.name);
           } else {
-          validFiles.push(file);
+            validFiles.push(file);
           }
         } else {
           newInvalidSizeFileNames.push(file.name);
@@ -61,25 +61,15 @@ useEffect(() => {
         setImageData([]);
       }
     } else {
-      debugger
-      if (Array.isArray(userData) && userData.every(item => item instanceof File) || userData === null) {
-        setFieldValue(name, userData, ...validFiles);
+      if (typeof userData !== 'string') {
+        setFieldValue(name, ...validFiles);
         setImageData([...imageData, ...validFiles]);
-      } else {
-        debugger
-        if (Array.isArray(userData) && userData.every(item => item instanceof File) || userData === null) {
-          setFieldValue(name, ...validFiles);
-          setImageData([...imageData, ...validFiles]);
-        }else if (Array.isArray(userData) && userData.length >= 1 && Array.isArray(userData[0]) && userData[0].length >= 1 && userData.slice(1).every(item => item instanceof File) || userData === null) {
-          setFieldValue(name, ...validFiles);
-          setImageData([...imageData, ...validFiles]);
-        }
-         else {
-          debugger
-          setFieldValue(name, [...validFiles]);
-          setImageData([...imageData, ...validFiles, userData]);
-        }      
-      }      
+      }
+      else {
+        setFieldValue(name, [...validFiles]);
+        setImageData([...imageData, ...validFiles, userData]);
+      }
+
     }
 
     if (newInvalidTypeFileNames.length > 0 || newInvalidSizeFileNames.length > 0 || newDuplicateFileNames.length > 0) {
@@ -103,37 +93,24 @@ useEffect(() => {
 
   const handleImageRemove = (indexToRemove: number) => {
     if (indexToRemove === -1) {
-      debugger
-      const remainingImages = imageData.filter((_, index) => index !== indexToRemove);
-      setImageData(remainingImages);
-      setUserData(null);
-      if (remainingImages.length > 0) {
-        setFieldValue(name, remainingImages);
-      } else {
-        setFieldValue(name, null);
-      }
-      return;
+      setFieldValue(name, null);
     }
-  
+
     const remainingImages = imageData.filter((_, index) => index !== indexToRemove);
-  debugger
     if (remainingImages.length > 0) {
-      setFieldValue(name, [userData, ...remainingImages]); 
+      setFieldValue(name, [userData, ...remainingImages]);
       setImageData(remainingImages);
     } else {
-      debugger
       setFieldValue(name, null);
       setImageData([]);
-      setUserData(null);
     }
   };
-  
+
 
   const resetInputValue = (event: any) => {
     event.currentTarget.value = null;
   };
 
-  debugger
   return (
     <div>
       <div className="productImage">
@@ -148,24 +125,24 @@ useEffect(() => {
         />
       </div>
       {imageData.length === 0 ? (
-  <div>
-     {userData ? (
-        <div className='imgBox'>
-          <div className='imageContainer'>
-          <img
-            src={typeof userData === 'string' ? userData : URL.createObjectURL(userData)}
-            alt='selected'
-            className='multipleImage'
-          />
-            <CancelIcon
-              className='closeBtn'
-              onClick={() => handleImageRemove(-1)}
-            />
-          </div>
+        <div>
+          {userData ? (
+            <div className='imgBox'>
+              <div className='imageContainer'>
+                <img
+                  src={typeof userData === 'string' ? userData : URL.createObjectURL(userData)}
+                  alt='selected'
+                  className='multipleImage'
+                />
+                <CancelIcon
+                  className='closeBtn'
+                  onClick={() => handleImageRemove(-1)}
+                />
+              </div>
+            </div>
+          ) : null}
         </div>
-      ) : null}
-  </div>
-) : (
+      ) : (
         <>
           {imageData && (
             <div>
@@ -180,7 +157,7 @@ useEffect(() => {
                     <div key={index} className='imgBox'>
                       <img
                         src={
-                          typeof image === 'string'  ? image : URL.createObjectURL(image as File)
+                          typeof image === 'string' ? image : URL.createObjectURL(image as File)
                         }
                         alt={`Selected ${index + 1}`}
                         className='multipleImage'
@@ -201,6 +178,9 @@ useEffect(() => {
           )}
         </>
 
+      )}
+      {imageData.length === 0 && userData === null && (
+        <p className="errorText">No files selected. Please select at least one file.</p>
       )}
       <div className="row p-0 m-0 w-100">
         <ErrorMessage name={name} component="div" className="text-danger" />
